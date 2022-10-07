@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-primary-blue {
+    color: #23408E;
+}
+
+.text-secondary-blue {
+    color: #2DAAE2;
+}
+
+.text-tertiary-blue {
+    color: #8ED7F0;
+}
+
+.bg-primary-blue {
+    background-color: #23408E;
+}
+
+.bg-secondary-blue {
+    background-color: #2DAAE2;
+}
+
+.bg-tertiary-blue {
+    background-color: #8ED7F0;
+}
+
+.border-primary-blue {
+    border-color: #23408E;
+}
+
+.border-secondary-blue {
+    border-color: #2DAAE2;
+}
+
+.border-tertiary-blue {
+    border-color: #8ED7F0;
+}
+
+.modal {
+    width: 300px;
+    padding: 30px;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: 20px;
+    text-align: center;
+}
