@@ -1,6 +1,7 @@
 <?php
 
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\StaffController;
@@ -21,12 +22,11 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if(Auth::check()) {
+        return redirect(route('dashboard'));
+    } else {
+        return redirect(route('login'));
+    }
 });
 
 //dashbard
@@ -42,6 +42,7 @@ Route::get('/staff-list', [StaffController::class, 'list'])->middleware(['auth',
 //client
 Route::get('/client', [ClientsController::class, 'index'])->middleware(['auth', 'verified'])->name('client');
 Route::post('/client', [ClientsController::class, 'create'])->middleware(['auth', 'verified'])->name('client.create');
+Route::get('/client/{user}', [ClientsController::class, 'show'])->middleware(['auth', 'verified'])->name('client.show');
 Route::put('/client/{user}', [ClientsController::class, 'update'])->middleware(['auth', 'verified'])->name('client.update');
 Route::delete('/{user}/client', [ClientsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('client.delete');
 Route::get('/client-list', [ClientsController::class, 'list'])->middleware(['auth', 'verified'])->name('client.list');

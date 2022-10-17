@@ -10,7 +10,8 @@ import VueQrcode from '@chenfengyuan/vue-qrcode';
 import VueSweetalert2 from 'vue-sweetalert2'
 import QrReader from 'vue3-qr-reader';
 import 'sweetalert2/dist/sweetalert2.min.css'
-import store from './store'
+import store from './Store'
+import VueHtmlToPaper from './Plugins/VueHtmlToPaper';
 
 import { vfmPlugin } from 'vue-final-modal'
 
@@ -25,6 +26,7 @@ createInertiaApp({
             .use(plugin)
             .use(VueSweetalert2)
             .use(QrReader)
+            .use(VueHtmlToPaper)
             .use(vfmPlugin({
                 key: '$vfm',
                 componentName: 'VueFinalModal',

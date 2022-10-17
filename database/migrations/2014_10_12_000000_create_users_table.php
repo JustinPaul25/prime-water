@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('contact_no')->nullable();
             $table->string('address')->nullable();
             $table->boolean('status')->dafault(true);
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
+            $table->string('username')->unique();
             $table->string('slug');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

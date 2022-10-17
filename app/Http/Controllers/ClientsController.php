@@ -13,7 +13,7 @@ class ClientsController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Client');
+        return Inertia::render('Client/Client');
     }
 
     public function list(Request $request)
@@ -26,7 +26,7 @@ class ClientsController extends Controller
                 $q->where('first_name', 'LIKE', '%'.$search.'%')
                 ->orWhere('middle_name', 'LIKE', '%'.$search.'%')
                 ->orWhere('last_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('email', 'LIKE', '%'.$search.'%');
+                ->orWhere('username', 'LIKE', '%'.$search.'%');
             });
         }
 
@@ -42,7 +42,7 @@ class ClientsController extends Controller
             'last_name' => 'required|string|max:255',
             'contact_no' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:users',
             'status' => 'required',
         ]);
 
@@ -61,7 +61,7 @@ class ClientsController extends Controller
         $user->contact_no = $request->input('contact_no');
         $user->address = $request->input('address');
         $user->status = $request->input('status');
-        $user->email = $request->input('email');
+        $user->username = $request->input('username');
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
         $user->save();
@@ -79,6 +79,15 @@ class ClientsController extends Controller
         return;
     }
 
+    public function show(User $user)
+    {
+        return Inertia::render('Client/ClientProfile', [
+            'client' => $user,
+            'readings' => $user->reading,
+            'account' => $user->account,
+        ]);
+    }
+
     public function update(User $user, Request $request)
     {
         $request->validate([
@@ -86,7 +95,7 @@ class ClientsController extends Controller
             'last_name' => 'required|string|max:255',
             'contact_no' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
+            'username' => 'required|string|unique:users,username,'.$user->id,
             'status' => 'required',
         ]);
 
@@ -104,7 +113,7 @@ class ClientsController extends Controller
             'last_name' => $request->input('last_name'),
             'contact_no' => $request->input('contact_no'),
             'address' => $request->input('address'),
-            'email' => $request->input('email'),
+            'username' => $request->input('username'),
             'status' => $request->input('status'),
         ]);
 

@@ -1,6 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
+    import PrintQr from '@/Components/PrintQr.vue'
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
@@ -8,9 +9,8 @@
     import Pagination from '@/Components/Pagination.vue'
     import { Inertia } from '@inertiajs/inertia';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { computed, onMounted, inject, ref, watch } from 'vue'
+    import { computed, onMounted, inject, ref} from 'vue'
     import { useStore } from 'vuex'
-    import debounce from 'lodash/debounce'
     import { watchDebounced } from '@vueuse/core'
 
     defineProps({
@@ -37,7 +37,7 @@
         first_name: '',
         middle_name: '',
         last_name: '',
-        email: '',
+        username: '',
         contact_no: '',
         address: '',
         status: ''
@@ -50,7 +50,7 @@
             form.first_name = ''
             form.middle_name = ''
             form.last_name = ''
-            form.email = ''
+            form.username = ''
             form.contact_no = ''
             form.address = ''
             form.status = ''
@@ -60,7 +60,7 @@
             form.first_name = client.first_name
             form.middle_name = client.middle_name
             form.last_name = client.last_name
-            form.email = client.email
+            form.username = client.username
             form.contact_no = client.contact_no
             form.address = client.address
             form.status = client.status
@@ -150,7 +150,7 @@
             <h2 class="font-semibold text-xl text-white leading-tight">
                 Clients
             </h2>
-            <p class="mt-2 text-sm text-white">A list of all Prime Waters Clients including their information.</p>
+            <p class="mt-2 text-sm text-white">A list of all Barangay Consolacion Clients including their information.</p>
         </template>
 
         <div class="py-12">
@@ -190,9 +190,9 @@
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="email" value="Email" />
-                                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autocomplete="username" />
-                                <InputError class="mt-2" :message="form.errors.email" />
+                                <InputLabel for="username" value="Username" />
+                                <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required autocomplete="username" />
+                                <InputError class="mt-2" :message="form.errors.username" />
                             </div>
 
                             <div class="mt-4">
@@ -225,17 +225,18 @@
                         <InputLabel class="font-bold" for="search" value="Search" />
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
                     </div>
-                    <div class="ml-auto">
-                        <button  @click="showModal('create', null)" type="button" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Add Client</button>
+                    <div class="ml-auto flex">
+                        <PrintQr></PrintQr>
+                        <button  @click="showModal('create', null)" type="button" class="ml-2 mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Add Client</button>
                     </div>
                 </div>
-                <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+                <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg bg-white">
                     <table class="min-w-full divide-y divide-gray-300">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-primary-blue">
                             <tr>
-                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Email</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Status</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white font-bold sm:pl-6">Name</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Username</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Status</th>
                             <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                 <span class="sr-only">Edit</span>
@@ -244,8 +245,10 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
                             <tr v-for="client in clients.data">
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ client.name }}</td>
-                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ client.email }}</td>
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                    <a class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ client.first_name+' '+client.last_name }}</a>
+                                </td>
+                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ client.username }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
                                     <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full uppercase last:mr-0 mr-1" :class="client.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
                                         {{ client.status === 0 ? 'In-Active' : 'Active'}}

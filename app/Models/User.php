@@ -28,7 +28,7 @@ class User extends Authenticatable
         'contact_no',
         'address',
         'status',
-        'email',
+        'username',
         'password',
     ];
 
@@ -80,6 +80,11 @@ class User extends Authenticatable
     public function isMeterman(): bool
     {
         return $this->hasRole('meterman');
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->hasRole('cashier');
     }
 
     public function account()

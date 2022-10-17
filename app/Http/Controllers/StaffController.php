@@ -23,7 +23,7 @@ class StaffController extends Controller
             $search = $request->input('search');
             $staff->where(function($q) use ($search){
                 $q->where('name', 'LIKE', '%'.$search.'%')
-                ->orWhere('email', 'LIKE', '%'.$search.'%');
+                ->orWhere('username', 'LIKE', '%'.$search.'%');
             });
         }
 
@@ -40,13 +40,13 @@ class StaffController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:users',
             'role' => 'required',
         ]);
 
         $user = new User;
         $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        $user->username = $request->input('username');
         $user->status = true;
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
@@ -61,13 +61,13 @@ class StaffController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
+            'username' => 'required|string|unique:users,username,'.$user->id,
             'role' => 'required',
         ]);
 
         $user->update([
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'username' => $request->input('username'),
         ]);
 
         $user->removeRole('Cashier');

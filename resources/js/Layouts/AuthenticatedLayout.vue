@@ -84,7 +84,12 @@ function submitSuccess() {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogo class="block h-9 w-auto" />
+                                    <div class="flex items-end">
+                                        <ApplicationLogo class="block h-9 w-auto" />
+                                        <div>
+                                            <span class="text-secondary-blue font-bold text-xl">WBS</span>
+                                        </div>
+                                    </div>
                                 </Link>
                             </div>
 
@@ -95,6 +100,9 @@ function submitSuccess() {
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
                                     Staff
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.cashier" :href="route('staff')" :active="route().current('staff')">
+                                    Payments
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                                     Clients
@@ -122,7 +130,7 @@ function submitSuccess() {
                                     </template>
 
                                     <template #content>
-                                        <button @click="showPriceModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                                        <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                             Price/Cu M
                                         </button>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
@@ -151,6 +159,9 @@ function submitSuccess() {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.cashier" :href="route('staff')" :active="route().current('staff')">
+                            Paymentsasdas
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
                             Staff
                         </ResponsiveNavLink>
@@ -170,7 +181,9 @@ function submitSuccess() {
                         </div>
 
                         <div class="mt-3 space-y-1">
-
+                            <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="w-full block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                                Price/Cu M
+                            </button>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full">
                                 Log Out
                             </ResponsiveNavLink>
