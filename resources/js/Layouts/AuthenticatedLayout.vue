@@ -54,7 +54,7 @@ function submitSuccess() {
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
                     <div>
                         <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Current Price/Cu m</h1>
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Current sdPrice/Cu m</h1>
 
                             <div class="mt-3">
                                 <h2 class="sr-only">Product information</h2>
