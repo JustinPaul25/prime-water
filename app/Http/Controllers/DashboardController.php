@@ -21,6 +21,6 @@ class DashboardController extends Controller
             return Inertia::render('Dashboard/DashboardMeterman');
         }
 
-        return Inertia::render('Dashboard/Dashboard');
+        return redirect(route('payments'));
     }
 }

@@ -132,4 +132,12 @@ class ClientsController extends Controller
     {
         return $user;
     }
+
+    public function profile(User $user)
+    {
+        return Inertia::render('Client/ClientProfile', [
+            'client' => $user,
+            'account' => $user->account,
+        ]);
+    }
 }

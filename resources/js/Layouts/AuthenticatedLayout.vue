@@ -95,20 +95,20 @@ function submitSuccess() {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <NavLink :href="route('dashboard')" v-if="!$page.props.auth.cashier" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
                                     Staff
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.cashier" :href="route('staff')" :active="route().current('staff')">
-                                    Payments
-                                </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                                     Clients
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.admin" :href="route('dashboard')" :active="route().current('dashboard')">
+                                <NavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
                                     Reports
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
+                                    Payments
                                 </NavLink>
                             </div>
                         </div>
@@ -159,17 +159,17 @@ function submitSuccess() {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.cashier" :href="route('staff')" :active="route().current('staff')">
-                            Paymentsasdas
-                        </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
                             Staff
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                             Clients
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('dashboard')" :active="route().current('dashboard')">
+                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
                             Reports
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
+                            Payments
                         </ResponsiveNavLink>
                     </div>
 

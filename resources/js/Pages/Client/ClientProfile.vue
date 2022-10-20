@@ -1,23 +1,16 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { Head } from '@inertiajs/inertia-vue3';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/inertia-vue3';
 
-    defineProps({
-        client: Object,
-        readings: Object,
-        account: Object,
-    })
+defineProps({
+    client: Object
+})
 </script>
-    
+
 <template>
-    <Head title="Dashboard" />
+    <Head :title="client.name" />
     
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight">
-                Dashboard
-            </h2>
-        </template>
         <div class="py-12">
             <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
                 <div class="flex items-center space-x-5">
@@ -28,14 +21,14 @@
                     </div>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">{{ $page.props.auth.user.name }}</h1>
-                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ $page.props.auth.user.address }}</span></p>
-                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ $page.props.auth.user.contact_no }}</span></p>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ client.name }}</h1>
+                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ client.address }}</span></p>
+                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ client.contact_no }}</span></p>
                     </div>
                 </div>
                 <div class="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
                     <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100" :class="$page.props.auth.user.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
-                        {{ $page.props.auth.user.status === 0 ? 'In-Active' : 'Active' }}
+                        {{ client.status === 0 ? 'In-Active' : 'Active' }}
                     </button>
                 </div>
             </div>
@@ -49,32 +42,32 @@
                             <dl class="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Reading</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ $page.props.auth.user.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Current Reading</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ $page.props.auth.user.account.current_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.current_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Consumed Cu. M</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ $page.props.auth.user.account.current_reading - $page.props.auth.user.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.current_reading - client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Balance</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ $page.props.auth.user.account.prev_balance }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ client.account.prev_balance }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Current Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ $page.props.auth.user.account.current_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ client.account.current_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Total Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ $page.props.auth.user.account.current_charges + $page.props.auth.user.account.prev_balance }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ client.account.current_charges + client.account.prev_balance }}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -96,54 +89,32 @@
                                 <table class="min-w-full divide-y divide-gray-300">
                                     <thead>
                                         <tr>
-                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"></th>
-                                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Memory</th>
-                                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">CPU</th>
-                                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Storage</th>
-                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Price</th>
+                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Transaction No.</th>
+                                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Amount</th>
+                                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                <div class="font-medium text-gray-900">Hobby</div>
+                                                <div class="font-medium text-gray-900">12312</div>
                                                 <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                <span>4 GB RAM / 4 CPUs</span>
-                                                <span class="hidden sm:inline">·</span>
-                                                <span>128 GB SSD disk</span>
+                                                <span>₱ 123 / 10-10-2022</span>
                                                 </div>
                                             </td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">4 GB RAM</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">4 CPUs</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">128 GB SSD disk</td>
-                                            <td class="px-3 py-3.5 text-sm text-gray-500">
-                                                <div class="sm:hidden">$40/mo</div>
-                                                <div class="hidden sm:block">$40/month</div>
-                                            </td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
                                         </tr>
 
                                         <tr>
-                                            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-transparent">
-                                                <div class="font-medium text-gray-900">
-                                                Startup
-
-                                                <span class="ml-1 text-indigo-600">(Current Plan)</span>
-                                                </div>
+                                            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+                                                <div class="font-medium text-gray-900">1232312</div>
                                                 <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                <span>8 GB RAM / 6 CPUs</span>
-                                                <span class="hidden sm:inline">·</span>
-                                                <span>256 GB SSD disk</span>
+                                                <span>₱ 123 / 10-10-2022</span>
                                                 </div>
-
-                                                <div class="absolute right-0 left-6 -top-px h-px bg-gray-200"></div>
                                             </td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">8 GB RAM</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">6 CPUs</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">256 GB SSD disk</td>
-                                            <td class="px-3 py-3.5 text-sm text-gray-500 border-t border-gray-200">
-                                                <div class="sm:hidden">$80/mo</div>
-                                                <div class="hidden sm:block">$80/month</div>
-                                            </td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
                                         </tr>
 
                                         <!-- More plans... -->
@@ -157,3 +128,4 @@
         </div>
     </AuthenticatedLayout>
 </template>
+    

@@ -90,54 +90,32 @@
                                     <table class="min-w-full divide-y divide-gray-300">
                                         <thead>
                                             <tr>
-                                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"></th>
-                                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Memory</th>
-                                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">CPU</th>
-                                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Storage</th>
-                                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Price</th>
+                                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Transaction No.</th>
+                                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Amount</th>
+                                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                    <div class="font-medium text-gray-900">Hobby</div>
+                                                    <div class="font-medium text-gray-900">12312</div>
                                                     <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                    <span>4 GB RAM / 4 CPUs</span>
-                                                    <span class="hidden sm:inline">·</span>
-                                                    <span>128 GB SSD disk</span>
+                                                    <span>₱ 123 / 10-10-2022</span>
                                                     </div>
                                                 </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">4 GB RAM</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">4 CPUs</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">128 GB SSD disk</td>
-                                                <td class="px-3 py-3.5 text-sm text-gray-500">
-                                                    <div class="sm:hidden">$40/mo</div>
-                                                    <div class="hidden sm:block">$40/month</div>
-                                                </td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
                                             </tr>
 
                                             <tr>
-                                                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-transparent">
-                                                    <div class="font-medium text-gray-900">
-                                                    Startup
-
-                                                    <span class="ml-1 text-indigo-600">(Current Plan)</span>
-                                                    </div>
+                                                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+                                                    <div class="font-medium text-gray-900">1232312</div>
                                                     <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                    <span>8 GB RAM / 6 CPUs</span>
-                                                    <span class="hidden sm:inline">·</span>
-                                                    <span>256 GB SSD disk</span>
+                                                    <span>₱ 123 / 10-10-2022</span>
                                                     </div>
-
-                                                    <div class="absolute right-0 left-6 -top-px h-px bg-gray-200"></div>
                                                 </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">8 GB RAM</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">6 CPUs</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell border-t border-gray-200">256 GB SSD disk</td>
-                                                <td class="px-3 py-3.5 text-sm text-gray-500 border-t border-gray-200">
-                                                    <div class="sm:hidden">$80/mo</div>
-                                                    <div class="hidden sm:block">$80/month</div>
-                                                </td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
                                             </tr>
 
                                             <!-- More plans... -->

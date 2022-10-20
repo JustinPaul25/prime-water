@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ReadingController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\DashboardController;
 
@@ -47,11 +49,18 @@ Route::put('/client/{user}', [ClientsController::class, 'update'])->middleware([
 Route::delete('/{user}/client', [ClientsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('client.delete');
 Route::get('/client-list', [ClientsController::class, 'list'])->middleware(['auth', 'verified'])->name('client.list');
 Route::get('/client-data/{user}', [ClientsController::class, 'data'])->middleware(['auth', 'verified'])->name('client.data');
+Route::get('/client/{user}/profile', [ClientsController::class, 'profile'])->middleware(['auth', 'verified'])->name('client.profile');
 
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');
 
 //utilities
 Route::put('/utilities-price/{utility}', [UtilityController::class, 'priceUpdate'])->middleware(['auth', 'verified'])->name('price.update');
+
+//Reports
+Route::get('/reports', [ReportsController::class, 'index'])->middleware(['auth', 'verified'])->name('reports');
+
+//Cashier
+Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');
 
 require __DIR__.'/auth.php';
