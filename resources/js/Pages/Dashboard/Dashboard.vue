@@ -3,6 +3,17 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import IncomeChart from '@/Components/IncomeChart.vue';
 import UsageChart from '@/Components/UsageChart.vue';
 import { Head } from '@inertiajs/inertia-vue3';
+import regression from 'regression'
+
+function getResult() {
+    return regression.linear([
+        [10, 2.1],
+        [23, 2.4],
+        [38, 2.6],
+        [46, 2.8],
+        [59, 3]
+    ])
+}
 </script>
 
 <template>
@@ -51,7 +62,15 @@ import { Head } from '@inertiajs/inertia-vue3';
                 <div class="grid overflow-hidden sm:grid sm:grid-cols-2 gap-1">
                     <div class="box row-span-2 p-5">
                         <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">2022 Income Chart</p>
-                        <income-chart></income-chart>
+                        <income-chart :raw-data="[
+                    [10, 2.1],
+                    [23, 2.4],
+                    [38, 2.6],
+                    [46, 2.8],
+                    [59, 3]
+                ]"
+                
+                :result="getResult()"></income-chart>
                     </div>
                     <div class="box row-span-2 p-5">
                         <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">2022 Consumed Water by:cu m</p>

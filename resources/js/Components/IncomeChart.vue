@@ -4,27 +4,9 @@
 
 <script>
     import Chart from 'chart.js/auto';
-    import regression from 'regression'
 
     export default {
-        data() {
-            return {
-                rawData: [
-                    [10, 2.1],
-                    [23, 2.4],
-                    [38, 2.6],
-                    [46, 2.8],
-                    [59, 3]
-                ],
-                result: regression.linear([
-                    [10, 2.1],
-                    [23, 2.4],
-                    [38, 2.6],
-                    [46, 2.8],
-                    [59, 3]
-                ])
-            }
-        },
+        props: ['rawData', 'result'],
         methods: {
             setTheoryData() {
                 var theoryData = [];

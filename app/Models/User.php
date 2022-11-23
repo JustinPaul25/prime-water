@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasSlug;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasSlug, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -51,13 +51,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['role'];
+    protected $appends = ['role', 'account'];
 
     public function getRoleAttribute()
     {
         $roles = $this->getRoleNames();
 
         return $roles[0];
+    }
+
+    public function getAccountAttribute()
+    {
+        return Account::where('client_id', $this->id)->first();
     }
 
     public function getSlugOptions() : SlugOptions

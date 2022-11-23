@@ -1,22 +1,28 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { computed, ref, inject, onMounted } from 'vue'
     import InputLabel from '@/Components/InputLabel.vue';
     import TextInput from '@/Components/TextInput.vue';
     import Pagination from '@/Components/Pagination.vue';
     import { watchDebounced } from '@vueuse/core';
     import { useStore } from 'vuex';
+    import InputError from '@/Components/InputError.vue';
 
     const search = ref('')
     const showPayment = ref(false)
-    const clientName = ref('')
+    const client = ref('')
 
     const store = useStore()
     const swal = inject('$swal')
     const clients = computed(() => store.state.clients.clients)
     const pagination = computed(() => store.state.clients.pagination)
+
+    const form = useForm({
+        id: '',
+        amount: 0,
+    });
 
     watchDebounced(search, () => {
         getClients()
@@ -32,7 +38,7 @@
     }
 
     function showPaymentModal(cust) {
-        clientName.value = cust.first_name+' '+cust.last_name
+        client.value = cust
         
         showPayment.value = true
     }
@@ -40,6 +46,24 @@
     function cancel(close) {
         showPayment.value = false
     }
+
+    const submit = () => {
+        form.id = client.value.id
+        form.post(route('pay-bill'), {
+            onSuccess: () => {
+                form.reset('id')
+                form.reset('amount')
+                showPayment.value = false
+                getClients()
+                swal.fire({
+                    icon: 'success',
+                    title: 'Successfully Paid',
+                    text: `Payment reflected to ${client.value.first_name} ${client.value.last_name}`,
+                    confirmButtonColor: '#23408E'
+                })
+            },
+        });
+    };
 
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
@@ -53,29 +77,32 @@
                 <div class="flex justify-center">
                         <div class="min-h-full bg-white px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
                             <div class="mx-auto max-w-max">
-                                <main class="sm:flex">
+                                <main v-if="client" class="sm:flex">
                                     <div class="sm:mr-6">
                                         <div class="sm:border-r sm:border-gray-200 sm:pr-6">
-                                        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{{ clientName }}</h1>
-                                        <p class="mt-1 text-base text-gray-500">Prev. Bill: ₱ 100.00 | Current Bill: ₱ 100.00</p>
+                                        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{{ client.first_name+' '+client.last_name }}</h1>
+                                        <p class="mt-1 text-base text-gray-500">Prev. Bill: ₱ {{ client.account.prev_balance }} | Current Bill: ₱ {{ client.account.current_charges }}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <p class="mt-1 text-base text-gray-500">Total Balance:</p>
-                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ 200.00</p>
+                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ client.account.prev_balance + client.account.current_charges }}</p>
                                     </div>
                                 </main>
-                                <div class="relative rounded-md shadow-sm mt-10">
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <!-- Heroicon name: mini/envelope -->
-                                    <p class="text-gray-400">₱</p>
+                                <form @submit.prevent="submit">
+                                    <div class="relative rounded-md shadow-sm mt-10">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <!-- Heroicon name: mini/envelope -->
+                                        <p class="text-gray-400">₱</p>
+                                        </div>
+                                        <input v-model="form.amount" type="number" name="amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     </div>
-                                    <input type="number" name="amount" id="email" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                                <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-                                    <button @click="cancel()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
-                                    <a href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Process Payment</a>
-                                </div>
+                                    <InputError class="mt-2" :message="form.errors.amount" />
+                                    <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+                                        <button @click="cancel()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
+                                        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Process Payment</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                 </div>

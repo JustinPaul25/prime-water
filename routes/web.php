@@ -62,5 +62,10 @@ Route::get('/reports', [ReportsController::class, 'index'])->middleware(['auth',
 
 //Cashier
 Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');
+Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth', 'verified'])->name('pay-bill');
+
+Route::get('/offline', function () {
+    return view('modules/laravelpwa/offline');
+});
 
 require __DIR__.'/auth.php';
