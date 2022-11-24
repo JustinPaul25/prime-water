@@ -4,16 +4,33 @@ import IncomeChart from '@/Components/IncomeChart.vue';
 import UsageChart from '@/Components/UsageChart.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import regression from 'regression'
+import { ref, onMounted } from 'vue'
+
+const props = defineProps({
+    income: Object,
+    reading: Object
+});
+
+const datas = ref([])
 
 function getResult() {
-    return regression.linear([
-        [10, 2.1],
-        [23, 2.4],
-        [38, 2.6],
-        [46, 2.8],
-        [59, 3]
-    ])
+    return regression.linear(datas.value)
 }
+
+function populateData() {
+    
+
+    props.income.forEach(elem => {
+        props.reading.forEach(read => {
+            if(elem.month === read.month && elem.year === read.year) {
+                const toPush = [read.readings , elem.amount]
+                datas.value.push(toPush)
+            }
+        })
+    });
+}
+
+onMounted(() => populateData())
 </script>
 
 <template>
@@ -59,22 +76,10 @@ function getResult() {
                 </div>
             </div>
             <div class="bg-white">
-                <div class="grid overflow-hidden sm:grid sm:grid-cols-2 gap-1">
+                <div class="grid overflow-hidden w-full px-8 lg:px-40">
                     <div class="box row-span-2 p-5">
                         <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">2022 Income Chart</p>
-                        <income-chart :raw-data="[
-                    [10, 2.1],
-                    [23, 2.4],
-                    [38, 2.6],
-                    [46, 2.8],
-                    [59, 3]
-                ]"
-                
-                :result="getResult()"></income-chart>
-                    </div>
-                    <div class="box row-span-2 p-5">
-                        <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">2022 Consumed Water by:cu m</p>
-                        <usage-chart></usage-chart>
+                        <income-chart class="h-60" v-if="datas.length != 0" :raw-data="datas" :result="getResult()"></income-chart>
                     </div>
                 </div>
             </div>

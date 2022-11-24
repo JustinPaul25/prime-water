@@ -11,8 +11,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import QrReader from 'vue3-qr-reader';
 import 'sweetalert2/dist/sweetalert2.min.css'
 import store from './Store'
-import VueHtmlToPaper from './Plugins/VueHtmlToPaper';
-
+import print from 'vue3-print-nb'
 import { vfmPlugin } from 'vue-final-modal'
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -26,12 +25,12 @@ createInertiaApp({
             .use(plugin)
             .use(VueSweetalert2)
             .use(QrReader)
-            .use(VueHtmlToPaper)
             .use(vfmPlugin({
                 key: '$vfm',
                 componentName: 'VueFinalModal',
                 dynamicContainerName: 'ModalsContainer'
             }))
+            .use(print)
             .use(ZiggyVue, Ziggy)
             .component(VueQrcode.name, VueQrcode)
             .mount(el);

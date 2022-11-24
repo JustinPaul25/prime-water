@@ -11,6 +11,7 @@ use App\Http\Controllers\ReadingController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Route::put('/utilities-price/{utility}', [UtilityController::class, 'priceUpdate
 
 //Reports
 Route::get('/reports', [ReportsController::class, 'index'])->middleware(['auth', 'verified'])->name('reports');
+Route::get('/transactions', [TransactionsController::class, 'list'])->middleware(['auth', 'verified'])->name('transaction.list');
 
 //Cashier
 Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');

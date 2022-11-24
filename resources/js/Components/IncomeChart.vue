@@ -48,7 +48,7 @@
                 data: {
                     datasets: [{
                         type: 'line',
-                        label: 'Sample Data',
+                        label: 'Data',
                         data: this.convertRawData(),
                         backgroundColor: '#23408E',
                         showLine: false
@@ -64,7 +64,27 @@
                     scales: {
                         x: {
                             type: 'linear',
-                            position: 'bottom'
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Consumed Water per cuM'
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    return value+' mᶟ';
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Income'
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    return '₱ ' + value;
+                                }
+                            }
                         }
                     }
                 }

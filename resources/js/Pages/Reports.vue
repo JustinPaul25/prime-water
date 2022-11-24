@@ -11,7 +11,6 @@
     import { computed, onMounted, inject, ref, watch } from 'vue'
     import { useStore } from 'vuex'
     import _ from 'lodash'
-    import { watchDebounced } from '@vueuse/core'
 
     defineProps({
         status: String,
@@ -27,8 +26,49 @@
     const role = ref('')
     const searchYear = ref('2022')
     const searchDate = ref('')
+    const searchFrom = ref('')
+    const searchTo = ref('')
     const searchBy = ref('')
     const sortBy = ref('')
+    const transactions = ref([])
+
+    watch(searchDate, (newValue, oldValue) => {
+        getTransactions()
+    })
+
+    watch(searchYear, (newValue, oldValue) => {
+        getTransactions()
+    })
+
+    watch(searchFrom, (newValue, oldValue) => {
+        if(searchTo.value !== '') {
+            getTransactions()
+        }
+    })
+
+    watch(searchTo, (newValue, oldValue) => {
+        if(searchFrom.value !== '') {
+            getTransactions()
+        }
+    })
+
+
+    async function getTransactions() {
+        await axios.get('/transactions', {
+                params: {
+                    searchYear: searchYear.value,
+                    searchDate: searchDate.value,
+                    searchFrom: searchFrom.value,
+                    searchTo: searchTo.value
+                }
+        })
+        .then(response => {
+            console.log(response.data)
+            transactions.value = response.data
+        })
+    }
+
+    onMounted(() => getTransactions())
 </script>
     
 <template>
@@ -45,13 +85,6 @@
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="sm:flex sm:items-center w-full">
                     <div class="mr-4">
-                        <InputLabel class="font-bold" for="role" value="Sort By:" />
-                        <select v-model="sortBy" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                            <option value="desc">DESC</option>
-                            <option value="asc">ASC</option>
-                        </select>
-                    </div>
-                    <div class="mr-4">
                         <InputLabel class="font-bold" for="role" value="Search By:" />
                         <select v-model="searchBy" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                             <option value="">None</option>
@@ -66,11 +99,11 @@
                     </div>
                     <div v-if="searchBy === 'between'" class="mr-4">
                         <InputLabel class="font-bold" for="date" value="Date From" />
-                        <TextInput id="search" type="date" class="mt-1 block w-full" v-model="searchDate"/>
+                        <TextInput id="search" type="date" class="mt-1 block w-full" v-model="searchFrom"/>
                     </div>
                     <div v-if="searchBy === 'between'" class="mr-4">
                         <InputLabel class="font-bold" for="date" value="Date To" />
-                        <TextInput id="search" type="date" class="mt-1 block w-full" v-model="searchDate"/>
+                        <TextInput id="search" type="date" class="mt-1 block w-full" v-model="searchTo"/>
                     </div>
                     <div v-if="searchBy === 'year'" class="mr-4">
                         <InputLabel class="font-bold" for="date" value="Year" />
@@ -84,24 +117,18 @@
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead class="bg-primary-blue">
                             <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white font-bold sm:pl-6">Transaction #</th>
-                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Client</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white font-bold">Amount Paid</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white font-bold">Date</th>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Transaction #</th>
+                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Client</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Amount Paid</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Date</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
-                            <tr>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">1235123</td>
-                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">John Doe</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ 200.00</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">12-10-2022</td>
-                            </tr>
-                            <tr>
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">1235123</td>
-                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">Jane Doe</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ 200.00</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">12-10-2022</td>
+                            <tr v-for="transaction in transactions">
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ transaction.id }}</td>
+                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ transaction.client?.name }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ transaction.amount }}.00</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_paid }}</td>
                             </tr>
                         </tbody>
                     </table>

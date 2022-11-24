@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -14,6 +15,20 @@ class Transaction extends Model
         'cashier_id',
         'amount',
     ];
+
+    protected $appends = ['client', 'date_paid'];
+
+    public function getClientAttribute()
+    {
+        $client = User::find($this->client_id);
+
+        return $client;
+    }
+
+    public function getDatePaidAttribute()
+    {
+        return date("d-m-Y", strtotime($this->created_at));;
+    }
 
     public function client()
     {
