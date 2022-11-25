@@ -12,6 +12,7 @@
     import { computed, onMounted, inject, ref} from 'vue'
     import { useStore } from 'vuex'
     import { watchDebounced } from '@vueuse/core'
+import axios from 'axios';
 
     defineProps({
         status: String,

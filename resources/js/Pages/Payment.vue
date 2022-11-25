@@ -65,6 +65,17 @@
         });
     };
 
+    const sendReminder = (id) => {
+        axios.get(`/send-sms/${id}`)
+        .then(response => {
+            swal.fire({
+                icon: 'success',
+                title: 'Reminder Sent',
+                confirmButtonColor: '#23408E'
+            })
+        })
+    }
+
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
     
@@ -138,11 +149,12 @@
                                 </td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ client.username }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full uppercase last:mr-0 mr-1" :class="client.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
+                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full last:mr-0 mr-1" :class="client.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
                                         {{ client.status === 0 ? 'In-Active' : 'Active'}}
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                    <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
                                     <a @click="showPaymentModal(client)" href="#" class="text-primary-blue hover:opacity-75">Generate Payment</a>
                                 </td>
                             </tr>

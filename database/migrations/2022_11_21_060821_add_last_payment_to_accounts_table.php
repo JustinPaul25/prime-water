@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->date('last_payment')->nullable();
+            $table->timestamp('last_payment')->nullable();
         });
     }
 

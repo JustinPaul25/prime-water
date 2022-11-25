@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\SMSController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientsController;
@@ -69,5 +70,7 @@ Route::get('/transactions', [TransactionsController::class, 'list'])->middleware
 //Cashier
 Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');
 Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth', 'verified'])->name('pay-bill');
+
+Route::get('/send-sms/{num}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');;
 
 require __DIR__.'/auth.php';
