@@ -1,7 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import PrintQr from '@/Components/PrintQr.vue'
+    import RecieptModal from '@/Modals/RecieptModal.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
@@ -25,9 +25,11 @@ import axios from 'axios';
 
     let show = ref(false)
     let showQr = ref(false)
+    let showQrAll = ref(false)
     let isEdit = ref(false)
     const search = ref('')
     const qrUrl = ref('http://prime-water.test/dashboard')
+    const clientsQr = ref([])
     
     watchDebounced(search, () => {
         getClients()
@@ -78,6 +80,15 @@ import axios from 'axios';
     function cancel(close) {
         show.value = false
         showQr.value = false
+    }
+
+    const allQr = () => {
+        showQrAll.value = true
+        getAllUsers()
+    }
+
+    function cancelShowAll(close) {
+        showQrAll.value = false
     }
 
     function submitSuccess() {
@@ -140,6 +151,13 @@ import axios from 'axios';
         }
     };
 
+    const getAllUsers = () => {
+        axios.get('/all-clients')
+        .then(response => {
+            clientsQr.value = response.data
+        })
+    }
+
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
     
@@ -156,6 +174,30 @@ import axios from 'axios';
 
         <div class="py-12">
             <div>
+                <RecieptModal v-model="showQrAll" @cancel="cancelShowAll()">
+                    <section class="bg-white" id="printQr">
+                        <div class="max-w-5xl mx-auto bg-white">
+                            <article class="overflow-hidden">
+                                <div class="bg-[white] rounded-b-md">
+                                    <div class="p-9">
+                                        <p class="font-bold text-lg">WBS Client Qr's</p>
+                                        <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
+                                    </div>
+
+                                    <div class="grid grid-cols-4 gap-4">
+                                        <div class="text-center" v-for="client in clientsQr">
+                                            <vue-qrcode :value="`${client.id}`" :options="{ width: 200 }"></vue-qrcode>
+                                            <p class="text-center my-auto">{{ client.first_name }} {{ client.last_name }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <div class="flex">
+                        <button v-print="'#printQr'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
+                    </div>
+                </RecieptModal>
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
                     <template v-slot:title>{{isEdit ? 'Update Client' : 'Create Client'}}</template>
                     <div>
@@ -227,7 +269,7 @@ import axios from 'axios';
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
                     </div>
                     <div class="ml-auto flex">
-                        <PrintQr></PrintQr>
+                        <button  @click="allQr()" type="button" class="mr-2 mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Print All QR</button>
                         <button  @click="showModal('create', null)" type="button" class="ml-2 mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Add Client</button>
                     </div>
                 </div>
@@ -235,9 +277,9 @@ import axios from 'axios';
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead class="bg-primary-blue">
                             <tr>
-                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white font-bold sm:pl-6">Name</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Username</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Status</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Name</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Username</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Status</th>
                             <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                 <span class="sr-only">Edit</span>

@@ -56,6 +56,7 @@ Route::delete('/{user}/client', [ClientsController::class, 'destroy'])->middlewa
 Route::get('/client-list', [ClientsController::class, 'list'])->middleware(['auth', 'verified'])->name('client.list');
 Route::get('/client-data/{user}', [ClientsController::class, 'data'])->middleware(['auth', 'verified'])->name('client.data');
 Route::get('/client/{user}/profile', [ClientsController::class, 'profile'])->middleware(['auth', 'verified'])->name('client.profile');
+Route::get('/all-clients', [ClientsController::class, 'all'])->middleware(['auth', 'verified'])->name('all-clients');
 
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');

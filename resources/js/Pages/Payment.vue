@@ -1,6 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
+    import RecieptModal from '@/Modals/recieptModal.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { computed, ref, inject, onMounted } from 'vue'
     import InputLabel from '@/Components/InputLabel.vue';
@@ -12,7 +13,9 @@
 
     const search = ref('')
     const showPayment = ref(false)
+    const showReciept = ref(false)
     const client = ref('')
+    const amountToPrint = ref(0)
 
     const store = useStore()
     const swal = inject('$swal')
@@ -47,13 +50,19 @@
         showPayment.value = false
     }
 
+    function cancelReciept(close) {
+        showReciept.value = false
+    }
+
     const submit = () => {
         form.id = client.value.id
+        amountToPrint.value = form.amount
         form.post(route('pay-bill'), {
             onSuccess: () => {
                 form.reset('id')
                 form.reset('amount')
                 showPayment.value = false
+                showReciept.value = true
                 getClients()
                 swal.fire({
                     icon: 'success',
@@ -118,6 +127,65 @@
                         </div>
                 </div>
             </v-tailwind-modal>
+            <reciept-modal v-model="showReciept" @cancel="cancelReciept()">
+                <section class="bg-white" id="printReciept">
+                    <div class="max-w-5xl mx-auto bg-white">
+                    <article class="overflow-hidden">
+                    <div class="bg-[white] rounded-b-md">
+                        <div class="p-9">
+                            <p class="font-bold text-lg">WBS</p>
+                            <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
+                        </div>
+
+                        <div class="p-9">
+                        <div class="flex flex-col mx-0 mt-8">
+                        <table class="min-w-full divide-y divide-slate-500">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0">
+                                Description
+                                </th>
+                                <th scope="col" class="py-3.5 pl-3 pr-4 text-right text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
+                                Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-slate-200">
+                            <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
+                            <div class="font-medium text-slate-700">Water Bill Payment</div>
+                            </td>
+                            <td class="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                            ₱ {{amountToPrint}}
+                            </td>
+                            </tr>
+
+                            <!-- Here you can write more products/tasks that you want to charge for-->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th scope="row" colspan="3" class="hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0">
+                                Total
+                                </th>
+                                <th scope="row" class="pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden">
+                                Total
+                                </th>
+                                <td class="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
+                                ₱ {{ amountToPrint }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                        </table>
+                        </div>
+                        </div>
+                    </div>
+                    </article>
+                    </div>
+                </section>
+                <div class="flex">
+                    <button v-print="'#printReciept'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
+                </div>
+            </reciept-modal>
         </div>
         <div class="py-12">
             <div class="px-4 sm:px-6 lg:px-8">
@@ -129,13 +197,13 @@
                 </div>
             </div>
             <div class="mx-4">
-                <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg bg-white mx-4">
+                <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg bg-white">
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead class="bg-primary-blue">
                             <tr>
-                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white font-bold sm:pl-6">Name</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Username</th>
-                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white font-bold lg:table-cell">Status</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Name</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Username</th>
+                            <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Status</th>
                             <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                 <span class="sr-only">Edit</span>

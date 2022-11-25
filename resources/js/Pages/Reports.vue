@@ -31,6 +31,7 @@
     const searchBy = ref('')
     const sortBy = ref('')
     const transactions = ref([])
+    const showPrint = ref(false)
 
     watch(searchDate, (newValue, oldValue) => {
         getTransactions()
@@ -67,6 +68,10 @@
             transactions.value = response.data
         })
     }
+    
+    const cancel = () => {
+        showPrint.value = false
+    }
 
     onMounted(() => getTransactions())
 </script>
@@ -75,8 +80,15 @@
     <Head title="Staff"/>
 
     <AuthenticatedLayout>
+        <v-tailwind-modal class="w-full" v-model="showPrint" @cancel="cancel()">
+            <div>
+                <table>
+                    asdasdasd
+                </table>
+            </div>
+        </v-tailwind-modal>
         <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight">
+            <h2 class="font-semibold text-xl text-white leading-tight w-full">
                 Reports
             </h2>
         </template>
@@ -110,7 +122,7 @@
                         <TextInput id="search" type="number" min="1980" max="2030" class="mt-1 block w-full" v-model="searchYear"/>
                     </div>
                     <div class="ml-auto">
-                        <button type="button" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Print Report</button>
+                        <button @click="showPrint = true" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Print Report</button>
                     </div>
                 </div>
                 <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg bg-white">

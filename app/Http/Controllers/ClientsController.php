@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ClientsController extends Controller
 {
+    public function all()
+    {
+        return User::role(['client'])->get();
+    }
+
     public function index()
     {
         return Inertia::render('Client/Client');
