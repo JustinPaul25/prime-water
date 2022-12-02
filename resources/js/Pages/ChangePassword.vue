@@ -22,13 +22,19 @@
             })
         } else {
             form.post(route('change.password'), {
-                onFinish: () => {
+                onSuccess: () => {
                     form.reset('password')
                     swal.fire({
                         icon: 'success',
                         title: 'Password Reset'
                     })
                 },
+                onError: () => {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Check you input.'
+                    })
+                }
             });
         }
     };
