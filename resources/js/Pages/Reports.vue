@@ -1,5 +1,6 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import RecieptModal from '@/Modals/RecieptModal.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import InputError from '@/Components/InputError.vue';
@@ -80,13 +81,50 @@
     <Head title="Staff"/>
 
     <AuthenticatedLayout>
-        <v-tailwind-modal class="w-full" v-model="showPrint" @cancel="cancel()">
-            <div>
-                <table>
-                    asdasdasd
-                </table>
+        <RecieptModal v-model="showPrint" @cancel="cancel()">
+            <div class="flex mt-4">
+                <button v-print="'#printQr'" class="mx-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
             </div>
-        </v-tailwind-modal>
+            <section class="bg-white" id="printQr">
+                <div class="max-w-5xl mx-auto bg-white">
+                    <article class="overflow-hidden">
+                        <div class="bg-[white] rounded-b-md">
+                            <div class="p-9">
+                                <p class="font-bold text-lg">WBS Client Qr's</p>
+                                <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
+                            </div>
+
+                            <table class="min-w-full divide-y divide-slate-500">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0">
+                                            Transaction #
+                                        </th>
+                                        <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
+                                            Client
+                                        </th>
+                                        <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
+                                            Amount Paid
+                                        </th>
+                                        <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
+                                            Date
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="transaction in transactions">
+                                        <td>{{ transaction.id }}</td>
+                                        <td class="text-center">{{ transaction.client?.name }}</td>
+                                        <td class="text-center">₱ {{ transaction.amount }}.00</td>
+                                        <td class="text-center">{{ transaction.date_paid }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </RecieptModal>
         <template #header>
             <h2 class="font-semibold text-xl text-white leading-tight w-full">
                 Reports

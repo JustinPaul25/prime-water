@@ -10,21 +10,57 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login','register']]);
+    }
+
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('username', 'password'))) {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required|string',
+        ]);
+        $credentials = $request->only('username', 'password');
+
+        $token = Auth::attempt($credentials);
+        if (!$token) {
             return response()->json([
-                'message' => 'Invalid login details'
+                'status' => 'error',
+                'message' => 'Unauthorized',
             ], 401);
         }
-        $request->session()->regenerate();
+
+        $user = Auth::user();
+        return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'authorization' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
     }
 
 
-    public function logout(Request $request)
+    public function logout()
     {
         Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully logged out',
+        ]);
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
     }
 }

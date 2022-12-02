@@ -1,10 +1,23 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
+import { ref, onMounted } from 'vue'
+import { watchDebounced } from '@vueuse/core'
 
-defineProps({
+const transactions = ref(null)
+
+const props = defineProps({
     client: Object
 })
+
+const getTransaction = () => {
+    axios.get(`/client-transactions/${props.client.id}`)
+    .then(response => {
+        transactions.value = response.data
+    });
+}
+
+onMounted(() => getTransaction())
 </script>
 
 <template>
@@ -21,9 +34,9 @@ defineProps({
                     </div>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">{{ client.name }}</h1>
-                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ client.address }}</span></p>
-                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ client.contact_no }}</span></p>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ props.client.first_name }} {{ props.client.last_name }}</h1>
+                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ props.client.address }}</span></p>
+                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ props.client.contact_no }}</span></p>
                     </div>
                 </div>
                 <div class="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
@@ -42,32 +55,32 @@ defineProps({
                             <dl class="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Reading</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Current Reading</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.current_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.current_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Consumed Cu. M</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.current_reading - client.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.current_reading - props.client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Balance</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ client.account.prev_balance }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ props.client.account.prev_balance }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Current Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ client.account.current_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ props.client.account.current_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Total Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ client.account.current_charges + client.account.prev_balance }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ props.client.account.current_charges + props.client.account.prev_balance }}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -95,29 +108,16 @@ defineProps({
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr v-for="transaction in transactions">
                                             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                <div class="font-medium text-gray-900">12312</div>
+                                                <div class="font-medium text-gray-900">{{ transaction.id }}</div>
                                                 <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                <span>₱ 123 / 10-10-2022</span>
+                                                <span>₱ {{ transaction.amount }} / {{ transaction.created_at }}</span>
                                                 </div>
                                             </td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ transaction.amount }}</td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.created_at }}</td>
                                         </tr>
-
-                                        <tr>
-                                            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                <div class="font-medium text-gray-900">1232312</div>
-                                                <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                <span>₱ 123 / 10-10-2022</span>
-                                                </div>
-                                            </td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
-                                        </tr>
-
-                                        <!-- More plans... -->
                                     </tbody>
                                 </table>
                             </div>

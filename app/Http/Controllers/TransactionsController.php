@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -30,5 +31,12 @@ class TransactionsController extends Controller
     public function calculateIncom(Request $request)
     {
         # code...
+    }
+
+    public function clientList(User $user)
+    {
+        $transactions = Transaction::where('client_id', $user->id)->get();
+
+        return $transactions;
     }
 }

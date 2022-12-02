@@ -12,7 +12,7 @@
     import { computed, onMounted, inject, ref} from 'vue'
     import { useStore } from 'vuex'
     import { watchDebounced } from '@vueuse/core'
-import axios from 'axios';
+    import axios from 'axios';
 
     defineProps({
         status: String,
@@ -28,12 +28,9 @@ import axios from 'axios';
     let showQrAll = ref(false)
     let isEdit = ref(false)
     const search = ref('')
+    const status = ref(null)
     const qrUrl = ref('http://prime-water.test/dashboard')
     const clientsQr = ref([])
-    
-    watchDebounced(search, () => {
-        getClients()
-    }, {debounce: 500})
 
     const form = useForm({
         id: '',
@@ -45,6 +42,64 @@ import axios from 'axios';
         address: '',
         status: ''
     });
+    
+    watchDebounced(search, () => {
+        getClients()
+    }, {debounce: 500})
+
+    watchDebounced(status, () => {
+        getClients()
+    }, {debounce: 500})
+
+    watchDebounced(
+        () => form.first_name, 
+        (first_name) => {
+            form.first_name = capitalizeString(first_name)
+        }, 
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.middle_name, 
+        (middle_name) => {
+            form.middle_name = capitalizeString(middle_name)
+        }, 
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.last_name, 
+        (last_name) => {
+            form.last_name = capitalizeString(last_name)
+        }, 
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.contact_no, 
+        (contact_no) => {
+            form.contact_no = checkContact(contact_no)
+        }, 
+        {debounce: 300}
+    )
+
+    const checkContact = (text) => {
+        let result = text.replace(/[^a-zA-Z0-9 ]/g, "");
+        result = result.replace(/([a-zA-Z ])/g, "")
+
+        return result;
+    }
+
+    const capitalizeString = (text) => {
+        const words = text.split(" ");
+
+        // return text.toLowerCase();
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
+        }
+
+        return words.join(" ");
+    }
 
     function showModal(type, client) {
         if(type === 'create') {
@@ -134,7 +189,8 @@ import axios from 'axios';
         store.dispatch('clients/getClients', {
             params: {
                 page: page,
-                search: search.value
+                search: search.value,
+                status: status.value
             }
         })
     }
@@ -155,6 +211,25 @@ import axios from 'axios';
         axios.get('/all-clients')
         .then(response => {
             clientsQr.value = response.data
+        })
+    }
+
+    const statusSwitch = (id) => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "Client will switch status!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#23408E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, switch it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.get(`/switch-status/${id}`)
+                .then(response => {
+                    store.dispatch('clients/getClients')
+                })
+            }
         })
     }
 
@@ -222,13 +297,19 @@ import axios from 'axios';
 
                             <div class="mt-4">
                                 <InputLabel for="contact_no" value="Contact Number" />
-                                <TextInput id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
+                                <TextInput maxlength="11" id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
                                 <InputError class="mt-2" :message="form.errors.contact_no" />
                             </div>
                             
                             <div class="mt-4">
                                 <InputLabel for="address" value="Complete Address" />
-                                <TextInput id="address" type="text" class="mt-1 block w-full" v-model="form.address" required autofocus autocomplete="address" />
+                                <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                    <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
+                                </select>
                                 <InputError class="mt-2" :message="form.errors.address" />
                             </div>
 
@@ -236,15 +317,6 @@ import axios from 'axios';
                                 <InputLabel for="username" value="Username" />
                                 <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required autocomplete="username" />
                                 <InputError class="mt-2" :message="form.errors.username" />
-                            </div>
-
-                            <div class="mt-4">
-                                <InputLabel for="status" value="Status" />
-                                <select v-model="form.status" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                                    <option value="1">Active</option>
-                                    <option value="0">In-Active</option>
-                                </select>
-                                <InputError class="mt-2" :message="form.errors.status" />
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
@@ -267,6 +339,14 @@ import axios from 'axios';
                     <div class="mr-4">
                         <InputLabel class="font-bold" for="search" value="Search" />
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
+                    </div>
+                    <div class="mr-4">
+                        <InputLabel class="font-bold" for="search" value="Status" />
+                        <select v-model="status" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="0">In-Active</option>
+                        </select>
                     </div>
                     <div class="ml-auto flex">
                         <button  @click="allQr()" type="button" class="mr-2 mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Print All QR</button>
@@ -293,12 +373,12 @@ import axios from 'axios';
                                 </td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ client.username }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full uppercase last:mr-0 mr-1" :class="client.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
+                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full last:mr-0 mr-1" :class="client.status === 0 ? 'text-red-600 bg-red-200' : 'text-green-600 bg-green-200'">
                                         {{ client.status === 0 ? 'In-Active' : 'Active'}}
                                     </span>
                                 </td>
                                 <td class="hidden whitespace-nowrap px-3 text-sm text-gray-500 lg:table-cell">
-                                    <span @click="showQrModal(client.id)" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full uppercase last:mr-0 mr-1 text-primary-blue hover:opacity-75 cursor-pointer">
+                                    <span @click="showQrModal(client.id)" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full last:mr-0 mr-1 text-primary-blue hover:opacity-75 cursor-pointer">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
@@ -306,7 +386,7 @@ import axios from 'axios';
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <a @click="deleteClient(client.id)" href="#" class="text-red-400 hover:opacity-75 mr-2">Delete</a>
+                                    <button @click="statusSwitch(client.id)" :class=" client.status === 1 ? 'text-red-600': 'text-green-600'" class="hover:opacity-75 mr-4">{{client.status === 1 ? 'Switch to Inactive' : 'Switch to Active'}}</button>
                                     <a @click="showModal('update', client)" href="#" class="text-primary-blue hover:opacity-75">Edit</a>
                                 </td>
                             </tr>

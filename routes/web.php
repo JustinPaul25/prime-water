@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\SMSController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientsController;
@@ -57,6 +58,7 @@ Route::get('/client-list', [ClientsController::class, 'list'])->middleware(['aut
 Route::get('/client-data/{user}', [ClientsController::class, 'data'])->middleware(['auth', 'verified'])->name('client.data');
 Route::get('/client/{user}/profile', [ClientsController::class, 'profile'])->middleware(['auth', 'verified'])->name('client.profile');
 Route::get('/all-clients', [ClientsController::class, 'all'])->middleware(['auth', 'verified'])->name('all-clients');
+Route::get('/switch-status/{user}', [ClientsController::class, 'switchStatus'])->middleware(['auth', 'verified'])->name('switch.status');
 
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');
@@ -67,11 +69,14 @@ Route::put('/utilities-price/{utility}', [UtilityController::class, 'priceUpdate
 //Reports
 Route::get('/reports', [ReportsController::class, 'index'])->middleware(['auth', 'verified'])->name('reports');
 Route::get('/transactions', [TransactionsController::class, 'list'])->middleware(['auth', 'verified'])->name('transaction.list');
+Route::get('/client-transactions/{user}', [TransactionsController::class, 'clientList'])->middleware(['auth', 'verified'])->name('transaction.client');
 
 //Cashier
 Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');
 Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth', 'verified'])->name('pay-bill');
 
+Route::get('/change-password', [UserController::class, 'changePassword'])->middleware(['auth', 'verified'])->name('change.password.form');
+Route::post('/change-password', [UserController::class, 'updatePassword'])->middleware(['auth', 'verified'])->name('change.password');
 Route::get('/send-sms/{num}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');;
 
 require __DIR__.'/auth.php';

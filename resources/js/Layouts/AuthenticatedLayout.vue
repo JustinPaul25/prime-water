@@ -130,6 +130,9 @@ function submitSuccess() {
                                     </template>
 
                                     <template #content>
+                                        <DropdownLink :href="route('change.password.form')">
+                                            Change Password
+                                        </DropdownLink>
                                         <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                             Price/Cu M
                                         </button>
@@ -181,6 +184,9 @@ function submitSuccess() {
                         </div>
 
                         <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('change.password.form')" class="w-full">
+                                Change Password
+                            </ResponsiveNavLink>
                             <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="w-full block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Price/Cu M
                             </button>

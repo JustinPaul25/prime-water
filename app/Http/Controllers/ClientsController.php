@@ -35,6 +35,10 @@ class ClientsController extends Controller
             });
         }
 
+        if($request->filled('status')) {
+            $client = $client->where('status', $request->input('status'));
+        }
+
         $client = $client->role(['client'])->paginate(10);
 
         return $client;
@@ -48,7 +52,6 @@ class ClientsController extends Controller
             'contact_no' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
-            'status' => 'required',
         ]);
 
         $name = $request->input('first_name');
@@ -65,7 +68,6 @@ class ClientsController extends Controller
         $user->name = $name;
         $user->contact_no = $request->input('contact_no');
         $user->address = $request->input('address');
-        $user->status = $request->input('status');
         $user->username = $request->input('username');
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
@@ -144,5 +146,14 @@ class ClientsController extends Controller
             'client' => $user,
             'account' => $user->account,
         ]);
+    }
+
+    public function switchStatus(User $user)
+    {
+        $user->update([
+            'status' => !$user->status,
+        ]);   
+
+        return $user->status;
     }
 }

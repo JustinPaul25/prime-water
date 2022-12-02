@@ -8,12 +8,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasSlug, HasApiTokens;
+    use HasFactory, Notifiable, HasRoles, HasSlug, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -95,5 +96,15 @@ class User extends Authenticatable
     public function account()
     {
         return $this->hasOne(Account::class, 'client_id');
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
