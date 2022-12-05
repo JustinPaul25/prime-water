@@ -1,7 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import RecieptModal from '@/Modals/recieptModal.vue';
+    import RecieptModal from '@/Modals/RecieptModal.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { computed, ref, inject, onMounted } from 'vue'
     import InputLabel from '@/Components/InputLabel.vue';
