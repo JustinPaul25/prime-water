@@ -22,15 +22,11 @@ class CashierController extends Controller
 
         $account = Account::where('client_id', $request->input('id'))->first();
         
-        if($account->prev_balance > $request->input('amount')) {
-            $current_charges = $account->current_charges;
-            $prev_balance = $account->prev_balance - $request->input('amount');
-        } else {
-            $prev_balance = 0;
-            $current_charges = $account->current_charges - ($request->input('amount') - $account->prev_balance);
-        }
+        $current_charges =  $account->current_charges - $request->input('amount');
+        $prev_balance = $account->current_charges;
 
         $account->update([
+            'last_payment' => date("Y-m-d H:i:s", strtotime('now')),
             'current_charges' => $current_charges,
             'prev_balance' => $prev_balance,
         ]);

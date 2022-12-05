@@ -70,17 +70,12 @@ onMounted(() => getTransaction())
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Balance</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ props.client.account.prev_balance }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">₱ {{ props.client.account.prev_balance }}.00</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
-                                    <dt class="text-gray-500">Current Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">P{{ props.client.account.current_reading }}</dd>
-                                </div>
-
-                                <div class="flex justify-between py-3 text-sm font-medium">
-                                    <dt class="text-gray-500">Total Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ props.client.account.current_charges + props.client.account.prev_balance }}</dd>
+                                    <dt class="text-gray-500">Remaining Balance</dt>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ props.client.account.current_charges }}.00</dd>
                                 </div>
                             </dl>
                         </div>

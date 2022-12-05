@@ -73,7 +73,7 @@ Route::get('/client-transactions/{user}', [TransactionsController::class, 'clien
 
 //Cashier
 Route::get('/payments', [CashierController::class, 'index'])->middleware(['auth', 'verified'])->name('payments');
-Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth', 'verified'])->name('pay-bill');
+Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth', 'verified'])->name('pay.bill');
 
 Route::get('/change-password', [UserController::class, 'changePassword'])->middleware(['auth', 'verified'])->name('change.password.form');
 Route::post('/change-password', [UserController::class, 'updatePassword'])->middleware(['auth', 'verified'])->name('change.password');

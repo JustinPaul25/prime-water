@@ -19,7 +19,7 @@ class Account extends Model
     ];
 
     protected $appends = [
-        'month_last_payment'
+        'month_last_payment',
     ];
 
     public function getMonthLastPaymentAttribute()
@@ -50,5 +50,10 @@ class Account extends Model
     public function client()
     {
         return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

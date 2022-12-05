@@ -104,6 +104,9 @@
                                             Client
                                         </th>
                                         <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
+                                            Cu M
+                                        </th>
+                                        <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
                                             Amount Paid
                                         </th>
                                         <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
@@ -115,6 +118,7 @@
                                     <tr v-for="transaction in transactions">
                                         <td>{{ transaction.id }}</td>
                                         <td class="text-center">{{ transaction.client?.name }}</td>
+                                        <td class="text-center">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
                                         <td class="text-center">₱ {{ transaction.amount }}.00</td>
                                         <td class="text-center">{{ transaction.date_paid }}</td>
                                     </tr>
@@ -169,6 +173,7 @@
                             <tr>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Transaction #</th>
                                 <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Client</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Consumed Cu M</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Amount Paid</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Date</th>
                             </tr>
@@ -176,7 +181,8 @@
                         <tbody class="divide-y divide-gray-200 bg-white">
                             <tr v-for="transaction in transactions">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ transaction.id }}</td>
-                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ transaction.client?.name }}</td>
+                                <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ transaction.client?.first_name }} {{ transaction.client?.last_name }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ transaction.amount }}.00</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_paid }}</td>
                             </tr>

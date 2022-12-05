@@ -14,7 +14,7 @@ class SMSController extends Controller
         $client = new \Vonage\Client($basic);
 
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS("639099026782", 'NEXMO', 'Test SMS API to Brian')
+            new \Vonage\SMS\Message\SMS("639099026782", 'NEXMO', 'Notice of disconnection')
         );
 
         return 'success';

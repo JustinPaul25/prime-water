@@ -16,13 +16,18 @@ class Transaction extends Model
         'amount',
     ];
 
-    protected $appends = ['client', 'date_paid'];
+    protected $appends = ['client', 'date_paid', 'format_created_at'];
 
     public function getClientAttribute()
     {
         $client = User::find($this->client_id);
 
         return $client;
+    }
+
+    public function getFormatCreatedAtAttribute()
+    {
+        return $this->created_at;
     }
 
     public function getDatePaidAttribute()

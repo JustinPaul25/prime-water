@@ -24,6 +24,7 @@
         "@chenfengyuan/vue-qrcode": "^2.0.0",
         "@vueuse/core": "^9.3.0",
         "chart.js": "^3.9.1",
+        "moment": "^2.29.4",
         "qrcode": "^1.5.1",
         "regression": "^2.0.1",
         "vue-final-modal": "^3.4.4",

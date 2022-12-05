@@ -10,12 +10,15 @@
     import { watchDebounced } from '@vueuse/core';
     import { useStore } from 'vuex';
     import InputError from '@/Components/InputError.vue';
+    import moment from 'moment';
 
     const search = ref('')
     const showPayment = ref(false)
     const showReciept = ref(false)
     const client = ref(null)
     const amountToPrint = ref(0)
+    const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
+    const transactions = ref([])
 
     const store = useStore()
     const swal = inject('$swal')
@@ -42,7 +45,8 @@
 
     function showPaymentModal(cust) {
         client.value = cust
-        
+        getTransactions()
+
         showPayment.value = true
     }
 
@@ -57,7 +61,7 @@
     const submit = () => {
         form.id = client.value.id
         amountToPrint.value = form.amount
-        form.post(route('pay-bill'), {
+        form.post(route('pay.bill'), {
             onSuccess: () => {
                 form.reset('id')
                 form.reset('amount')
@@ -85,6 +89,31 @@
         })
     }
 
+    const getMonth = () => {
+        const d = new Date();
+
+        return month.value[d.getMonth()];
+    }
+
+    const getPrevMonth = () => {
+        const d = new Date();
+
+        return month.value[d.getMonth()-1];
+    }
+
+    const getCurrentYear = () => {
+        const d = new Date();
+
+        return d.getFullYear();
+    }
+
+    const getTransactions = () => {
+        axios.get(`/client-transactions/${client.value.id}`)
+        .then(response => {
+            transactions.value = response.data
+        })
+    }
+
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
     
@@ -106,7 +135,7 @@
                                     </div>
                                     <div>
                                         <p class="mt-1 text-base text-gray-500">Total Balance:</p>
-                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ client.account.prev_balance + client.account.current_charges }}</p>
+                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ client.account.current_charges }}</p>
                                     </div>
                                 </main>
                                 <form @submit.prevent="submit">
@@ -127,76 +156,65 @@
                         </div>
                 </div>
             </v-tailwind-modal>
-            <reciept-modal v-model="showReciept" @cancel="cancelReciept()">
+            <reciept-modal v-if="client" v-model="showReciept" @cancel="cancelReciept()">
                 <section class="bg-white" id="printReciept">
                     <div class="max-w-5xl mx-auto bg-white">
                     <article class="overflow-hidden">
                     <div class="bg-[white] rounded-b-md">
-                        <div class="p-9">
-                            <p class="font-bold text-lg">WBS</p>
-                            <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
+                        <div class="p-4 text-center text-xs">
+                            <p>Barangay Consolacion</p>
+                            <p>Water Bill</p>
+                            <p class="font-bold">Month of {{ getMonth() }}</p>
                         </div>
 
-                        <div class="p-9">
-                        <div class="flex flex-col mx-0 mt-8">
-                        <table class="min-w-full divide-y divide-slate-500">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0">
-                                Description
-                                </th>
-                                <th scope="col" class="py-3.5 pl-3 pr-4 text-right text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
-                                Amount
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-slate-200">
-                                <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
-                                    <div class="font-medium text-slate-700">Water Bill Payment</div>
-                                </td>
-                                <td class="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                    ₱ {{amountToPrint}}
-                                </td>
-                            </tr>
-
-                            <tr class="border-b border-slate-200">
-                                <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
-                                    <div class="font-medium text-slate-700">Previous Balance</div>
-                                </td>
-                                <td class="hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                    ₱ {{client?.account.current_charges}}
-                                </td>
-                            </tr>
-
-                            <!-- Here you can write more products/tasks that you want to charge for-->
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th scope="row" colspan="3" class="hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0">
-                                Total
-                                </th>
-                                <th scope="row" class="pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden">
-                                Total
-                                </th>
-                                <td class="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                ₱ {{ amountToPrint }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" colspan="3" class="hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0">
-                                Remaining Balance
-                                </th>
-                                <th scope="row" class="pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden">
-                                Remaining Balance
-                                </th>
-                                <td class="pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                ₱ {{ client?.account.current_charges - amountToPrint }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                        </table>
+                        <div class="flex text-xs">
+                            <p>Name of Consumer: </p>
+                            <p class="font-bold mx-auto">{{client.first_name}} {{client.last_name}}</p>
                         </div>
+                        <div class="flex text-xs">
+                            <p>Address: </p>
+                            <p class="mx-auto">{{client.address}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Previous Reading: </p>
+                            <p class="mx-auto">{{client.account.prev_reading}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Current Reading: </p>
+                            <p class="mx-auto">{{client.account.current_reading}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p class="font-bold">Consumed Cu. M: </p>
+                            <p class="mx-auto font-bold">{{client.account.current_reading-client.account.prev_reading}}</p>
+                        </div>
+
+                        <div class="flex text-xs mt-4">
+                            <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
+                            <p class="mx-auto">₱ {{client.account.prev_balance}}.00</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
+                            <p class="mx-auto">₱ {{client.account.current_charges - client.account.prev_balance}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold mt-2">
+                            <p>Total Bill: </p>
+                            <p class="ml-auto">₱ {{client.account.current_charges}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold">
+                            <p>Remaining Balance: </p>
+                            <p class="ml-auto">₱ {{client.account.current_charges - amountToPrint}}.00</p>
+                        </div>
+
+                        <div class="flex text-sm font-bold">
+                            <p>Paid Amount: </p>
+                            <p class="ml-auto">₱ {{amountToPrint}}.00</p>
+                        </div>
+
+                        <div class="flex text-xs mt-8">
+                            <p>Last Payment:</p>
+                            <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
+                            <p class="ml-4 ">Amount:</p>
+                            <p class="ml-4 font-bold">₱ {{transactions[transactions.length - 1]?.amount}}.00</p>
                         </div>
                     </div>
                     </article>

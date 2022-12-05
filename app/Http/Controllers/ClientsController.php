@@ -69,6 +69,7 @@ class ClientsController extends Controller
         $user->contact_no = $request->input('contact_no');
         $user->address = $request->input('address');
         $user->username = $request->input('username');
+        $user->status = 1;
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
         $user->save();
