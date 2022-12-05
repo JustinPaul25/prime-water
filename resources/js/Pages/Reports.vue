@@ -34,6 +34,18 @@
     const transactions = ref([])
     const showPrint = ref(false)
 
+    const amount = computed(() => {
+        return transactions.value.reduce((accumulator, object) => {
+            return accumulator + object.amount;
+        }, 0);
+    })
+
+    const consumed = computed(() => {
+        return transactions.value.reduce((accumulator, object) => {
+            return accumulator + (object.client.account.current_reading - object.client.account.prev_reading);
+        }, 0);
+    })
+
     watch(searchDate, (newValue, oldValue) => {
         getTransactions()
     })
@@ -94,6 +106,16 @@
                                 <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
                             </div>
 
+                            <div class="flex mx-2">
+                                <div class="ml-auto">
+                                    <p class="font-bold text-sm">Total Income:</p>
+                                    <p class="font-bold text-3xl text-primary-blue">₱ {{amount}}.00</p>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="font-bold text-sm">Total Consumed Cu M:</p>
+                                    <p class="font-bold text-3xl text-primary-blue text-right">{{consumed}}</p>
+                                </div>
+                            </div>
                             <table class="min-w-full divide-y divide-slate-500">
                                 <thead>
                                     <tr>
@@ -137,6 +159,16 @@
 
         <div class="py-12">
             <div class="px-4 sm:px-6 lg:px-8">
+                <div class="flex mb-8">
+                    <div class="ml-auto">
+                        <p class="font-bold text-sm">Total Income:</p>
+                        <p class="font-bold text-3xl text-primary-blue">₱ {{amount}}.00</p>
+                    </div>
+                    <div class="ml-4">
+                        <p class="font-bold text-sm">Total Consumed Cu M:</p>
+                        <p class="font-bold text-3xl text-primary-blue text-right">{{consumed}}</p>
+                    </div>
+                </div>
                 <div class="sm:flex sm:items-center w-full">
                     <div class="mr-4">
                         <InputLabel class="font-bold" for="role" value="Search By:" />
