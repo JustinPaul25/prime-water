@@ -26,7 +26,7 @@ use App\Http\Controllers\TransactionsController;
 |
 */
 
-Route::get('/', function () {
+Route::get('', function () {
     if(Auth::check()) {
         return redirect(route('dashboard'));
     } else {
