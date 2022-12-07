@@ -13,7 +13,7 @@ class ClientsController extends Controller
 {
     public function all()
     {
-        return User::role(['client'])->get();
+        return User::role(['Client'])->get();
     }
 
     public function index()
@@ -39,7 +39,7 @@ class ClientsController extends Controller
             $client = $client->where('status', $request->input('status'));
         }
 
-        $client = $client->role(['client'])->paginate(10);
+        $client = $client->role(['Client'])->paginate(10);
 
         return $client;
     }

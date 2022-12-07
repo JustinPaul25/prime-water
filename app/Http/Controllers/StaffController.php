@@ -30,7 +30,7 @@ class StaffController extends Controller
         if($request->filled('role')) {
             $staff = $staff->role([$request->input('role')])->paginate(10);
         } else {
-            $staff = $staff->role(['meterman', 'cashier'])->paginate(10);
+            $staff = $staff->role(['Meterman', 'Cashier'])->paginate(10);
         }
 
         return $staff;
