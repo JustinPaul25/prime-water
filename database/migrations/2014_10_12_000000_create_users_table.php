@@ -24,7 +24,6 @@ return new class extends Migration
             $table->boolean('status')->dafault(true);
             $table->string('email')->unique()->nullable();
             $table->string('username')->unique();
-            $table->string('slug');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

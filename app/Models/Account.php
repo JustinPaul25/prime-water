@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Account extends Model
 {
@@ -20,7 +21,14 @@ class Account extends Model
 
     protected $appends = [
         'month_last_payment',
+        'due_date',
     ];
+
+    public function getDueDateAttribute()
+    {
+        $due = Carbon::parse($this->last_payment)->addMonth(3);
+        return $due->format('M-d-Y');
+    }
 
     public function getMonthLastPaymentAttribute()
     {

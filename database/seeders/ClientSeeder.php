@@ -23,13 +23,24 @@ class ClientSeeder extends Seeder
     {
         $faker = Factory::create();
 
+        $address = [
+            'Prk - 1 Consolacion Panabo City Davao Del Norte',
+            'Prk - 1A Consolacion Panabo City Davao Del Norte',
+            'Prk - 2 Consolacion Panabo City Davao Del Norte',
+            'Prk - 3 Consolacion Panabo City Davao Del Norte',
+            'Prk - 4 Consolacion Panabo City Davao Del Norte',
+        ];
+
         foreach( range(1, 100) as $index ){
+            $addIndex = rand(0, 4);
+
             $user = new User;
             $user->name = $faker->name();
             $user->username = $faker->name();
             $user->first_name = $faker->firstName();
             $user->last_name = $faker->lastName();
             $user->password = Hash::make('123123');
+            $user->address = $address[$addIndex];
             $user->status = true;
             $user->email_verified_at = Carbon::now();
             $user->save();
@@ -42,6 +53,7 @@ class ClientSeeder extends Seeder
             $account->current_reading = 0;
             $account->prev_balance = 0;
             $account->current_charges = 0;
+            $account->last_payment = date("Y-m-d", strtotime("+1 month"));
             $account->save();
 
             $price = Utility::find(1);

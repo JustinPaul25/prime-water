@@ -201,13 +201,12 @@
                             <p class="ml-auto">₱ {{client.account.current_charges}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
-                            <p>Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{client.account.current_charges - amountToPrint}}.00</p>
-                        </div>
-
-                        <div class="flex text-sm font-bold">
                             <p>Paid Amount: </p>
                             <p class="ml-auto">₱ {{amountToPrint}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold">
+                            <p>Remaining Balance: </p>
+                            <p class="ml-auto">₱ {{client.account.current_charges - amountToPrint}}.00</p>
                         </div>
 
                         <div class="flex text-xs mt-8">
@@ -251,7 +250,7 @@
                         <tbody class="divide-y divide-gray-200 bg-white">
                             <tr v-for="client in clients.data">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                    <a class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ client.first_name+' '+client.last_name }}</a>
+                                    <a :href="route('client.profile', client.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ client.first_name+' '+client.last_name }}</a>
                                 </td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ client.username }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
@@ -261,7 +260,7 @@
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                     <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
-                                    <a @click="showPaymentModal(client)" href="#" class="text-primary-blue hover:opacity-75">Generate Payment</a>
+                                    <button @click="showPaymentModal(client)" class="text-primary-blue hover:opacity-75">Generate Payment</button>
                                 </td>
                             </tr>
                         </tbody>

@@ -28,9 +28,9 @@ class StaffController extends Controller
         }
 
         if($request->filled('role')) {
-            $staff = $staff->role([$request->input('role')])->paginate(10);
+            $staff = $staff->where('id', '!=', auth()->id())->role([$request->input('role')])->paginate(10);
         } else {
-            $staff = $staff->role(['Meterman', 'Cashier'])->paginate(10);
+            $staff = $staff->where('id', '!=', auth()->id())->role(['Meterman', 'Cashier', 'Admin'])->paginate(10);
         }
 
         return $staff;

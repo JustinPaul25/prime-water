@@ -39,6 +39,10 @@ class ClientsController extends Controller
             $client = $client->where('status', $request->input('status'));
         }
 
+        if($request->filled('purok')) {
+            $client = $client->where('address', $request->input('purok'));
+        }
+
         $client = $client->role(['Client'])->paginate(10);
 
         return $client;

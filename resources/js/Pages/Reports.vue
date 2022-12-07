@@ -36,7 +36,7 @@
 
     const amount = computed(() => {
         return transactions.value.reduce((accumulator, object) => {
-            return accumulator + object.amount;
+            return parseInt(accumulator) + parseInt(object.amount);
         }, 0);
     })
 

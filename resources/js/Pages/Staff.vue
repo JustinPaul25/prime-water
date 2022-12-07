@@ -160,6 +160,7 @@
                             <div class="mt-4">
                                 <InputLabel for="role" value="Role" />
                                 <select v-model="form.role" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                    <option value="Admin">Administrator</option>
                                     <option value="Meterman">Meterman</option>
                                     <option value="Cashier">Cashier</option>
                                 </select>
@@ -184,6 +185,7 @@
                         <InputLabel class="font-bold" for="role" value="Role" />
                         <select v-model="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                             <option value="">All Staff</option>
+                            <option value="Admin">Administrator</option>
                             <option value="Meterman">Meterman</option>
                             <option value="Cashier">Cashier</option>
                         </select>

@@ -28,7 +28,8 @@
     let showQrAll = ref(false)
     let isEdit = ref(false)
     const search = ref('')
-    const status = ref(null)
+    const status = ref('')
+    const purok = ref('')
     const qrUrl = ref('http://prime-water.test/dashboard')
     const clientsQr = ref([])
 
@@ -48,6 +49,10 @@
     }, {debounce: 500})
 
     watchDebounced(status, () => {
+        getClients()
+    }, {debounce: 500})
+
+    watchDebounced(purok, () => {
         getClients()
     }, {debounce: 500})
 
@@ -190,7 +195,8 @@
             params: {
                 page: page,
                 search: search.value,
-                status: status.value
+                status: status.value,
+                purok: purok.value
             }
         })
     }
@@ -346,6 +352,17 @@
                             <option value="">All</option>
                             <option value="1">Active</option>
                             <option value="0">In-Active</option>
+                        </select>
+                    </div>
+                    <div class="mr-4">
+                        <InputLabel class="font-bold" for="search" value="Status" />
+                        <select v-model="purok" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                            <option value="">All</option>
+                            <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
+                            <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
+                            <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
+                            <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
+                            <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
                         </select>
                     </div>
                     <div class="ml-auto flex">

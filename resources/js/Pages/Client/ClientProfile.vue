@@ -2,9 +2,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue'
-import { watchDebounced } from '@vueuse/core'
+import RecieptModal from '@/Modals/RecieptModal.vue';
+import moment from 'moment';
 
 const transactions = ref(null)
+const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
+const showBill = ref(false)
 
 const props = defineProps({
     client: Object
@@ -18,6 +21,29 @@ const getTransaction = () => {
 }
 
 onMounted(() => getTransaction())
+
+const printBill = () => {
+    showBill.value = true
+}
+
+function cancel(close) {
+    showBill.value = false
+}
+
+const getMonth = () => {
+    const d = new Date();
+    return month.value[d.getMonth()];
+}
+
+const getPrevMonth = () => {
+    const d = new Date();
+    return month.value[d.getMonth()-1];
+}
+
+const getCurrentYear = () => {
+    const d = new Date();
+    return d.getFullYear();
+}
 </script>
 
 <template>
@@ -25,6 +51,65 @@ onMounted(() => getTransaction())
     
     <AuthenticatedLayout>
         <div class="py-12">
+            <reciept-modal v-model="showBill" @cancel="cancel()">
+                <section class="bg-white" id="printReciept">
+                    <div class="max-w-5xl mx-auto bg-white">
+                    <article class="overflow-hidden">
+                    <div class="bg-[white] rounded-b-md">
+                        <div class="p-4 text-center text-xs">
+                            <p>Barangay Consolacion</p>
+                            <p>Water Bill</p>
+                            <p class="font-bold">Month of {{ getMonth() }}</p>
+                        </div>
+
+                        <div class="flex text-xs">
+                            <p>Name of Consumer: </p>
+                            <p class="font-bold mx-auto">{{client.first_name}} {{client.last_name}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Address: </p>
+                            <p class="mx-auto">{{client.address}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Previous Reading: </p>
+                            <p class="mx-auto">{{client.account.prev_reading}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Current Reading: </p>
+                            <p class="mx-auto">{{client.account.current_reading}}</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p class="font-bold">Consumed Cu. M: </p>
+                            <p class="mx-auto font-bold">{{client.account.current_reading-client.account.prev_reading}}</p>
+                        </div>
+
+                        <div class="flex text-xs mt-4">
+                            <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
+                            <p class="mx-auto">₱ {{client.account.prev_balance}}.00</p>
+                        </div>
+                        <div class="flex text-xs">
+                            <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
+                            <p class="mx-auto">₱ {{client.account.current_charges - client.account.prev_balance}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold mt-2">
+                            <p>Total Bill: </p>
+                            <p class="ml-auto">₱ {{client.account.current_charges}}.00</p>
+                        </div>
+
+                        <div v-if="transactions.length" class="flex text-xs mt-8">
+                            <p>Last Payment:</p>
+                            <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
+                            <p class="ml-4 ">Amount:</p>
+                            <p class="ml-4 font-bold">₱ {{transactions[transactions.length - 1]?.amount}}.00</p>
+                        </div>
+                    </div>
+                    </article>
+                    </div>
+                </section>
+                <div class="flex">
+                    <button v-print="'#printReciept'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
+                </div>
+            </reciept-modal>
             <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
                 <div class="flex items-center space-x-5">
                     <div class="flex-shrink-0">
@@ -81,7 +166,8 @@ onMounted(() => getTransaction())
                         </div>
 
                         <div class="justify-stretch mt-6 flex flex-col">
-                            <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: 25/09/2022</button>
+                            <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{$props.client.account.due_date}}</button>
+                            <button @click="printBill()" type="button" class="hover:opacity-75 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-2">Print Bill</button>
                         </div>
                     </div>
                 </section>

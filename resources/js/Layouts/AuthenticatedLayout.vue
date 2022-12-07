@@ -99,7 +99,7 @@ function submitSuccess() {
                                     Dashboard
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
-                                    Staff
+                                    Admin/Staff
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                                     Clients
@@ -163,7 +163,7 @@ function submitSuccess() {
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('staff')" :active="route().current('staff')">
-                            Staff
+                            Admin/Staff
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                             Clients
