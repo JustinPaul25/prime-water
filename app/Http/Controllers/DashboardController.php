@@ -15,8 +15,8 @@ class DashboardController extends Controller
     {
         if(auth()->user()->isAdmin()) {
             $income = Transaction::select(
-                DB::raw('year(created_at) as year'),
-                DB::raw('month(created_at) as month'),
+                DB::raw('extract(year from created_at) as year'),
+                DB::raw('extract(month from created_at) as month'),
                 DB::raw('sum(amount) as amount'),
             )
                 ->where(DB::raw('date(created_at)'), '>=', "2010-01-01")
@@ -26,8 +26,8 @@ class DashboardController extends Controller
                 ->toArray();
 
             $reading = Reading::select(
-                DB::raw('year(created_at) as year'),
-                DB::raw('month(created_at) as month'),
+                DB::raw('extract(year from created_at) as year'),
+                DB::raw('extract(month from created_at) as month'),
                 DB::raw('sum(current_reading) as readings'),
             )
                 ->where(DB::raw('date(created_at)'), '>=', "2010-01-01")
