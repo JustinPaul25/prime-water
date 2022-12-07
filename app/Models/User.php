@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Spatie\Sluggable\HasSlug;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Permission\Traits\HasRoles;
@@ -14,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, HasRoles, HasSlug, HasApiTokens;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -64,13 +63,6 @@ class User extends Authenticatable implements JWTSubject
     public function getAccountAttribute()
     {
         return Account::where('client_id', $this->id)->first();
-    }
-
-    public function getSlugOptions() : SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom('name')
-            ->saveSlugsTo('slug');
     }
 
     public function isAdmin(): bool
