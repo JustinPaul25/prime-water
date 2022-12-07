@@ -75,22 +75,22 @@ class User extends Authenticatable implements JWTSubject
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin');
+        return $this->hasRole('Admin');
     }
 
     public function isClient(): bool
     {
-        return $this->hasRole('client');
+        return $this->hasRole('Client');
     }
 
     public function isMeterman(): bool
     {
-        return $this->hasRole('meterman');
+        return $this->hasRole('Meterman');
     }
 
     public function isCashier(): bool
     {
-        return $this->hasRole('cashier');
+        return $this->hasRole('Cashier');
     }
 
     public function account()
