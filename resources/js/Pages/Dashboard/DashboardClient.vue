@@ -1,38 +1,46 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head, usePage } from '@inertiajs/inertia-vue3';
+    import RecieptModal from '@/Modals/RecieptModal.vue';
+    import { ref, onMounted } from 'vue'
+    import moment from 'moment';
+
+    const transactions = ref([])
+    const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
+    const showBill = ref(false)
+    const props = ref(usePage().props.value.auth.user);
 
     const getTransaction = () => {
-    axios.get(`/client-transactions/${props.client.id}`)
-    .then(response => {
-        transactions.value = response.data
-    });
-}
+        axios.get(`/client-transactions/${props.value.id}`)
+        .then(response => {
+            transactions.value = response.data
+        });
+    }
 
-onMounted(() => getTransaction())
+    onMounted(() => getTransaction())
 
-const printBill = () => {
-    showBill.value = true
-}
+    const printBill = () => {
+        showBill.value = true
+    }
 
-function cancel(close) {
-    showBill.value = false
-}
+    function cancel(close) {
+        showBill.value = false
+    }
 
-const getMonth = () => {
-    const d = new Date();
-    return month.value[d.getMonth()];
-}
+    const getMonth = () => {
+        const d = new Date();
+        return month.value[d.getMonth()];
+    }
 
-const getPrevMonth = () => {
-    const d = new Date();
-    return month.value[d.getMonth()-1];
-}
+    const getPrevMonth = () => {
+        const d = new Date();
+        return month.value[d.getMonth()-1];
+    }
 
-const getCurrentYear = () => {
-    const d = new Date();
-    return d.getFullYear();
-}
+    const getCurrentYear = () => {
+        const d = new Date();
+        return d.getFullYear();
+    }
 </script>
     
     <template>
@@ -45,6 +53,65 @@ const getCurrentYear = () => {
                 </h2>
             </template>
             <div class="py-12">
+                <reciept-modal v-model="showBill" @cancel="cancel()">
+                    <section class="bg-white" id="printReciept">
+                        <div class="max-w-5xl mx-auto bg-white">
+                        <article class="overflow-hidden">
+                        <div class="bg-[white] rounded-b-md">
+                            <div class="p-4 text-center text-xs">
+                                <p>Barangay Consolacion</p>
+                                <p>Water Bill</p>
+                                <p class="font-bold">Month of {{ getMonth() }}</p>
+                            </div>
+
+                            <div class="flex text-xs">
+                                <p>Name of Consumer: </p>
+                                <p class="font-bold mx-auto">{{props.first_name}} {{props.last_name}}</p>
+                            </div>
+                            <div class="flex text-xs">
+                                <p>Address: </p>
+                                <p class="mx-auto">{{props.address}}</p>
+                            </div>
+                            <div class="flex text-xs">
+                                <p>Previous Reading: </p>
+                                <p class="mx-auto">{{props.account.prev_reading}}</p>
+                            </div>
+                            <div class="flex text-xs">
+                                <p>Current Reading: </p>
+                                <p class="mx-auto">{{props.account.current_reading}}</p>
+                            </div>
+                            <div class="flex text-xs">
+                                <p class="font-bold">Consumed Cu. M: </p>
+                                <p class="mx-auto font-bold">{{props.account.current_reading-props.account.prev_reading}}</p>
+                            </div>
+
+                            <div class="flex text-xs mt-4">
+                                <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
+                                <p class="mx-auto">₱ {{props.account.prev_balance}}.00</p>
+                            </div>
+                            <div class="flex text-xs">
+                                <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
+                                <p class="mx-auto">₱ {{props.account.current_charges}}.00</p>
+                            </div>
+                            <div class="flex text-sm font-bold mt-2">
+                                <p>Total Bill: </p>
+                                <p class="ml-auto">₱ {{props.account.current_charges}}.00</p>
+                            </div>
+
+                            <div v-if="transactions.length" class="flex text-xs mt-8">
+                                <p>Last Payment:</p>
+                                <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
+                                <p class="ml-4 ">Amount:</p>
+                                <p class="ml-4 font-bold">₱ {{transactions[transactions.length - 1]?.amount}}.00</p>
+                            </div>
+                        </div>
+                        </article>
+                        </div>
+                    </section>
+                    <div class="flex">
+                        <button v-print="'#printReciept'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
+                    </div>
+                </reciept-modal>
                 <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
                     <div class="flex items-center space-x-5">
                         <div class="flex-shrink-0">
@@ -128,29 +195,16 @@ const getCurrentYear = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
+                                            <tr v-for="transaction in transactions">
                                                 <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                    <div class="font-medium text-gray-900">12312</div>
+                                                    <div class="font-medium text-gray-900">{{ transaction.id }}</div>
                                                     <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                    <span>₱ 123 / 10-10-2022</span>
+                                                    <span>₱ {{ transaction.amount }} / {{ transaction.created_at }}</span>
                                                     </div>
                                                 </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ transaction.amount }}</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.created_at }}</td>
                                             </tr>
-
-                                            <tr>
-                                                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                                                    <div class="font-medium text-gray-900">1232312</div>
-                                                    <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                    <span>₱ 123 / 10-10-2022</span>
-                                                    </div>
-                                                </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ 123</td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">10-10-2022</td>
-                                            </tr>
-
-                                            <!-- More plans... -->
                                         </tbody>
                                     </table>
                                 </div>
