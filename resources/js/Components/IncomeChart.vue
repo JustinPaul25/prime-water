@@ -16,6 +16,17 @@
                         x: toPush[0],
                         y: toPush[1]
                     })
+                    if(i === this.rawData.length - 1) {
+                        const toAdd = theoryData[theoryData.length - 1].y - theoryData[theoryData.length - 2].y
+                        theoryData.push({
+                            x: this.rawData[i][0]+1,
+                            y: toPush[1] + toAdd
+                        })
+                        theoryData.push({
+                            x: this.rawData[i][0]+2,
+                            y: toPush[1] + toAdd + toAdd
+                        })
+                    }
                 }   
 
                 return theoryData;
@@ -55,7 +66,7 @@
                     },
                     {
                         type: 'line',
-                        label: 'Theoretically calculated data',
+                        label: 'Prediction',
                         data: this.setTheoryData(),
                         backgroundColor: '#2DAAE2'
                     }],
@@ -66,24 +77,26 @@
                             type: 'linear',
                             position: 'bottom',
                             title: {
+                                display: true
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                                    return months[value-1];
+                                },
+                                stepSize: 1
+                            }
+                        },
+                        y: {
+
+                            title: {
                                 display: true,
                                 text: 'Consumed Water per cuM'
                             },
                             ticks: {
                                 callback: function(value, index, ticks) {
                                     return value+' mᶟ';
-                                }
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Income'
-                            },
-                            ticks: {
-                                callback: function(value, index, ticks) {
-                                    return '₱ ' + value;
-                                }
+                                },
                             }
                         }
                     }

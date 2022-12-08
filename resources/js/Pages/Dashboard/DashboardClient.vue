@@ -167,7 +167,7 @@
 
                                     <div class="flex justify-between py-3 text-sm font-medium">
                                         <dt class="text-gray-500">Total Bill</dt>
-                                        <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ $page.props.auth.user.account.current_charges + $page.props.auth.user.account.prev_balance }}</dd>
+                                        <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">P{{ parseInt($page.props.auth.user.account.current_charges) + parseInt($page.props.auth.user.account.prev_balance) }}</dd>
                                     </div>
                                 </dl>
                             </div>
