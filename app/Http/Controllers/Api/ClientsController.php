@@ -54,7 +54,7 @@ class ClientsController extends Controller
 
         $reading = new Reading;
         $reading->client_id = $request->input('id');
-        $reading->meterman_id = auth()->user()->id;
+        $reading->meterman_id = 2;
         $reading->prev_reading = $new_current - $reading_diff;
         $reading->current_reading = $new_current;
         $reading->price = $payment;

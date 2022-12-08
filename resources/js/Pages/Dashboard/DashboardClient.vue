@@ -1,7 +1,39 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head } from '@inertiajs/inertia-vue3';
-    </script>
+
+    const getTransaction = () => {
+    axios.get(`/client-transactions/${props.client.id}`)
+    .then(response => {
+        transactions.value = response.data
+    });
+}
+
+onMounted(() => getTransaction())
+
+const printBill = () => {
+    showBill.value = true
+}
+
+function cancel(close) {
+    showBill.value = false
+}
+
+const getMonth = () => {
+    const d = new Date();
+    return month.value[d.getMonth()];
+}
+
+const getPrevMonth = () => {
+    const d = new Date();
+    return month.value[d.getMonth()-1];
+}
+
+const getCurrentYear = () => {
+    const d = new Date();
+    return d.getFullYear();
+}
+</script>
     
     <template>
         <Head title="Dashboard" />
@@ -74,7 +106,7 @@
                             </div>
 
                             <div class="justify-stretch mt-6 flex flex-col">
-                                <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: 25/09/2022</button>
+                                <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{$page.props.auth.user.account.due_date}}</button>
                             </div>
                         </div>
                     </section>
