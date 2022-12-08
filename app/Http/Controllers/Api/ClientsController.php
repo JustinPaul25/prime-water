@@ -10,9 +10,21 @@ use App\Http\Controllers\Controller;
 
 class ClientsController extends Controller
 {
-    public function list()
+    public function list(Request $request)
     {
-        $clients = Reading::with(['client'])->get();
+        $clients = User::query();
+
+        if($request->filled('search')) {
+            $search = $request->input('search');
+            $clients = $clients->where(function($q) use ($search){
+                $q->where('first_name', 'LIKE', '%'.$search.'%')
+                ->orWhere('middle_name', 'LIKE', '%'.$search.'%')
+                ->orWhere('last_name', 'LIKE', '%'.$search.'%')
+                ->orWhere('username', 'LIKE', '%'.$search.'%');
+            });
+        }
+
+        $clients = $clients->role(['Client'])->get();
 
         return response()->json(['clients' => $clients]);
     }

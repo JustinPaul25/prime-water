@@ -31,7 +31,7 @@ const submit = () => {
         <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
             <div>
-                <h2 class="mt-6 text-3xl font-bold text-primary-blue text-center text-center lg:text-left">Brgy. Concolasion</h2>
+                <h2 class="mt-6 text-3xl font-bold text-primary-blue text-center lg:text-left">Brgy. Consolacion</h2>
                 <h2 class="text-3xl font-bold tracking-tight text-secondary-blue text-center lg:text-left">Water Billing System</h2>
                 <h2 class="mt-6 text-xl font-bold tracking-tight text-gray-800 text-center lg:text-left">Sign in to your account</h2>
             </div>
