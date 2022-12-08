@@ -41,20 +41,20 @@ class ClientsController extends Controller
 
         $price = Utility::find(1);
 
-        $new_current = $request->input('reading') + $account->current_reading;
+        $new_current = $request->input('reading');
 
-        $reading_diff = $request->input('reading') - $account->current_reading;
+        $reading_diff = $new_current - $account->current_reading;
 
         $payment = $reading_diff * $price->value;
 
         $account->prev_reading = $account->current_reading;
         $account->current_reading = $new_current;
-        $account->current_charges = $payment;
+        $account->current_charges = $account->current_charges + $payment;
         $account->update();
 
         $reading = new Reading;
-        $reading->client_id = $request->input('id');
-        $reading->meterman_id = 2;
+        $reading->client_id = $request->input('client_id');
+        $reading->meterman_id = auth()->user()->id;
         $reading->prev_reading = $new_current - $reading_diff;
         $reading->current_reading = $new_current;
         $reading->price = $payment;
