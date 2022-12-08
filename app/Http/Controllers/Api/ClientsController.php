@@ -53,7 +53,7 @@ class ClientsController extends Controller
         $account->update();
 
         $reading = new Reading;
-        $reading->client_id = $request->input('client_id');
+        $reading->client_id = $request->input('id');
         $reading->meterman_id = auth()->user()->id;
         $reading->prev_reading = $new_current - $reading_diff;
         $reading->current_reading = $new_current;
