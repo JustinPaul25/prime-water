@@ -18,16 +18,10 @@ function getResult() {
 }
 
 function populateData() {
-    
-
-    props.income.forEach(elem => {
-        props.reading.forEach(read => {
-            if(elem.month === read.month && elem.year === read.year) {
-                const toPush = [read.readings , elem.amount]
-                datas.value.push(toPush)
-            }
-        })
-    });
+    props.reading.forEach(read => {
+        const toPush = [read.month , read.readings]
+        datas.value.push(toPush)
+    })
 }
 
 onMounted(() => populateData())

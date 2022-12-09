@@ -130,12 +130,12 @@
                                     <div class="sm:mr-6">
                                         <div class="sm:border-r sm:border-gray-200 sm:pr-6">
                                         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{{ client.first_name+' '+client.last_name }}</h1>
-                                        <p>Current Bill: ₱ {{ client.account.current_charges }}</p>
+                                        <p>Current Bill: ₱ {{ Number(client.account.current_charges).toLocaleString() }}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <p class="mt-1 text-base text-gray-500">Total Balance:</p>
-                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ client.account.current_charges }}</p>
+                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ Number(client.account.current_charges).toLocaleString() }}</p>
                                     </div>
                                 </main>
                                 <form @submit.prevent="submit">
@@ -190,30 +190,30 @@
 
                         <div class="flex text-xs mt-4">
                             <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
-                            <p class="mx-auto">₱ {{client.account.prev_balance}}.00</p>
+                            <p class="mx-auto">₱ {{Number(client.account.prev_balance).toLocaleString()}}</p>
                         </div>
                         <div class="flex text-xs">
                             <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
-                            <p class="mx-auto">₱ {{client.account.current_charges}}.00</p>
+                            <p class="mx-auto">₱ {{Number(client.account.current_charges - client.account.prev_balance).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold mt-2">
                             <p>Total Bill: </p>
-                            <p class="ml-auto">₱ {{client.account.current_charges}}.00</p>
+                            <p class="ml-auto">₱ {{Number(client.account.current_charges).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Paid Amount: </p>
-                            <p class="ml-auto">₱ {{amountToPrint}}.00</p>
+                            <p class="ml-auto">₱ {{Number(amountToPrint).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{client.account.current_charges - amountToPrint}}.00</p>
+                            <p class="ml-auto">₱ {{Number(client.account.current_charges - amountToPrint).toLocaleString()}}.00</p>
                         </div>
 
                         <div class="flex text-xs mt-8">
                             <p>Last Payment:</p>
                             <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
                             <p class="ml-4 ">Amount:</p>
-                            <p class="ml-4 font-bold">₱ {{transactions[transactions.length - 1]?.amount}}.00</p>
+                            <p class="ml-4 font-bold">₱ {{Number(transactions[transactions.length - 1]?.amount).toLocaleString()}}.00</p>
                         </div>
                     </div>
                     </article>

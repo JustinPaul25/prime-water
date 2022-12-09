@@ -87,22 +87,22 @@
 
                             <div class="flex text-xs mt-4">
                                 <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
-                                <p class="mx-auto">₱ {{props.account.prev_balance}}.00</p>
+                                <p class="mx-auto">₱ {{Number(props.account.prev_balance).toLocaleString()}}.00</p>
                             </div>
                             <div class="flex text-xs">
                                 <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
-                                <p class="mx-auto">₱ {{props.account.current_charges}}.00</p>
+                                <p class="mx-auto">₱ {{Number(props.account.current_charges).toLocaleString()}}.00</p>
                             </div>
                             <div class="flex text-sm font-bold mt-2">
                                 <p>Total Bill: </p>
-                                <p class="ml-auto">₱ {{props.account.current_charges}}.00</p>
+                                <p class="ml-auto">₱ {{Number(props.account.current_charges).toLocaleString()}}.00</p>
                             </div>
 
                             <div v-if="transactions.length" class="flex text-xs mt-8">
                                 <p>Last Payment:</p>
                                 <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
                                 <p class="ml-4 ">Amount:</p>
-                                <p class="ml-4 font-bold">₱ {{transactions[transactions.length - 1]?.amount}}.00</p>
+                                <p class="ml-4 font-bold">₱ {{Number(transactions[transactions.length - 1]?.amount).toLocaleString()}}.00</p>
                             </div>
                         </div>
                         </article>
@@ -202,7 +202,7 @@
                                                     <span>₱ {{ transaction.amount }} / {{ transaction.created_at }}</span>
                                                     </div>
                                                 </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ transaction.amount }}</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ Number(transaction.amount).toLocaleString() }}</td>
                                                 <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.created_at }}</td>
                                             </tr>
                                         </tbody>
