@@ -109,7 +109,7 @@
                             <div class="flex mx-2">
                                 <div class="ml-auto">
                                     <p class="font-bold text-sm">Total Income:</p>
-                                    <p class="font-bold text-3xl text-primary-blue">₱ {{amount}}.00</p>
+                                    <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>
                                 </div>
                                 <div class="ml-4">
                                     <p class="font-bold text-sm">Total Consumed Cu M:</p>
@@ -141,7 +141,7 @@
                                         <td>{{ transaction.id }}</td>
                                         <td class="text-center">{{ transaction.client?.name }}</td>
                                         <td class="text-center">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
-                                        <td class="text-center">₱ {{ transaction.amount }}.00</td>
+                                        <td class="text-center">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
                                         <td class="text-center">{{ transaction.date_paid }}</td>
                                     </tr>
                                 </tbody>
@@ -162,7 +162,7 @@
                 <div class="flex mb-8">
                     <div class="ml-auto">
                         <p class="font-bold text-sm">Total Income:</p>
-                        <p class="font-bold text-3xl text-primary-blue">₱ {{amount}}.00</p>
+                        <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>
                     </div>
                     <div class="ml-4">
                         <p class="font-bold text-sm">Total Consumed Cu M:</p>
@@ -215,7 +215,7 @@
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ transaction.id }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ transaction.client?.first_name }} {{ transaction.client?.last_name }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ transaction.amount }}.00</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_paid }}</td>
                             </tr>
                         </tbody>
