@@ -31,7 +31,15 @@ class ClientSeeder extends Seeder
             'Prk - 4 Consolacion Panabo City Davao Del Norte',
         ];
 
+        $date = [
+            '2022-10-01 10:00:00',
+            '2022-11-01 10:00:00',
+            '2022-12-01 10:00:00',
+        ];
+
         foreach( range(1, 100) as $index ){
+            $dateInd = rand(1,3);
+
             $addIndex = rand(0, 4);
 
             $user = new User;
@@ -69,12 +77,14 @@ class ClientSeeder extends Seeder
             $account->update();
 
             $reading = new Reading;
-                $reading->client_id = $user->id;
-                $reading->meterman_id = 2;
-                $reading->prev_reading = $randReading - $reading_diff;
-                $reading->current_reading = $randReading;
-                $reading->price = $payment;
-                $reading->save();
-            }
+            $reading->client_id = $user->id;
+            $reading->meterman_id = 2;
+            $reading->prev_reading = $randReading - $reading_diff;
+            $reading->current_reading = $randReading;
+            $reading->price = $payment;
+            $reading->updated_at = $date[$dateInd-1];
+            $reading->created_at = $date[$dateInd-1];
+            $reading->save(['timestamps' => false]);
+        }
     }
 }

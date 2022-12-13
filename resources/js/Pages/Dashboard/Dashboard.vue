@@ -73,7 +73,7 @@ onMounted(() => populateData())
                 <div class="grid overflow-hidden w-full px-8 lg:px-40">
                     <div class="box row-span-2 p-5">
                         <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">Forecast Chart</p>
-                        <income-chart class="h-60" v-if="datas.length != 0" :raw-data="datas" :result="getResult()"></income-chart>
+                        <income-chart class="h-60" v-if="datas.length > 1" :raw-data="datas" :result="getResult()"></income-chart>
                     </div>
                 </div>
             </div>
