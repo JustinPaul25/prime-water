@@ -17,24 +17,24 @@
                         y: toPush[1]
                     })
                     if(i === this.rawData.length - 1) {
-                        const toAdd = theoryData[theoryData.length - 1].y - theoryData[theoryData.length - 2].y
+                        const toAdd = Number(theoryData[theoryData.length - 1].y) - Number(theoryData[theoryData.length - 2].y)
                         theoryData.push({
-                            x: this.rawData[i][0]+1,
-                            y: toPush[1] + toAdd
+                            x: Number(this.rawData[i][0]) + 1,
+                            y: Number(toPush[1]) + Number(toAdd)
                         })
                         theoryData.push({
-                            x: this.rawData[i][0]+2,
-                            y: toPush[1] + toAdd + toAdd
+                            x: Number(this.rawData[i][0]) + 2,
+                            y: Number(toPush[1]) + Number(toAdd) + Number(toAdd)
                         })
                     }
-                }   
+                }
 
                 return theoryData;
             },
             formula(coeff, x) {
                 var result = null;
                 for (var i = 0, j = coeff.length - 1; i < coeff.length; i++, j--) {
-                    result += coeff[i] * Math.pow(x, j);
+                    result += Number(coeff[i]) * Math.pow(x, j);
                 }
                 return result;
             },
