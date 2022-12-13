@@ -34,7 +34,7 @@
             formula(coeff, x) {
                 var result = null;
                 for (var i = 0, j = coeff.length - 1; i < coeff.length; i++, j--) {
-                    result += Number(coeff[i]) * Math.pow(x, j);
+                    result += Number(coeff[i]) * Math.pow(Number(x), Number(j));
                 }
                 return result;
             },
