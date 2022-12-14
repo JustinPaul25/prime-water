@@ -116,10 +116,10 @@
 
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
-    
+
 <template>
     <Head title="Cashier" />
-    
+
     <AuthenticatedLayout>
         <div>
             <v-tailwind-modal v-model="showPayment" @cancel="cancel()">
@@ -267,7 +267,7 @@
                     </table>
 
 
-                    <pagination class="mt-6" 
+                    <pagination class="mt-6"
                             :pagination="pagination"
                             @paginate="getClients"
                             :offset="4" />
@@ -276,4 +276,3 @@
         </div>
     </AuthenticatedLayout>
 </template>
-    

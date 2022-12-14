@@ -10,11 +10,11 @@ class SMSController extends Controller
 {
     public function notify(User $user)
     {
-        $basic  = new \Vonage\Client\Credentials\Basic("fc8342f4", "Zym3dVQtAi3SqOWe");
+        $basic  = new \Vonage\Client\Credentials\Basic("91feaea9", "VoyeRquAsliUvY6V");
         $client = new \Vonage\Client($basic);
 
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS("639099026782", 'NEXMO', 'Notice of disconnection')
+            new \Vonage\SMS\Message\SMS("639293194425", 'NEXMO', 'This is Notice of disconnection From WBS')
         );
 
         return 'success';

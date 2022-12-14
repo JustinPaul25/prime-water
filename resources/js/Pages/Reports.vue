@@ -81,14 +81,14 @@
             transactions.value = response.data
         })
     }
-    
+
     const cancel = () => {
         showPrint.value = false
     }
 
     onMounted(() => getTransactions())
 </script>
-    
+
 <template>
     <Head title="Staff"/>
 
@@ -214,7 +214,7 @@
                             <tr v-for="transaction in transactions">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ transaction.id }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                    <a :href="route('client.profile', client.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ transaction.client.first_name+' '+transaction.client.last_name }}</a>
+                                    <a :href="route('client.profile', transaction.client.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ transaction.client.first_name+' '+transaction.client.last_name }}</a>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
@@ -227,4 +227,3 @@
         </div>
     </AuthenticatedLayout>
 </template>
-    

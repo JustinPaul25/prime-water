@@ -61,7 +61,7 @@ class ClientSeeder extends Seeder
             $account->current_reading = 0;
             $account->prev_balance = 0;
             $account->current_charges = 0;
-            $account->last_payment = date("Y-m-d", strtotime("+1 month"));
+            $account->last_payment = '2022-07-14 11:23:04';
             $account->save();
 
             $price = Utility::find(1);
