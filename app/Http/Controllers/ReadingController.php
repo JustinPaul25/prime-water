@@ -12,6 +12,19 @@ class ReadingController extends Controller
     public function store(Request $request)
     {
         $client = User::find($request->input('client_id'));
+        $reading = Reading::where('client_id', $client->id)->latest()->first();
+        $readMonthYear = $reading->created_at->month . '-' . $reading->created_at->year;
+        $nowMonthYear = now()->month . '-' . now()->year;
+
+        if ($reading->current_reading >= $request->input('reading'))
+            return redirect()->back()->withErrors([
+                'create' => 'ups, there was an error'
+            ]);
+        if ($readMonthYear === $nowMonthYear)
+            return redirect()->back()->withErrors([
+                'create' => 'ups, there was an error'
+            ]);
+
         $account = $client->account;
 
         $price = Utility::find(1);

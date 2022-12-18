@@ -39,6 +39,16 @@ class ClientsController extends Controller
         $client = User::find($request->input('id'));
         $account = $client->account;
 
+        $reading = Reading::where('client_id', $client->id)->latest()->first();
+        $readMonthYear = $reading->created_at->month . '-' . $reading->created_at->year;
+        $nowMonthYear = now()->month . '-' . now()->year;
+
+        if($reading->current_reading >= $request->input('reading'))
+            return;
+
+        if ($readMonthYear === $nowMonthYear)
+            return;
+
         $price = Utility::find(1);
 
         $new_current = $request->input('reading');

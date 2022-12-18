@@ -22,12 +22,28 @@ class Account extends Model
     protected $appends = [
         'month_last_payment',
         'due_date',
+        'is_metered',
+        'last_reading',
     ];
 
     public function getDueDateAttribute()
     {
         $due = Carbon::parse($this->last_payment)->addMonth();
         return $due->format('M-d-Y');
+    }
+
+    public function getIsMeteredAttribute() {
+        $reading = Reading::where('client_id', $this->client_id)->latest()->first();
+        $readMonthYear = $reading->created_at->month . '-' . $reading->created_at->year;
+        $nowMonthYear = now()->month . '-' . now()->year;
+
+        return $readMonthYear === $nowMonthYear;
+    }
+
+    public function getLastReadingAttribute()
+    {
+        $reading = Reading::where('client_id', $this->client_id)->latest()->first();
+        return $reading->created_at->format('M-d-Y');
     }
 
     public function getMonthLastPaymentAttribute()

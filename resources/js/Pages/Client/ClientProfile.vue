@@ -48,7 +48,7 @@ const getCurrentYear = () => {
 
 <template>
     <Head :title="client.name" />
-    
+
     <AuthenticatedLayout>
         <div class="py-12">
             <reciept-modal v-model="showBill" @cancel="cancel()">
@@ -166,6 +166,7 @@ const getCurrentYear = () => {
                         </div>
 
                         <div class="justify-stretch mt-6 flex flex-col">
+                            <p class="text-xs text-gray-500 mb-2">Note: Due date is based on 3 consecutive months without payment</p>
                             <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{$props.client.account.due_date}}</button>
                             <button @click="printBill()" type="button" class="hover:opacity-75 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-2">Print Bill</button>
                         </div>
@@ -209,4 +210,3 @@ const getCurrentYear = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-    

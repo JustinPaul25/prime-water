@@ -43,7 +43,7 @@
         address: '',
         status: ''
     });
-    
+
     watchDebounced(search, () => {
         getClients()
     }, {debounce: 500})
@@ -57,34 +57,34 @@
     }, {debounce: 500})
 
     watchDebounced(
-        () => form.first_name, 
+        () => form.first_name,
         (first_name) => {
             form.first_name = capitalizeString(first_name)
-        }, 
+        },
         {debounce: 300}
     )
 
     watchDebounced(
-        () => form.middle_name, 
+        () => form.middle_name,
         (middle_name) => {
             form.middle_name = capitalizeString(middle_name)
-        }, 
+        },
         {debounce: 300}
     )
 
     watchDebounced(
-        () => form.last_name, 
+        () => form.last_name,
         (last_name) => {
             form.last_name = capitalizeString(last_name)
-        }, 
+        },
         {debounce: 300}
     )
 
     watchDebounced(
-        () => form.contact_no, 
+        () => form.contact_no,
         (contact_no) => {
             form.contact_no = checkContact(contact_no)
-        }, 
+        },
         {debounce: 300}
     )
 
@@ -128,7 +128,7 @@
             form.address = client.address
             form.status = client.status
         }
-        
+
         show.value = true
     }
 
@@ -241,7 +241,7 @@
 
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
-    
+
 <template>
     <Head title="Staff"/>
 
@@ -306,7 +306,7 @@
                                 <TextInput maxlength="11" id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
                                 <InputError class="mt-2" :message="form.errors.contact_no" />
                             </div>
-                            
+
                             <div class="mt-4">
                                 <InputLabel for="address" value="Complete Address" />
                                 <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
@@ -411,7 +411,7 @@
                     </table>
 
 
-                    <pagination class="mt-6" 
+                    <pagination class="mt-6"
                             :pagination="pagination"
                             @paginate="getClients"
                             :offset="4" />
@@ -420,4 +420,3 @@
         </div>
     </AuthenticatedLayout>
 </template>
-    

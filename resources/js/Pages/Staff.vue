@@ -30,7 +30,7 @@
     watch(role, async (newRole, oldRole) => {
         getStaffs()
     })
-    
+
     watchDebounced(search, () => {
         getStaffs()
     }, {debounce: 500})
@@ -48,7 +48,7 @@
             form.id = ''
             form.name = ''
             form.username = ''
-            form.role = '' 
+            form.role = ''
         } else {
             isEdit.value = true
             form.id = staff.id
@@ -56,7 +56,7 @@
             form.username = staff.username
             form.role = staff.role.replace(/^./, staff.role[0].toUpperCase())
         }
-        
+
         show.value = true
     }
 
@@ -127,7 +127,7 @@
 
     onMounted(() => store.dispatch('staffs/getStaffs'))
 </script>
-    
+
 <template>
     <Head title="Staff"/>
 
@@ -142,7 +142,7 @@
         <div class="py-12">
             <div>
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
-                    <template v-slot:title>{{isEdit ? 'Update Staff' : 'Create Staff'}}</template>
+                    <template v-slot:title>{{isEdit ? 'Update User' : 'Create User'}}</template>
                     <div>
                         <form @submit.prevent="submit">
                             <div>
@@ -168,7 +168,7 @@
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    {{isEdit ? 'Update Staff' : 'Save Staff'}}
+                                    {{isEdit ? 'Update User' : 'Save User'}}
                                 </PrimaryButton>
                             </div>
                         </form>
@@ -192,7 +192,7 @@
                         <InputError class="mt-2" :message="form.errors.role" />
                     </div>
                     <div class="ml-auto">
-                        <button  @click="showModal('create', null)" type="button" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Add Staff</button>
+                        <button  @click="showModal('create', null)" type="button" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Create User</button>
                     </div>
                 </div>
                 <div class="-mx-4 mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg bg-white">
@@ -221,13 +221,12 @@
                     </table>
 
 
-                    <pagination class="mt-6" 
-                            :pagination="pagination"
-                            @paginate="getStaffs"
-                            :offset="4" />
+                    <pagination class="mt-6"
+                        :pagination="pagination"
+                        @paginate="getStaffs"
+                        :offset="4" />
                 </div>
             </div>
         </div>
     </AuthenticatedLayout>
 </template>
-    

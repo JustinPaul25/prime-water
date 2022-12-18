@@ -42,10 +42,10 @@
         return d.getFullYear();
     }
 </script>
-    
+
     <template>
         <Head title="Dashboard" />
-        
+
         <AuthenticatedLayout>
             <template #header>
                 <h2 class="font-semibold text-xl text-white leading-tight">
@@ -173,6 +173,7 @@
                             </div>
 
                             <div class="justify-stretch mt-6 flex flex-col">
+                                <p class="text-xs text-gray-500 mb-2">Note: Due date is 3 months before the last payment</p>
                                 <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{$page.props.auth.user.account.due_date}}</button>
                             </div>
                         </div>
@@ -215,4 +216,3 @@
             </div>
         </AuthenticatedLayout>
     </template>
-    

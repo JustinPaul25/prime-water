@@ -104,11 +104,14 @@ function submitSuccess() {
                                 <NavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                                     Clients
                                 </NavLink>
+                                <NavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
+                                    Payments
+                                </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
                                     Reports
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
-                                    Payments
+                                <NavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
+                                    Usage
                                 </NavLink>
                             </div>
                         </div>
@@ -168,11 +171,14 @@ function submitSuccess() {
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('client')" :active="route().current('client')">
                             Clients
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
+                            Payments
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
                             Reports
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.admin || $page.props.auth.cashier" :href="route('payments')" :active="route().current('payments')">
-                            Payments
+                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
+                            Usage
                         </ResponsiveNavLink>
                     </div>
 

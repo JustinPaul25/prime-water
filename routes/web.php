@@ -28,7 +28,7 @@ use App\Http\Controllers\TransactionsController;
 |
 */
 if (App::environment('production')) {
-    URL::forceScheme('https'); 
+    URL::forceScheme('https');
 }
 
 Route::get('', function () {
@@ -82,6 +82,6 @@ Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth',
 
 Route::get('/change-password', [UserController::class, 'changePassword'])->middleware(['auth', 'verified'])->name('change.password.form');
 Route::post('/change-password', [UserController::class, 'updatePassword'])->middleware(['auth', 'verified'])->name('change.password');
-Route::get('/send-sms/{num}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');;
+Route::get('/send-sms/{user}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');;
 
 require __DIR__.'/auth.php';

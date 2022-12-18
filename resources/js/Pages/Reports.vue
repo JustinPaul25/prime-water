@@ -164,10 +164,6 @@
                         <p class="font-bold text-sm">Total Income:</p>
                         <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>
                     </div>
-                    <div class="ml-4">
-                        <p class="font-bold text-sm">Total Consumed Cu M:</p>
-                        <p class="font-bold text-3xl text-primary-blue text-right">{{consumed}}</p>
-                    </div>
                 </div>
                 <div class="sm:flex sm:items-center w-full">
                     <div class="mr-4">

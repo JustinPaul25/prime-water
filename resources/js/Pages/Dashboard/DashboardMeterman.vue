@@ -48,11 +48,12 @@
 
     const submit = () => {
         form.post(route('reading.create'), {
-            onSuccess: () => submitSuccess()
+            onSuccess: (value) => submitSuccess(value)
         });
     }
 
-    function submitSuccess() {
+    function submitSuccess(value) {
+        console.log(value)
         show.value = false
         swal.fire({
             icon: 'success',
@@ -61,12 +62,12 @@
             confirmButtonColor: '#23408E'
         })
     }
-    
+
     </script>
-    
+
     <template>
         <Head title="Dashboard" />
-    
+
         <AuthenticatedLayout>
             <template #header>
                 <h2 class="font-semibold text-xl text-white leading-tight">
@@ -146,7 +147,7 @@
                             </div>
                         </div>
                         <!-- <div class="p-6 bg-white border-b border-gray-200">
-                            
+
                             {{ scanned }}
                         </div> -->
                     </div>
@@ -154,4 +155,3 @@
             </div>
         </AuthenticatedLayout>
     </template>
-    
