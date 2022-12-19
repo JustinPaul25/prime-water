@@ -6,15 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
-    }
-
     public function login(Request $request)
     {
         $request->validate([
@@ -23,23 +19,13 @@ class AuthController extends Controller
         ]);
         $credentials = $request->only('username', 'password');
 
-        $token = Auth::attempt($credentials);
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken("LaravelRestApi")->accessToken;
+            return response()->json(["token" => $token, "user" => $user], 200);
+        } else {
+            return response()->json(["error" => "Unauthorised"], 401);
         }
-
-        $user = Auth::user();
-        return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorization' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ]
-            ]);
     }
 
 
@@ -61,6 +47,15 @@ class AuthController extends Controller
                 'token' => Auth::refresh(),
                 'type' => 'bearer',
             ]
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = User::find($request->id);
+
+        return $user->update([
+            'password' => Hash::make($request->password),
         ]);
     }
 }
