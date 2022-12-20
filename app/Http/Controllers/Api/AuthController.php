@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login','register','changePassword']]);
+    }
     public function login(Request $request)
     {
         $request->validate([
@@ -19,13 +23,23 @@ class AuthController extends Controller
         ]);
         $credentials = $request->only('username', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken("LaravelRestApi")->accessToken;
-            return response()->json(["token" => $token, "user" => $user], 200);
-        } else {
-            return response()->json(["error" => "Unauthorised"], 401);
+        $token = Auth::attempt($credentials);
+        if (!$token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized',
+            ], 401);
         }
+
+        $user = Auth::user();
+        return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
     }
 
 
