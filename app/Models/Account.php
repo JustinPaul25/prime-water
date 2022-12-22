@@ -23,7 +23,8 @@ class Account extends Model
         'month_last_payment',
         'due_date',
         'is_metered',
-        'last_reading',
+        'current_date_reading',
+        'prev_date_reading',
     ];
 
     public function getDueDateAttribute()
@@ -40,7 +41,7 @@ class Account extends Model
         return $readMonthYear === $nowMonthYear;
     }
 
-    public function getLastReadingAttribute()
+    public function getCurrentDateReadingAttribute()
     {
         $reading = Reading::where('client_id', $this->client_id)->latest()->first();
         return $reading->created_at->format('M-d-Y');
@@ -69,6 +70,17 @@ class Account extends Model
         $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
 
         return $diff;
+    }
+
+    public function getPrevDateReadingAttribute()
+    {
+        $reading = Reading::where('client_id', $this->client_id)->orderBy('created_at', 'desc')->skip(1)->take(1)->first();
+
+        if($reading) {
+            return $reading->created_at->format('M-d-Y');
+        } else {
+            return null;
+        }
     }
 
     public function client()
