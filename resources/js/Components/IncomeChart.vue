@@ -19,11 +19,11 @@
                     if(i === this.rawData.length - 1) {
                         const toAdd = Number(theoryData[theoryData.length - 1].y) - Number(theoryData[theoryData.length - 2].y)
                         theoryData.push({
-                            x: Number(this.rawData[i][0]) + 1,
+                            x: Number(this.rawData[i][0]) + Number(1),
                             y: Number(toPush[1]) + Number(toAdd)
                         })
                         theoryData.push({
-                            x: Number(this.rawData[i][0]) + 2,
+                            x: Number(this.rawData[i][0]) + Number(2),
                             y: Number(toPush[1]) + Number(toAdd) + Number(toAdd)
                         })
                     }
