@@ -28,7 +28,7 @@ class ClientsController extends Controller
         if($request->filled('search')) {
             $search = $request->input('search');
             $client = $client->where(function($q) use ($search){
-                $q->where('LOWER(name)', 'LIKE', '%' . strtolower($search) . '%')
+                $q->whereRaw('lower(name) like (?)',["%{$search}%"])
                 ->orWhere('username', 'LIKE', '%'.$search.'%');
             });
         }
