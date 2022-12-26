@@ -25,17 +25,17 @@ class ClientsController extends Controller
     {
         $client = User::query();
 
+        if($request->filled('search')) {
+            $search = $request->input('search');
+            $client = $client->where('name', 'LIKE', '%'.$search.'%');
+        }
+
         if($request->filled('status')) {
             $client = $client->where('status', $request->input('status'));
         }
 
-        if($request->filled('purok')) {
+        if ($request->filled('purok')) {
             $client = $client->where('address', $request->input('purok'));
-        }
-
-        if($request->filled('search')) {
-            $search = $request->input('search');
-            $client = $client->where('name', 'LIKE', '%'.$search.'%');
         }
 
         $client = $client->role(['Client'])->paginate(10);
