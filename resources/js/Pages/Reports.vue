@@ -9,12 +9,13 @@
     import Pagination from '@/Components/Pagination.vue'
     import { Inertia } from '@inertiajs/inertia';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
+    import ReportsChart from '@/Components/ReportsChart.vue';
     import { computed, onMounted, inject, ref, watch } from 'vue'
     import { useStore } from 'vuex'
     import _ from 'lodash'
 
     defineProps({
-        status: String,
+        income_data: Object,
     });
 
     const store = useStore()
@@ -160,6 +161,9 @@
         <div class="py-12">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="flex mb-8">
+                    <div>
+                        <ReportsChart :datas="income_data"/>
+                    </div>
                     <div class="ml-auto">
                         <p class="font-bold text-sm">Total Income:</p>
                         <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>

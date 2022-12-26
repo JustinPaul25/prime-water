@@ -217,7 +217,7 @@
                             <p class="ml-auto">₱ {{Number(client.account.current_charges - amountToPrint).toLocaleString()}}.00</p>
                         </div>
 
-                        <div class="flex text-xs mt-8">
+                        <div v-if="transactions.length !== 0" class="flex text-xs mt-8">
                             <p>Last Payment:</p>
                             <p class="ml-4">{{moment(transactions[transactions.length - 1]?.created_at).format('YYYY-MM-DD')}}</p>
                             <p class="ml-4 ">Amount:</p>

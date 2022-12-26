@@ -1,49 +1,19 @@
 <template>
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="myReportChart" width="400" height="200"></canvas>
 </template>
 
 <script>
     import Chart from 'chart.js/auto';
 
     export default {
-        props: ['rawData', 'result'],
+        props: ['datas'],
         methods: {
-            setTheoryData() {
-                var theoryData = [];
-                for (var i = 0; i < this.rawData.length; i++) {
-                    const toPush = [this.rawData[i][0], this.formula(this.result.equation, this.rawData[i][0])];
-                    theoryData.push({
-                        x: toPush[0],
-                        y: toPush[1]
-                    })
-                    if(i === this.rawData.length - 1) {
-                        const toAdd = Number(theoryData[theoryData.length - 1].y) - Number(theoryData[theoryData.length - 2].y)
-                        theoryData.push({
-                            x: Number(this.rawData[i][0]) + Number(1),
-                            y: Number(toPush[1]) + Number(toAdd)
-                        })
-                        theoryData.push({
-                            x: Number(this.rawData[i][0]) + Number(2),
-                            y: Number(toPush[1]) + Number(toAdd) + Number(toAdd)
-                        })
-                    }
-                }
-
-                return theoryData;
-            },
-            formula(coeff, x) {
-                var result = null;
-                for (var i = 0, j = coeff.length - 1; i < coeff.length; i++, j--) {
-                    result += Number(coeff[i]) * Math.pow(Number(x), Number(j));
-                }
-                return result;
-            },
             convertRawData() {
                 let dataArr = [];
-                this.rawData.forEach(element => {
+                this.datas.forEach(element => {
                     const toPush = {
-                        x: element[0],
-                        y: element[1]
+                        x: element.month,
+                        y: element.amount
                     }
                     dataArr.push(toPush)
                 });
@@ -52,13 +22,19 @@
             }
         },
         mounted() {
-            const ctx = document.getElementById('myChart');
-
+            const ctx = document.getElementById('myReportChart');
             const myChart = new Chart(ctx, {
                 type: 'line',
+                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4'],
                 data: {
-                    labels: ['january', 'february'],
-                    datasets: [65, 59],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: this.convertRawData(),
+                            backgroundColor: '#23408E',
+                        }
+                    ]
+                },
                 options: {
                     scales: {
                         x: {
@@ -76,14 +52,13 @@
                             }
                         },
                         y: {
-
                             title: {
                                 display: true,
-                                text: 'Consumed Water per cuM'
+                                text: 'Income'
                             },
                             ticks: {
                                 callback: function(value, index, ticks) {
-                                    return value+' mᶟ';
+                                    return '₱ '+value;
                                 },
                             }
                         }
