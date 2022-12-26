@@ -120,12 +120,6 @@ const getCurrentYear = () => {
             </reciept-modal>
             <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
                 <div class="flex items-center space-x-5">
-                    <div class="flex-shrink-0">
-                    <div class="relative">
-                        <img class="h-16 w-16 rounded-full" src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80" alt="">
-                        <span class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></span>
-                    </div>
-                    </div>
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">{{ props.client.first_name }} {{ props.client.last_name }}</h1>
                         <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ props.client.address }}</span></p>

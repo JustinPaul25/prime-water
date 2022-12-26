@@ -202,7 +202,7 @@
                         </div>
                         <div class="flex text-xs">
                             <p>Current Bill - {{getMonth()}} {{getCurrentYear()}}: </p>
-                            <p class="mx-auto">₱ {{Number(client.account.current_charges - client.account.prev_balance).toLocaleString()}}.00</p>
+                            <p class="mx-auto">₱ {{Number(client.account.current_charges).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold mt-2">
                             <p>Total Bill: </p>
