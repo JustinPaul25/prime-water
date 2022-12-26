@@ -35,16 +35,20 @@ class Account extends Model
 
     public function getIsMeteredAttribute() {
         $reading = Reading::where('client_id', $this->client_id)->latest()->first();
-        $readMonthYear = $reading->created_at->month . '-' . $reading->created_at->year;
-        $nowMonthYear = now()->month . '-' . now()->year;
+        if($reading) {
+            $readMonthYear = $reading->created_at->month . '-' . $reading->created_at->year;
+            $nowMonthYear = now()->month . '-' . now()->year;
 
-        return $readMonthYear === $nowMonthYear;
+            return $readMonthYear === $nowMonthYear;
+        } else {
+            return;
+        }
     }
 
     public function getCurrentDateReadingAttribute()
     {
         $reading = Reading::where('client_id', $this->client_id)->latest()->first();
-        return $reading->created_at->format('M-d-Y');
+        return $reading ? $reading->created_at->format('M-d-Y') : null;
     }
 
     public function getMonthLastPaymentAttribute()
