@@ -403,7 +403,7 @@
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <button @click="statusSwitch(client.id)" :class=" client.status === true ? 'text-red-600': 'text-green-600'" class="hover:opacity-75 mr-4">{{client.status === true ? 'Switch to Inactive' : 'Switch to Active'}}</button>
+                                    <button @click="statusSwitch(client.id)" :class=" client.status === 1 ? 'text-red-600': 'text-green-600'" class="hover:opacity-75 mr-4">{{client.status === 1 ? 'Switch to Inactive' : 'Switch to Active'}}</button>
                                     <a @click="showModal('update', client)" href="#" class="text-primary-blue hover:opacity-75">Edit</a>
                                 </td>
                             </tr>

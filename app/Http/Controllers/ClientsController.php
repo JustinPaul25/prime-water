@@ -25,6 +25,14 @@ class ClientsController extends Controller
     {
         $client = User::query();
 
+        if($request->filled('status')) {
+            $client = $client->where('status', $request->input('status'));
+        }
+
+        if($request->filled('purok')) {
+            $client = $client->where('address', $request->input('purok'));
+        }
+
         if($request->filled('search')) {
             $search = $request->input('search');
             $client->where(function($q) use ($search){
@@ -33,14 +41,6 @@ class ClientsController extends Controller
                 ->orWhere('last_name', 'LIKE', '%'.$search.'%')
                 ->orWhere('username', 'LIKE', '%'.$search.'%');
             });
-        }
-
-        if($request->filled('status')) {
-            $client = $client->where('status', $request->input('status'));
-        }
-
-        if($request->filled('purok')) {
-            $client = $client->where('address', $request->input('purok'));
         }
 
         $client = $client->role(['Client'])->paginate(10);
@@ -157,7 +157,7 @@ class ClientsController extends Controller
     {
         $user->update([
             'status' => !$user->status,
-        ]);   
+        ]);
 
         return $user->status;
     }

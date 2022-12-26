@@ -5,7 +5,7 @@
           Showing
           <span class="font-medium">{{ pagination.from }}</span>
           to
-          <span class="font-medium">{{ (pagination.from+19 > pagination.total) ? pagination.total :  pagination.from+19}}</span>
+          <span class="font-medium">{{ (pagination.from+9 > pagination.total) ? pagination.total :  pagination.from+9}}</span>
           of
           <span class="font-medium">{{ pagination.total }}</span>
           results
