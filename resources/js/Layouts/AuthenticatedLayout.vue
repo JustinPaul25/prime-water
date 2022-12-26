@@ -108,10 +108,10 @@ function submitSuccess() {
                                     Payments
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
-                                    Reports
+                                    Income Report
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
-                                    Usage
+                                <NavLink v-if="$page.props.auth.admin" :href="route('usage')" :active="route().current('usage')">
+                                    Usage Report
                                 </NavLink>
                             </div>
                         </div>
@@ -175,10 +175,10 @@ function submitSuccess() {
                             Payments
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
-                            Reports
+                            Income Report
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('reports')" :active="route().current('reports')">
-                            Usage
+                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('usage')" :active="route().current('usage')">
+                            Usage Report
                         </ResponsiveNavLink>
                     </div>
 

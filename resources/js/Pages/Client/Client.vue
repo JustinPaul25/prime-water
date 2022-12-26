@@ -243,7 +243,7 @@
 </script>
 
 <template>
-    <Head title="Staff"/>
+    <Head title="Client"/>
 
     <AuthenticatedLayout>
         <template #header>

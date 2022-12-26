@@ -81,6 +81,7 @@ class ClientSeeder extends Seeder
             $reading->meterman_id = 2;
             $reading->prev_reading = $randReading - $reading_diff;
             $reading->current_reading = $randReading;
+            $reading->cum_price = $price->value;
             $reading->price = $payment;
             $reading->updated_at = $date[$dateInd-1];
             $reading->created_at = $date[$dateInd-1];

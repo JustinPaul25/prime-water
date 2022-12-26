@@ -68,6 +68,7 @@ class ClientsController extends Controller
         $reading->meterman_id = 2;
         $reading->prev_reading = $new_current - $reading_diff;
         $reading->current_reading = $new_current;
+        $reading->cum_price = $price->value;
         $reading->price = $payment;
         $reading->save();
 

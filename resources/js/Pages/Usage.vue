@@ -68,7 +68,7 @@
 
 
     async function getTransactions() {
-        await axios.get('/transactions', {
+        await axios.get('/usage/list', {
                 params: {
                     searchYear: searchYear.value,
                     searchDate: searchDate.value,
@@ -90,7 +90,7 @@
 </script>
 
 <template>
-    <Head title="Income Report"/>
+    <Head title="Staff"/>
 
     <AuthenticatedLayout>
         <RecieptModal v-model="showPrint" @cancel="cancel()">
@@ -107,13 +107,9 @@
                             </div>
 
                             <div class="flex mx-2">
-                                <div class="ml-auto">
-                                    <p class="font-bold text-sm">Total Income:</p>
-                                    <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>
-                                </div>
                                 <div class="ml-4">
                                     <p class="font-bold text-sm">Total Consumed Cu M:</p>
-                                    <p class="font-bold text-3xl text-primary-blue text-right">{{consumed}}</p>
+                                    <p class="font-bold text-3xl text-primary-blue text-right">{{consumed.toLocaleString()}} Cu M</p>
                                 </div>
                             </div>
                             <table class="min-w-full divide-y divide-slate-500">
@@ -129,7 +125,7 @@
                                             Cu M
                                         </th>
                                         <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
-                                            Amount Paid
+                                            Rate/CuM
                                         </th>
                                         <th scope="col" class="py-3.5 pl-3 pr-4 text-center text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
                                             Date
@@ -141,8 +137,8 @@
                                         <td>{{ transaction.id }}</td>
                                         <td class="text-center">{{ transaction.client?.name }}</td>
                                         <td class="text-center">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
-                                        <td class="text-center">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
-                                        <td class="text-center">{{ transaction.date_paid }}</td>
+                                        <td class="text-center">{{ transaction.cum_price}} /Cu M</td>
+                                        <td class="text-center">{{ transaction.date_metered }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -153,7 +149,7 @@
         </RecieptModal>
         <template #header>
             <h2 class="font-semibold text-xl text-white leading-tight w-full">
-                Income Reports
+                Usage Reports
             </h2>
         </template>
 
@@ -161,8 +157,8 @@
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="flex mb-8">
                     <div class="ml-auto">
-                        <p class="font-bold text-sm">Total Income:</p>
-                        <p class="font-bold text-3xl text-primary-blue">₱ {{Number(amount).toLocaleString()}}.00</p>
+                        <p class="font-bold text-sm">Total Consumed:</p>
+                        <p class="font-bold text-3xl text-primary-blue">{{ Number(consumed).toLocaleString() }} Cu M</p>
                     </div>
                 </div>
                 <div class="sm:flex sm:items-center w-full">
@@ -202,7 +198,7 @@
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Transaction #</th>
                                 <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-white lg:table-cell">Client</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Consumed Cu M</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Amount Paid</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Rate/Cu M</th>
                                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Date</th>
                             </tr>
                         </thead>
@@ -213,8 +209,8 @@
                                     <a :href="route('client.profile', transaction.client.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ transaction.client.first_name+' '+transaction.client.last_name }}</a>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_paid }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize font-bold">₱{{ transaction.cum_price }}<span class="text-xs font-thin">/CuM</span></td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_metered }}</td>
                             </tr>
                         </tbody>
                     </table>

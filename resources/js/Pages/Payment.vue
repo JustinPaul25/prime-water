@@ -118,7 +118,7 @@
 </script>
 
 <template>
-    <Head title="Cashier" />
+    <Head title="Payments"/>
 
     <AuthenticatedLayout>
         <div>
@@ -179,9 +179,17 @@
                             <p>Previous Reading: </p>
                             <p class="mx-auto">{{client.account.prev_reading}}</p>
                         </div>
+                        <div v-if="client.account.prev_date_reading" class="flex text-xs">
+                            <p>Current Date Metered:</p>
+                            <p class="mx-auto">{{ client.account.prev_date_reading }}</p>
+                        </div>
                         <div class="flex text-xs">
                             <p>Current Reading: </p>
                             <p class="mx-auto">{{client.account.current_reading}}</p>
+                        </div>
+                        <div v-if="client.account.current_date_reading" class="flex text-xs">
+                            <p>Current Date Metered:</p>
+                            <p class="mx-auto">{{ client.account.current_date_reading }}</p>
                         </div>
                         <div class="flex text-xs">
                             <p class="font-bold">Consumed Cu. M: </p>

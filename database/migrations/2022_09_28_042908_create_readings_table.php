@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->unsignedBigInteger('meterman_id')->nullable();
+            $table->float('cum_price', 10, 2);
             $table->float('prev_reading', 10, 2);
             $table->float('current_reading', 10, 2);
             $table->float('price', 10, 2);

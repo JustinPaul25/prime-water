@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reading extends Model
 {
@@ -14,8 +15,21 @@ class Reading extends Model
         'meterman_id',
         'prev_reading',
         'current_reading',
+        'cum_price',
         'price',
     ];
+
+    protected $with = ['client'];
+
+    protected $appends = [
+        'date_metered',
+    ];
+
+    public function getDateMeteredAttribute()
+    {
+        $due = Carbon::parse($this->created_at);
+        return $due->format('M-d-Y');
+    }
 
     public function client()
     {

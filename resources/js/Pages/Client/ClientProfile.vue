@@ -74,9 +74,17 @@ const getCurrentYear = () => {
                             <p>Previous Reading: </p>
                             <p class="mx-auto">{{client.account.prev_reading}}</p>
                         </div>
+                        <div v-if="client.account.prev_date_reading" class="flex text-xs">
+                            <p>Previous Date Metered:</p>
+                            <p class="mx-auto">{{ client.account.prev_date_reading }}</p>
+                        </div>
                         <div class="flex text-xs">
                             <p>Current Reading: </p>
                             <p class="mx-auto">{{client.account.current_reading}}</p>
+                        </div>
+                        <div v-if="client.account.current_date_reading" class="flex text-xs">
+                            <p>Current Date Metered:</p>
+                            <p class="mx-auto">{{ client.account.current_date_reading }}</p>
                         </div>
                         <div class="flex text-xs">
                             <p class="font-bold">Consumed Cu. M: </p>
@@ -139,12 +147,18 @@ const getCurrentYear = () => {
                         <div>
                             <dl class="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
                                 <div class="flex justify-between py-3 text-sm font-medium">
-                                    <dt class="text-gray-500">Previous Reading</dt>
+                                    <dt class="text-gray-500">
+                                        Previous Reading<br>
+                                        <span v-if="props.client.account.prev_date_reading">Date Metered: {{ props.client.account.prev_date_reading }}</span>
+                                    </dt>
                                     <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
-                                    <dt class="text-gray-500">Current Reading</dt>
+                                    <dt class="text-gray-500">
+                                        Current Reading<br>
+                                        <span v-if="props.client.account.current_date_reading">Date Metered: {{ props.client.account.current_date_reading }}</span>
+                                    </dt>
                                     <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.current_reading }}</dd>
                                 </div>
 

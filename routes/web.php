@@ -16,6 +16,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\UsageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,9 @@ Route::post('/pay-bill', [CashierController::class, 'pay'])->middleware(['auth',
 
 Route::get('/change-password', [UserController::class, 'changePassword'])->middleware(['auth', 'verified'])->name('change.password.form');
 Route::post('/change-password', [UserController::class, 'updatePassword'])->middleware(['auth', 'verified'])->name('change.password');
-Route::get('/send-sms/{user}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');;
+Route::get('/send-sms/{user}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');
+
+Route::get('/usage', [UsageController::class, 'usage'])->middleware(['auth', 'verified'])->name('usage');
+Route::get('/usage/list', [UsageController::class, 'list'])->middleware(['auth', 'verified'])->name('usage.list');
 
 require __DIR__.'/auth.php';

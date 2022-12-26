@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Transaction;
+use Inertia\Inertia;
+use App\Models\Reading;
 use Illuminate\Http\Request;
 
-class TransactionsController extends Controller
+class UsageController extends Controller
 {
+    public function usage()
+    {
+        return Inertia::render('Usage');
+    }
+
     public function list(Request $request)
     {
-        $transactions = Transaction::query();
+        $transactions = Reading::query();
 
         if($request->filled('searchDate')) {
             $transactions->whereDate('created_at', '=', date($request->input('searchDate')));
@@ -26,17 +31,5 @@ class TransactionsController extends Controller
         }
 
         return $transactions->get();
-    }
-
-    public function calculateIncom(Request $request)
-    {
-        # code...
-    }
-
-    public function clientList(User $user)
-    {
-        $transactions = Transaction::where('client_id', $user->id)->get();
-
-        return $transactions;
     }
 }
