@@ -43,10 +43,10 @@ class ClientSeeder extends Seeder
             $addIndex = rand(0, 4);
 
             $user = new User;
-            $user->name = $faker->name();
             $user->username = $faker->name();
             $user->first_name = $faker->firstName();
             $user->last_name = $faker->lastName();
+            $user->name = $user->first_name . ' ' . $user->last_name;
             $user->password = Hash::make('123123');
             $user->address = $address[$addIndex];
             $user->status = true;

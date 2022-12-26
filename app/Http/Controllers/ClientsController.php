@@ -36,9 +36,7 @@ class ClientsController extends Controller
         if($request->filled('search')) {
             $search = $request->input('search');
             $client->where(function($q) use ($search){
-                $q->where('first_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('middle_name', 'LIKE', '%'.$search.'%')
-                ->orWhere('last_name', 'LIKE', '%'.$search.'%')
+                $q->where('name', 'LIKE', '%'.$search.'%')
                 ->orWhere('username', 'LIKE', '%'.$search.'%');
             });
         }
