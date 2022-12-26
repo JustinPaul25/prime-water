@@ -15,6 +15,7 @@ import TextInput from '@/Components/TextInput.vue';
 
 const showingNavigationDropdown = ref(false);
 const show = ref(false)
+const showList = ref(false)
 const swal = inject('$swal')
 
 const form = useForm({
@@ -26,8 +27,16 @@ function showPriceModal() {
     show.value = true
 }
 
+function showPriceListModal() {
+    showList.value = true
+}
+
 function cancel(close) {
     show.value = false
+}
+
+function cancelList(close) {
+    showList.value = false
 }
 
 const submit = () => {
@@ -68,11 +77,36 @@ function submitSuccess() {
                                 <InputError class="mt-2" :message="form.errors.amount" />
                             </div>
                             <div class="flex items-center justify-end mt-4">
+                                <p  @click="showPriceListModal()" class="mr-auto text-lg font-bold hover:opacity-75 cursor-pointer">Show Price</p>
                                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     Update
                                 </PrimaryButton>
                             </div>
                         </form>
+                    </div>
+                </v-tailwind-modal>
+                <v-tailwind-modal v-model="showList" @cancel="cancelList()">
+                    <div>
+                        <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Price History</h1>
+
+                            <div class="mt-3">
+                                <table class="table-auto w-full">
+                                    <thead>
+                                        <tr>
+                                        <th>Price</th>
+                                        <th>Date Changes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="price in $page.props.auth.price_list">
+                                            <td>₱ {{ price.value }}/CuM</td>
+                                            <td class="text-center">{{ price.date_created }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </v-tailwind-modal>
             </div>

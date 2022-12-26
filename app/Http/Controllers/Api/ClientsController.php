@@ -49,7 +49,7 @@ class ClientsController extends Controller
         if ($readMonthYear === $nowMonthYear)
             return;
 
-        $price = Utility::find(1);
+        $price = Utility::latest()->first();
 
         $new_current = $request->input('reading');
 

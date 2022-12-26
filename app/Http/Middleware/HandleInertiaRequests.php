@@ -53,7 +53,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user() ? User::where('id', $request->user()->id)->with('account')->first() : $request->user(),
                 'admin' => $isAdmin,
                 'cashier' => $isCashier,
-                'price' => Utility::find(1)
+                'price' => Utility::latest()->first(),
+                'price_list' => Utility::orderBy('created_at', 'desc')->get(),
             ],
             'cover_url' => url('/img/coverimg.jpg'),
             'ziggy' => function () use ($request) {

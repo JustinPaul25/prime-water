@@ -9,10 +9,17 @@ class UtilityController extends Controller
 {
     public function PriceUpdate(Request $request, Utility $utility)
     {
-        $utility->update([
-            'value' => $request->input('amount')
-        ]);
+        $utility = new Utility();
+
+        $utility->field = 'price';
+        $utility->value = $request->input('amount');
+        $utility->save();
 
         return;
+    }
+
+    public function list()
+    {
+        return Utility::where('field', 'price')->sortBy('desc')->get();
     }
 }

@@ -32,7 +32,7 @@ class Transaction extends Model
 
     public function getDatePaidAttribute()
     {
-        return date("d-m-Y", strtotime($this->created_at));;
+        return date("d-M-Y", strtotime($this->created_at));
     }
 
     public function client()

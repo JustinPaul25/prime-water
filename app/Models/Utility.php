@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Utility extends Model
 {
@@ -13,4 +14,13 @@ class Utility extends Model
         'field',
         'value',
     ];
+
+    protected $appends = [
+        'date_created',
+    ];
+
+    public function getDateCreatedAttribute()
+    {
+        return date("d-M-Y", strtotime($this->created_at));
+    }
 }
