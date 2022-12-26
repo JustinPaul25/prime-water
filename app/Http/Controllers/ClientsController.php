@@ -25,10 +25,13 @@ class ClientsController extends Controller
     {
         $client = User::query();
 
-        $client = $client->where(function($q) use ($search){
-            $q->where('name', 'LIKE', '%'.$search.'%')
-            ->orWhere('username', 'LIKE', '%'.$search.'%');
-        });
+        if($request->filled('search')) {
+            $search = $request->input('search');
+            $client = $client->where(function($q) use ($search){
+                $q->where('name', 'LIKE', '%'.$search.'%')
+                ->orWhere('username', 'LIKE', '%'.$search.'%');
+            });
+        }
 
         if($request->filled('status')) {
             $client = $client->where('status', $request->input('status'));
