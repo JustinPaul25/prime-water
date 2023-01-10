@@ -138,14 +138,14 @@
                                         <dt class="text-gray-500">Previous Reading</dt>
                                         <dd class="whitespace-nowrap text-gray-900">
                                             {{ $page.props.auth.user.account.prev_reading }}<br>
-                                            <span v-if="$page.props.client.account.prev_date_reading">Date Metered: {{ $page.props.client.account.prev_date_reading }}</span>
+                                            <span v-if="$page.props.auth.user.account.prev_date_reading">Date Metered: {{ $page.props.auth.user.account.prev_date_reading }}</span>
                                         </dd>
                                     </div>
 
                                     <div class="flex justify-between py-3 text-sm font-medium">
                                         <dt class="text-gray-500">
                                             Current Reading<br>
-                                            <span v-if="$page.props.client.account.current_date_reading">Date Metered: {{ $page.props.client.account.current_date_reading }}</span>
+                                            <span v-if="$page.props.auth.user.account.current_date_reading">Date Metered: {{ $page.props.auth.user.account.current_date_reading }}</span>
                                         </dt>
                                         <dd class="whitespace-nowrap text-gray-900">{{ $page.props.auth.user.account.current_reading }}</dd>
                                     </div>

@@ -157,7 +157,7 @@
         swal.fire({
             icon: 'success',
             title: isEdit.value ? 'Client Updated!' : 'Client Saved!',
-            text: isEdit.value ? '' : `The user password is default "PW-Client"`,
+            text: isEdit.value ? '' : `The user password is default "pwclient"`,
             confirmButtonColor: '#23408E'
         })
     }
