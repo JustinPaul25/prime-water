@@ -44,6 +44,13 @@ const getCurrentYear = () => {
     const d = new Date();
     return d.getFullYear();
 }
+
+const sendSms = (id) => {
+    axios.get(`/send-bill-duedate/${id}`)
+    .then(response => {
+        console.log('sms sent')
+    })
+}
 </script>
 
 <template>
@@ -115,7 +122,7 @@ const getCurrentYear = () => {
                     </div>
                 </section>
                 <div class="flex">
-                    <button v-print="'#printReciept'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
+                    <button @click="sendSms(client.id)" v-print="'#printReciept'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
                 </div>
             </reciept-modal>
             <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
@@ -206,7 +213,7 @@ const getCurrentYear = () => {
                                                 </div>
                                             </td>
                                             <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ Number(transaction.amount).toLocaleString() }}</td>
-                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.created_at }}</td>
+                                            <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.date_paid }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
