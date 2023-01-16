@@ -11,7 +11,7 @@ class UsageController extends Controller
 {
     public function usage()
     {
-        $usage = Reading::select(
+        $usages = Reading::select(
             DB::raw('extract(year from created_at) as year'),
             DB::raw('extract(month from created_at) as month'),
             DB::raw('sum(current_reading) as readings'),
@@ -22,7 +22,13 @@ class UsageController extends Controller
             ->get()
             ->toArray();
 
-        return Inertia::render('Usage', ['usage_data' => $usage]);
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        foreach($usages as $key => $usage) {
+            $usages[$key]['yearmonth'] = $months[$usage['month'] - 1] . ' ' . $usage['year'];
+        }
+
+        return Inertia::render('Usage', ['usage_data' => $usages]);
     }
 
     public function list(Request $request)

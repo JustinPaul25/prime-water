@@ -91,11 +91,11 @@
 
                             title: {
                                 display: true,
-                                text: 'Consumed Water per cuM'
+                                text: 'Income'
                             },
                             ticks: {
                                 callback: function(value, index, ticks) {
-                                    return value+' mᶟ';
+                                    return +'₱ ' + value;
                                 },
                             }
                         }

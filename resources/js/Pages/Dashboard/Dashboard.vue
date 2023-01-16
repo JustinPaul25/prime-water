@@ -18,7 +18,7 @@ function getResult() {
 }
 
 function populateData() {
-    props.reading.forEach(read => {
+    props.income.forEach(read => {
         const toPush = [Number(read.month) , Number(read.readings)]
         datas.value.push(toPush)
     })
