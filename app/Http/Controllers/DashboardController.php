@@ -35,7 +35,13 @@ class DashboardController extends Controller
                 ->groupBy('month')
                 ->get()
                 ->toArray();
-            
+
+            foreach($income as $key => $data) {
+                $income[$key]['yearmonth'] = $data['month'] < 10
+                    ? $data['year'] . '0' . $data['month']
+                    : $data['year'] . $data['month'];
+            }
+
             return Inertia::render('Dashboard/Dashboard', ['income' => $income, 'reading' => $reading]);
         }
 

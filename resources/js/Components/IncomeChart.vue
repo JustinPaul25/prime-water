@@ -82,7 +82,9 @@
                             ticks: {
                                 callback: function(value, index, ticks) {
                                     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                                    return months[value-1];
+                                    let year = value.slice(0, 4)
+                                    let month = value.slice(-2)
+                                    return year + months[month];
                                 },
                                 stepSize: 1
                             }
