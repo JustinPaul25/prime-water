@@ -14,14 +14,60 @@ const props = defineProps({
 const datas = ref([])
 
 function getResult() {
+    console.log(regression.linear(datas.value).points);
     return regression.linear(datas.value)
 }
 
 function populateData() {
     props.income.forEach(read => {
-        const toPush = [Number(read.yearmonth) , Number(read.amount)]
+        const toPush = [Number(read.key) , Number(read.amount)]
         datas.value.push(toPush)
     })
+}
+
+function renderLabel() {
+    var label = [];
+    const months = {
+        '1': 'Jan',
+        '2': 'Feb',
+        '3': 'Mar',
+        '4': 'Apr',
+        '5': 'May',
+        '6': 'Jun',
+        '7': 'Jul',
+        '8': 'Aug',
+        '9': 'Sep',
+        '10': 'Oct',
+        '11': 'Nov',
+        '12': 'Dec'
+    }
+
+    props.income.forEach(read => {
+        label.push([months[String(read.month)], String(read.year)])
+    })
+
+    const lengthData = label.length-1
+    let month = props.income[lengthData].month + 1;
+    let year = props.income[lengthData].year;
+
+    for (let i = 0; i < 2; i++) {
+        console.log(props.income[length].month + i + 1);
+        if(Number(month)+i > 12) {
+            month = Number(month) - 12;
+            month = month + i;
+            year = Number(year) + 1;
+            label.push([months[String(month)], String(year)])
+        } else {
+            month = month + i;
+            label.push([months[String(month)], String(year)])
+        }
+        // console.log(label[length][0]);
+        // if()
+        // let toPush = []
+        // console.log(`Iteration is #${i}`);
+    }
+
+    return label;
 }
 
 onMounted(() => populateData())
@@ -73,7 +119,7 @@ onMounted(() => populateData())
                 <div class="grid overflow-hidden w-full px-8 lg:px-40">
                     <div class="box row-span-2 p-5">
                         <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">Forecast Chart</p>
-                        <income-chart class="h-60" v-if="datas.length > 1" :raw-data="datas" :result="getResult()"></income-chart>
+                        <income-chart class="h-60" v-if="datas.length > 1" :raw-data="datas" :result="getResult()" :label="renderLabel()"></income-chart>
                     </div>
                 </div>
             </div>

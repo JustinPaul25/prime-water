@@ -26,7 +26,7 @@
     let show = ref(false)
     let isEdit = ref(false)
     const role = ref('')
-    const searchYear = ref('2022')
+    const searchYear = ref('')
     const searchDate = ref('')
     const searchFrom = ref('')
     const searchTo = ref('')

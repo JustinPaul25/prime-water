@@ -6,28 +6,20 @@
     import Chart from 'chart.js/auto';
 
     export default {
-        props: ['rawData', 'result'],
+        props: ['rawData', 'result', 'label'],
         methods: {
             setTheoryData() {
                 var theoryData = [];
-                for (var i = 0; i < this.rawData.length; i++) {
-                    const toPush = [this.rawData[i][0], this.formula(this.result.equation, this.rawData[i][0])];
-                    theoryData.push({
-                        x: toPush[0],
-                        y: toPush[1]
-                    })
-                    if(i === this.rawData.length - 1) {
-                        const toAdd = Number(theoryData[theoryData.length - 1].y) - Number(theoryData[theoryData.length - 2].y)
-                        theoryData.push({
-                            x: Number(this.rawData[i][0]) + Number(1),
-                            y: Number(toPush[1]) + Number(toAdd)
-                        })
-                        theoryData.push({
-                            x: Number(this.rawData[i][0]) + Number(2),
-                            y: Number(toPush[1]) + Number(toAdd) + Number(toAdd)
-                        })
-                    }
-                }
+                const points = this.result.points;
+
+                points.forEach(element => {
+                    theoryData.push(element[1]);
+                });
+
+                const difference = Number(points[points.length-1][1]) - Number(points[points.length-2][1])
+
+                theoryData.push(Number(points[points.length-1][1]) + difference)
+                theoryData.push(Number(points[points.length-1][1]) + difference + difference)
 
                 return theoryData;
             },
@@ -38,67 +30,50 @@
                 }
                 return result;
             },
-            convertRawData() {
-                let dataArr = [];
+            currentData() {
+                let incomes = []
                 this.rawData.forEach(element => {
-                    const toPush = {
-                        x: element[0],
-                        y: element[1]
-                    }
-                    dataArr.push(toPush)
+                    incomes.push(element[1])
                 });
 
-                return dataArr
+                return incomes;
             }
         },
         mounted() {
             const ctx = document.getElementById('myChart');
 
+            const NUMBER_CFG = this.currentData();
+            const YEAR_MONTH_LABEL = this.label;
+            const REGRESSION = this.setTheoryData();
             const myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    datasets: [{
-                        type: 'line',
-                        label: 'Data',
-                        data: this.convertRawData(),
-                        backgroundColor: '#23408E',
-                        showLine: false
-                    },
-                    {
-                        type: 'line',
-                        label: 'Prediction',
-                        data: this.setTheoryData(),
-                        backgroundColor: '#2DAAE2'
-                    }],
+                labels: YEAR_MONTH_LABEL,
+                    datasets: [
+                        {
+                            label: 'Income per month',
+                            data: NUMBER_CFG,
+                            fill: false,
+                            borderColor: '#23408E',
+                            backgroundColor: '#2DAAE2',
+                        },
+                        {
+                            label: 'Regression',
+                            data: REGRESSION,
+                            fill: false,
+                            borderColor: '#DDDDDD',
+                            backgroundColor: '#EEEEEE',
+                        }
+                    ],
                 },
                 options: {
                     scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true
-                            },
-                            ticks: {
-                                callback: function(value, index, ticks) {
-                                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                                    let year = value.slice(0, 4)
-                                    let month = value.slice(-2)
-                                    return year + months[month];
-                                },
-                                stepSize: 1
-                            }
-                        },
                         y: {
-
-                            title: {
-                                display: true,
-                                text: 'Income'
-                            },
                             ticks: {
+                                // Include a dollar sign in the ticks
                                 callback: function(value, index, ticks) {
-                                    return +'₱ ' + value;
-                                },
+                                    return '₱ ' + (Number(value)).toLocaleString();
+                                }
                             }
                         }
                     }

@@ -37,6 +37,7 @@ class DashboardController extends Controller
                 ->toArray();
 
             foreach($income as $key => $data) {
+                $income[$key]['key'] = $key+1;
                 $income[$key]['yearmonth'] = $data['month'] < 10
                     ? $data['year'] . '0' . $data['month']
                     : $data['year'] . $data['month'];
