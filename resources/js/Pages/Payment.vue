@@ -131,6 +131,7 @@
                                         <div class="sm:border-r sm:border-gray-200 sm:pr-6">
                                         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{{ client.first_name+' '+client.last_name }}</h1>
                                         <p>Current Bill: ₱ {{ Number(client.account.current_charges).toLocaleString() }}</p>
+                                        <p>Billed At: {{ client.account.current_date_reading }}</p>
                                         </div>
                                     </div>
                                     <div>
