@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Account;
 use App\Models\Reading;
 use App\Models\Utility;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -36,6 +37,13 @@ class ClientSeeder extends Seeder
             '2022-11-01 10:00:00',
             '2023-10-01 10:00:00',
             '2023-12-01 10:00:00',
+        ];
+
+        $datePaid = [
+            '2022-10-02 10:00:00',
+            '2022-11-02 10:00:00',
+            '2023-10-02 10:00:00',
+            '2023-12-02 10:00:00',
         ];
 
         foreach( range(1, 200) as $index ){
@@ -87,6 +95,25 @@ class ClientSeeder extends Seeder
             $reading->updated_at = $date[$dateInd-1];
             $reading->created_at = $date[$dateInd-1];
             $reading->save(['timestamps' => false]);
+
+            $current_charges =  $account->current_charges - $payment;
+            $prev_balance = $account->current_charges;
+
+            $account->update([
+                'last_payment' => date("Y-m-d H:i:s", strtotime('now')),
+                'current_charges' => $current_charges,
+                'prev_balance' => $prev_balance,
+                'created_at' => $datePaid[$dateInd-1],
+                'updated_at' => $datePaid[$dateInd-1],
+            ]);
+
+            Transaction::create([
+                'client_id' => $user->id,
+                'cashier_id' => 1,
+                'amount' => $payment,
+                'created_at' => $datePaid[$dateInd-1],
+                'updated_at' => $datePaid[$dateInd-1],
+            ]);
         }
     }
 }
