@@ -52,7 +52,7 @@ function renderLabel() {
 
     for (let i = 0; i < 2; i++) {
         console.log(props.income[length].month + i + 1);
-        if(Number(month)+i > 12) {
+        if(Number(month) + Number(i) > 12) {
             month = Number(month) - 12;
             month = month + i;
             year = Number(year) + 1;
