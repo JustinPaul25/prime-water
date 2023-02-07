@@ -19,6 +19,8 @@ class UsageController extends Controller
             ->where(DB::raw('date(created_at)'), '>=', "2010-01-01")
             ->groupBy('year')
             ->groupBy('month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
             ->get()
             ->toArray();
 
@@ -29,6 +31,7 @@ class UsageController extends Controller
         }
 
         dd($usages);
+
         return Inertia::render('Usage', ['usage_data' => $usages]);
     }
 

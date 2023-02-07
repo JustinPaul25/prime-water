@@ -34,11 +34,12 @@ class ClientSeeder extends Seeder
         $date = [
             '2022-10-01 10:00:00',
             '2022-11-01 10:00:00',
-            '2022-12-01 10:00:00',
+            '2023-10-01 10:00:00',
+            '2023-12-01 10:00:00',
         ];
 
-        foreach( range(1, 100) as $index ){
-            $dateInd = rand(1,3);
+        foreach( range(1, 200) as $index ){
+            $dateInd = rand(1,4);
 
             $addIndex = rand(0, 4);
 
