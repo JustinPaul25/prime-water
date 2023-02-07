@@ -19,6 +19,8 @@ class ReportsController extends Controller
             ->where(DB::raw('date(created_at)'), '>=', "2010-01-01")
             ->groupBy('year')
             ->groupBy('month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
             ->get()
             ->toArray();
 
