@@ -47,14 +47,14 @@ function renderLabel() {
     })
 
     const lengthData = label.length-1
-    let month = props.income[lengthData].month + 1;
+    let month = props.income[lengthData].month;
     let year = props.income[lengthData].year;
 
     for (let i = 0; i < 2; i++) {
         console.log(props.income[length].month + i + 1);
-        if(Number(month) + Number(i) > 12) {
+        if(Number(month) === 12) {
             month = Number(month) - 12;
-            month = month + i;
+            month = 1;
             year = Number(year) + 1;
             label.push([months[String(month)], String(year)])
         } else {
