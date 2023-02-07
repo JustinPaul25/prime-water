@@ -58,7 +58,7 @@ function renderLabel() {
             year = Number(year) + 1;
             label.push([months[String(month)], String(year)])
         } else {
-            month = month + i;
+            month = Number(month) + 1;
             label.push([months[String(month)], String(year)])
         }
         // console.log(label[length][0]);
