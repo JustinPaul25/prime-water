@@ -30,8 +30,6 @@ class UsageController extends Controller
             $usages[$key]['yearmonth'] = $months[$usage['month'] - 1] . ' ' . $usage['year'];
         }
 
-        dd($usages);
-
         return Inertia::render('Usage', ['usage_data' => $usages]);
     }
 
