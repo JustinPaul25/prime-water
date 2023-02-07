@@ -64,7 +64,7 @@
                     labels: YEAR_MONTH_LABEL,
                     datasets: [
                         {
-                            label: 'Income per month',
+                            label: 'Usage per month',
                             data: NUMBER_CFG,
                             fill: false,
                             borderColor: '#23408E',

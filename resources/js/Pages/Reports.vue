@@ -103,7 +103,7 @@
                     <article class="overflow-hidden">
                         <div class="bg-[white] rounded-b-md">
                             <div class="p-9">
-                                <p class="font-bold text-lg">WBS Client Qr's</p>
+                                <p class="font-bold text-lg">WBS Income Report</p>
                                 <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
                             </div>
 
