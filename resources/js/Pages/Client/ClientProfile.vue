@@ -1,9 +1,9 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
-import { ref, onMounted } from 'vue'
 import RecieptModal from '@/Modals/RecieptModal.vue';
+import { Head } from '@inertiajs/inertia-vue3';
 import moment from 'moment';
+import { onMounted, ref } from 'vue';
 
 const transactions = ref([])
 const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
@@ -209,7 +209,7 @@ const sendSms = (id) => {
                                             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
                                                 <div class="font-medium text-gray-900">{{ transaction.id }}</div>
                                                 <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                <span>₱ {{ Number(transaction.amount).toLocaleString() }} / {{ transaction.created_at }}</span>
+                                                <span>₱ {{ Number(transaction.amount).toLocaleString() }} / {{ transaction.date_paid }}</span>
                                                 </div>
                                             </td>
                                             <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ Number(transaction.amount).toLocaleString() }}</td>
