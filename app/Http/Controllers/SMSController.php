@@ -21,8 +21,8 @@ class SMSController extends Controller
     public function notify(User $user)
     {
         $config = Configuration::getDefaultConfiguration()
-            ->setUsername('rocesregine@gmail.com')
-            ->setPassword('5F95AAAB-35F7-9FAC-95A9-50C6FE112556');
+            ->setUsername('regineroces')
+            ->setPassword('RegineRoces@27');
 
         $apiInstance = new SMSApi(
             new GuzzleClient(),
@@ -50,8 +50,8 @@ class SMSController extends Controller
     public function bill(User $user)
     {
         $config = Configuration::getDefaultConfiguration()
-            ->setUsername('elmer.angcla@dnsc.edu.ph')
-            ->setPassword('1B05DB49-A364-907D-AB74-56AC71BC7476');
+            ->setUsername('regineroces')
+            ->setPassword('RegineRoces@27');
 
         $apiInstance = new SMSApi(
             new GuzzleClient(),
