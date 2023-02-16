@@ -100,7 +100,7 @@ class ClientSeeder extends Seeder
             $prev_balance = $account->current_charges;
 
             $account->update([
-                'last_payment' => date("Y-m-d H:i:s", strtotime('now')),
+                'last_payment' => $datePaid[$dateInd-1],
                 'current_charges' => $current_charges,
                 'prev_balance' => $prev_balance,
                 'created_at' => $datePaid[$dateInd-1],

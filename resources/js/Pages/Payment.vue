@@ -268,8 +268,8 @@ import { useStore } from 'vuex';
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <!-- <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a> -->
-                                    <a @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
+                                    <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
+                                    <!-- <a @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a> -->
                                     <button @click="showPaymentModal(client)" class="text-primary-blue hover:opacity-75">Generate Payment</button>
                                 </td>
                             </tr>
