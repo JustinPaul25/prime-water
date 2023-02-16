@@ -1,16 +1,16 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import RecieptModal from '@/Modals/RecieptModal.vue';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { computed, ref, inject, onMounted } from 'vue'
-    import InputLabel from '@/Components/InputLabel.vue';
-    import TextInput from '@/Components/TextInput.vue';
-    import Pagination from '@/Components/Pagination.vue';
-    import { watchDebounced } from '@vueuse/core';
-    import { useStore } from 'vuex';
     import InputError from '@/Components/InputError.vue';
-    import moment from 'moment';
+import InputLabel from '@/Components/InputLabel.vue';
+import Pagination from '@/Components/Pagination.vue';
+import TextInput from '@/Components/TextInput.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import RecieptModal from '@/Modals/RecieptModal.vue';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { watchDebounced } from '@vueuse/core';
+import moment from 'moment';
+import { computed, inject, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
 
     const search = ref('')
     const showPayment = ref(false)
@@ -268,7 +268,8 @@
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
+                                    <!-- <a v-if="parseInt(client.account.month_last_payment) >= 3" @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a> -->
+                                    <a @click="sendReminder(client.id)" href="#" class="text-yellow-500 hover:opacity-75 mr-8">Send Reminder!</a>
                                     <button @click="showPaymentModal(client)" class="text-primary-blue hover:opacity-75">Generate Payment</button>
                                 </td>
                             </tr>
