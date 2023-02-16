@@ -74,7 +74,7 @@ class ClientSeeder extends Seeder
             $account->save();
 
             $price = Utility::find(1);
-            $randReading = rand(10,200);
+            $randReading = rand(100,200);
 
             $reading_diff = $randReading - $account->current_reading;
 
@@ -96,7 +96,9 @@ class ClientSeeder extends Seeder
             $reading->created_at = $date[$dateInd-1];
             $reading->save(['timestamps' => false]);
 
-            $current_charges =  $account->current_charges - $payment;
+            $newPayment = $payment - 50;
+
+            $current_charges =  $account->current_charges - $newPayment;
             $prev_balance = $account->current_charges;
 
             $account->update([
@@ -110,7 +112,7 @@ class ClientSeeder extends Seeder
             Transaction::create([
                 'client_id' => $user->id,
                 'cashier_id' => 1,
-                'amount' => $payment,
+                'amount' => $newPayment,
                 'created_at' => $datePaid[$dateInd-1],
                 'updated_at' => $datePaid[$dateInd-1],
             ]);
