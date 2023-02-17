@@ -29,7 +29,7 @@ class SMSController extends Controller
             $config
         );
 
-        $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$user->account->curent_charges.'.';
+        $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$user->account->curent_charges.'.00';
 
         $msg = new SmsMessage();
         $msg->setBody($message);
@@ -60,7 +60,7 @@ class SMSController extends Controller
 
         $date = Carbon::now()->addDays(12)->format('M-d-Y');
 
-        $message = 'Hello '.$user->first_name.' '.$user->last_name.' Here is your bill this month and the due date will be on' . $date . '. Current Bill: ₱'.$user->account->current_charges.'.';
+        $message = 'Hello '.$user->first_name.' '.$user->last_name.' Here is your bill this month and the due date will be on' . $date . '. Current Bill: ₱'.$user->account->current_charges.'.00';
 
         $msg = new SmsMessage();
         $msg->setBody($message);
