@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use GuzzleHttp\Client;
 use App\Models\Account;
-use Twilio\Rest\Client;
 use ClickSend\Api\SMSApi;
 use ClickSend\Configuration;
 use Illuminate\Http\Request;
@@ -20,30 +20,30 @@ class SMSController extends Controller
 
     public function notify(User $user)
     {
-        $config = Configuration::getDefaultConfiguration()
-            ->setUsername('regineroces')
-            ->setPassword('RegineRoces@27');
-
-        $apiInstance = new SMSApi(
-            new GuzzleClient(),
-            $config
-        );
-
+        $username = 'mher';
+        $password = 'Qwerty123';
+        $number = $user->contact_no;
         $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$user->account->curent_charges.'.00';
 
-        $msg = new SmsMessage();
-        $msg->setBody($message);
-        $msg->setTo($user->contact_no);
-        $msg->setSource('sdk');
+        $client = new Client();
+        $url = 'https://api.itexmo.com/api/query?Email=elmer.angcla@dnsc.edu.ph&Password=Qwerty123';
 
-        $sms_message = new SmsMessageCollection();
-        $sms_message->setMessages([$msg]);
+        $data = [
+            "Recipients" => $user->contact_no,
+            "Message" => $message,
+            "ApiCode" => "PR-ELMER566617_LK5KT",
+            "SenderId" => "WBS"
+        ];
 
-        try {
-            $result = $apiInstance->smsSendPost($sms_message);
-            return $result;
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $response = $client->request('POST', $url, $data);
+
+        $result = $response->getBody()->getContents();
+        return $response;
+
+        if ($result == '0') {
+            return 'Message sent successfully!';
+        } else {
+            return 'Message sending failed.';
         }
     }
 
