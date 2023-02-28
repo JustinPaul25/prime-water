@@ -26,19 +26,24 @@ class SMSController extends Controller
         $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$user->account->curent_charges.'.00';
 
         $client = new Client();
-        $url = 'https://api.itexmo.com/api/query?Email=elmer.angcla@dnsc.edu.ph&Password=Qwerty123';
+        $url = 'https://api.itexmo.com/api/broadcast';
 
-        $data = [
-            "Recipients" => $user->contact_no,
-            "Message" => $message,
-            "ApiCode" => "PR-ELMER566617_LK5KT",
-            "SenderId" => "WBS"
-        ];
-
-        $response = $client->request('POST', $url, $data);
+        $response = $client->request(
+            'POST',
+            $url,
+            [
+                'json' => [
+                    'Email' => 'elmer.angcla@dnsc.edu.ph',
+                    'Password' => 'Qwerty123',
+                    "Recipients" => [ "09239712763" ],
+                    "Message" => "Test message.",
+                    'ApiCode' => 'PR-ELMER566617_LK5KT'
+                ]
+            ]
+        );
 
         $result = $response->getBody()->getContents();
-        return $response;
+        return $result;
 
         if ($result == '0') {
             return 'Message sent successfully!';
