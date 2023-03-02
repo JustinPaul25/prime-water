@@ -20,8 +20,6 @@ class SMSController extends Controller
 
     public function notify(User $user)
     {
-        $username = 'mher';
-        $password = 'Qwerty123';
         $number = $user->contact_no;
         $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$user->account->curent_charges.'.00';
 
@@ -35,8 +33,8 @@ class SMSController extends Controller
                 'json' => [
                     'Email' => 'elmer.angcla@dnsc.edu.ph',
                     'Password' => 'Qwerty123',
-                    "Recipients" => [ "09239712763" ],
-                    "Message" => "Test message.",
+                    "Recipients" => [ $number ],
+                    "Message" => $message,
                     'ApiCode' => 'PR-ELMER566617_LK5KT'
                 ]
             ]
@@ -54,32 +52,35 @@ class SMSController extends Controller
 
     public function bill(User $user)
     {
-        $config = Configuration::getDefaultConfiguration()
-            ->setUsername('regineroces')
-            ->setPassword('RegineRoces@27');
-
-        $apiInstance = new SMSApi(
-            new GuzzleClient(),
-            $config
-        );
-
         $date = Carbon::now()->addDays(12)->format('M-d-Y');
 
+        $number = $user->contact_no;
         $message = 'Hello '.$user->first_name.' '.$user->last_name.' Here is your bill this month and the due date will be on' . $date . '. Current Bill: ₱'.$user->account->current_charges.'.00';
 
-        $msg = new SmsMessage();
-        $msg->setBody($message);
-        $msg->setTo($user->contact_no);
-        $msg->setSource('sdk');
+        $client = new Client();
+        $url = 'https://api.itexmo.com/api/broadcast';
 
-        $sms_message = new SmsMessageCollection();
-        $sms_message->setMessages([$msg]);
+        $response = $client->request(
+            'POST',
+            $url,
+            [
+                'json' => [
+                    'Email' => 'elmer.angcla@dnsc.edu.ph',
+                    'Password' => 'Qwerty123',
+                    "Recipients" => [ $number ],
+                    "Message" => $message,
+                    'ApiCode' => 'PR-ELMER566617_LK5KT'
+                ]
+            ]
+        );
 
-        try {
-            $result = $apiInstance->smsSendPost($sms_message);
-            return $result;
-        } catch (Exception $e) {
-            return $e->getMessage();
+        $result = $response->getBody()->getContents();
+        return $result;
+
+        if ($result == '0') {
+            return 'Message sent successfully!';
+        } else {
+            return 'Message sending failed.';
         }
     }
     // public function notify(User $user)
