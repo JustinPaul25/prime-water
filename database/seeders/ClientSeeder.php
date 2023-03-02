@@ -46,7 +46,7 @@ class ClientSeeder extends Seeder
             '2023-01-02 10:00:00',
         ];
 
-        foreach( range(1, 200) as $index ){
+        foreach( range(1, 20) as $index ){
             $dateInd = rand(1,4);
 
             $addIndex = rand(0, 4);

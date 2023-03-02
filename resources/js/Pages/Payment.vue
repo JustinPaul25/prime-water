@@ -8,6 +8,7 @@ import RecieptModal from '@/Modals/RecieptModal.vue';
 import VTailwindModal from '@/Modals/VTailwindModal.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { watchDebounced } from '@vueuse/core';
+import axios from 'axios';
 import moment from 'moment';
 import { computed, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
@@ -84,6 +85,17 @@ import { useStore } from 'vuex';
             swal.fire({
                 icon: 'success',
                 title: 'Reminder Sent',
+                confirmButtonColor: '#23408E'
+            })
+        })
+    }
+
+    const notifyAll = () => {
+        axios.get('/notify-all')
+        .then(response => {
+            swal.fire({
+                icon: 'success',
+                title: 'All Reminder Sent to Specific Users',
                 confirmButtonColor: '#23408E'
             })
         })
@@ -239,6 +251,11 @@ import { useStore } from 'vuex';
                     <div class="mr-4">
                         <InputLabel class="font-bold" for="search" value="Search" />
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
+                    </div>
+                    <div class="ml-auto">
+                        <button @click="notifyAll()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                            Notify All User
+                        </button>
                     </div>
                 </div>
             </div>

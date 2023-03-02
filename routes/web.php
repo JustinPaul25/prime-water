@@ -85,6 +85,7 @@ Route::get('/change-password', [UserController::class, 'changePassword'])->middl
 Route::post('/change-password', [UserController::class, 'updatePassword'])->middleware(['auth', 'verified'])->name('change.password');
 Route::get('/send-sms/{user}', [SMSController::class, 'notify'])->middleware(['auth', 'verified'])->name('send-notification');
 Route::get('/send-bill-duedate/{user}', [SMSController::class, 'bill'])->middleware(['auth', 'verified'])->name('send-bill-duedate');
+Route::get('/notify-all', [SMSController::class, 'notifyAllUser'])->middleware(['auth', 'verified'])->name('notify-all');
 
 Route::get('/usage', [UsageController::class, 'usage'])->middleware(['auth', 'verified'])->name('usage');
 Route::get('/usage/list', [UsageController::class, 'list'])->middleware(['auth', 'verified'])->name('usage.list');
