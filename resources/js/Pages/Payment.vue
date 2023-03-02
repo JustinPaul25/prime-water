@@ -12,10 +12,13 @@ import axios from 'axios';
 import moment from 'moment';
 import { computed, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
+    // Import stylesheet
+    import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 
     const search = ref('')
     const showPayment = ref(false)
     const showReciept = ref(false)
+    const sending = ref(false)
     const client = ref(null)
     const amountToPrint = ref(0)
     const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
@@ -85,18 +88,25 @@ import { useStore } from 'vuex';
             swal.fire({
                 icon: 'success',
                 title: 'Reminder Sent',
-                confirmButtonColor: '#23408E'
+                confirmButtonColor: '#23408E',
+                backdrop: 'static',
+                allowOutsideClick: false,
+                allowEscapeKey: false
             })
         })
     }
 
     const notifyAll = () => {
+        sending.value = true
         axios.get('/notify-all')
         .then(response => {
+            sending.value = false
             swal.fire({
-                icon: 'success',
-                title: 'All Reminder Sent to Specific Users',
-                confirmButtonColor: '#23408E'
+                title: "Sent",
+                text: "Successfully sent to selected users.",
+                icon: "success",
+                buttons: false,
+                timer: 2000,
             })
         })
     }
@@ -253,8 +263,9 @@ import { useStore } from 'vuex';
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
                     </div>
                     <div class="ml-auto">
-                        <button @click="notifyAll()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
-                            Notify All User
+                        <button :disabled="sending" @click="notifyAll()" class="flex bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+                            <p v-if="sending" class="flex">Sending... <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="animate-spin ml-2"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg></p>
+                            <p v-else>Notify All User</p>
                         </button>
                     </div>
                 </div>

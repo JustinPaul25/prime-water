@@ -24,7 +24,7 @@ class SMSController extends Controller
         $balance = number_format($balance, 2);
         $string = $user->contact_no;
         $number = substr_replace($string, "+63", 0, 1);
-        $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$balance;
+        $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnection from WBS. Current Bill: ₱'.$balance;
 
         $client = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
 
@@ -51,7 +51,7 @@ class SMSController extends Controller
                 $balance = number_format($balance, 2);
                 $string = $user->contact_no;
                 $number = substr_replace($string, "+63", 0, 1);
-                $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnetion from WBS. Current Bill: ₱'.$balance;
+                $message = 'Hello '.$user->first_name.' '.$user->last_name.' This is a notice of disconnection from WBS. Current Bill: ₱'.$balance;
 
                 $message = $client->messages->create(
                     $number,
