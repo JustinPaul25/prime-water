@@ -23,10 +23,6 @@ class ChangePasswordController extends Controller
         $randomBytes = random_bytes(6);
         $randomString = bin2hex($randomBytes);
 
-        $user->update([
-            'password' => Hash::make($randomString),
-        ]);
-
         $message = 'Hello '.$user->first_name.' '.$user->last_name.'This is WBS your new password:'.$randomString;
         $string = $user->contact_no;
         $number = substr_replace($string, "+63", 0, 1);
@@ -39,6 +35,10 @@ class ChangePasswordController extends Controller
                 'body' => $message
             ]
         );
+
+        $user->update([
+            'password' => Hash::make($randomString),
+        ]);
 
         return response()->json([
             'message' => 'SMS sent successfully.',
