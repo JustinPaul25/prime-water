@@ -21,7 +21,7 @@ class CashierController extends Controller
         ]);
 
         $account = Account::where('client_id', $request->input('id'))->first();
-        
+
         $current_charges =  $account->current_charges - $request->input('amount');
         $prev_balance = $account->current_charges;
 

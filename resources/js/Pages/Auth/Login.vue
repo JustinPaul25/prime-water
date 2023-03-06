@@ -1,21 +1,26 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
+import { inject, ref } from 'vue';
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
-});
+})
+
+const swal = inject('$swal')
+
+const showResetPassword = ref(false)
 
 const form = useForm({
     login: '',
     password: '',
-    remember: false
+    remember: false,
+    username: '',
 });
 
 const submit = () => {
@@ -23,11 +28,58 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const submitChangePassword = () => {
+    axios.post(`/user-change-password`, {
+        'username': form.username
+    })
+    .then(response => {
+        swal.fire({
+            icon: 'success',
+            title: 'Temporary Password sent Via SMS',
+            text: `Change password as soon as possible`,
+            confirmButtonColor: '#23408E'
+        })
+    })
+    .catch(response => {
+        swal.fire({
+            icon: 'error',
+            title: 'Failed to Change Password',
+            text: response.response.data.message,
+            confirmButtonColor: '#23408E'
+        })
+    })
+}
+
+const enterEmail = () => {
+    showResetPassword.value = true
+}
+
+function cancel(close) {
+    showResetPassword.value = false
+}
 </script>
 
 <template>
-        <Head title="Login" />
+    <Head title="Login" />
     <div class="flex h-screen">
+        <v-tailwind-modal v-model="showResetPassword" @cancel="cancel()">
+            <div class="flex justify-center">
+                <div class="min-h-full bg-white w-full">
+                    <div class="mx-auto max-w-max">
+                        <div>
+                            <div class="relative rounded-md shadow-sm mt-10">
+                                <input v-model="form.username" type="text" name="amount" placeholder="Input Registered Username" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+                                <button @click="cancel()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
+                                <a @click="submitChangePassword()" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Change Password</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </v-tailwind-modal>
         <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div class="mx-auto w-full max-w-sm lg:w-96">
             <div>
@@ -57,6 +109,9 @@ const submit = () => {
                             </div>
                         </div>
                     </form>
+                    <button @click="enterEmail()" class="ml-auto text-right text-primary-blue hover:opacity-75 mt-2 w-full">
+                        Forgot Password?
+                    </button>
                 </div>
             </div>
             </div>

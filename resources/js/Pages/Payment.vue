@@ -31,7 +31,7 @@ import { useStore } from 'vuex';
 
     const form = useForm({
         id: '',
-        amount: 0,
+        amount: '',
     });
 
     watchDebounced(search, () => {
@@ -136,6 +136,14 @@ import { useStore } from 'vuex';
         })
     }
 
+    const renderChange = (amount) => {
+        if(amount < 0) {
+            return Math.abs(Number(amount));
+        } else {
+            return 0
+        }
+    }
+
     onMounted(() => store.dispatch('clients/getClients'))
 </script>
 
@@ -167,7 +175,7 @@ import { useStore } from 'vuex';
                                         <!-- Heroicon name: mini/envelope -->
                                         <p class="text-gray-400">₱</p>
                                         </div>
-                                        <input v-model="form.amount" type="number" name="amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <input v-model="form.amount" type="number" name="amount" placeholder="Input Amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.amount" />
                                     <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
@@ -237,7 +245,11 @@ import { useStore } from 'vuex';
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{Number(client.account.current_charges - amountToPrint).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{Number(client.account.current_charges - amountToPrint < 0 ? 0 : client.account.current_charges - amountToPrint).toLocaleString()}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold">
+                            <p>Change: </p>
+                            <p class="ml-auto">₱ {{Number(renderChange(client.account.current_charges - amountToPrint)).toLocaleString()}}.00</p>
                         </div>
 
                         <div v-if="transactions.length !== 0" class="flex text-xs mt-8">
@@ -265,7 +277,7 @@ import { useStore } from 'vuex';
                     <div class="ml-auto">
                         <button :disabled="sending" @click="notifyAll()" class="flex bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
                             <p v-if="sending" class="flex">Sending... <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="animate-spin ml-2"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg></p>
-                            <p v-else>Notify All User</p>
+                            <p v-else>Remind All User</p>
                         </button>
                     </div>
                 </div>

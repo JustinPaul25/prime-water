@@ -9,6 +9,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\SMSController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UsageController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ReadingController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionsController;
-use App\Http\Controllers\UsageController;
+use App\Http\Controllers\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,5 +90,7 @@ Route::get('/notify-all', [SMSController::class, 'notifyAllUser'])->middleware([
 
 Route::get('/usage', [UsageController::class, 'usage'])->middleware(['auth', 'verified'])->name('usage');
 Route::get('/usage/list', [UsageController::class, 'list'])->middleware(['auth', 'verified'])->name('usage.list');
+
+Route::post('/user-change-password', [ChangePasswordController::class, 'change'])->name('user.change.password');
 
 require __DIR__.'/auth.php';
