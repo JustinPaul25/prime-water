@@ -62,6 +62,7 @@ import { useStore } from 'vuex';
 
     function showPaymentModal(cust) {
         client.value = cust
+        amount.value = ''
         getTransactions()
 
         showPayment.value = true
