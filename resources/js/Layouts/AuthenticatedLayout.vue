@@ -147,7 +147,7 @@ const updateUser = () => {
                 <v-tailwind-modal v-model="showSettings" @cancel="cancelSettings()">
                     <div>
                         <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">User Settings</h1>
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Update Information</h1>
 
                             <div>
                                 <div class="mt-4">
@@ -290,7 +290,7 @@ const updateUser = () => {
                                             Price/Cu M
                                         </button>
                                         <button v-if="$page.props.auth.admin" @click="showSettingsModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
-                                            User Settings
+                                            Update Information
                                         </button>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
@@ -350,7 +350,7 @@ const updateUser = () => {
                                 Price/Cu M
                             </button>
                             <button v-if="$page.props.auth.admin" @click="showSettingsModal()" class="w-full block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                                User Settings
+                                Update Information
                             </button>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full">
                                 Log Out

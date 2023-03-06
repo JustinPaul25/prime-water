@@ -21,8 +21,10 @@ import { useStore } from 'vuex';
     const sending = ref(false)
     const client = ref(null)
     const change = ref(0)
-    const amount = ref(0)
+    const amount = ref(null)
+    const paidAmount = ref(null)
     const amountToPrint = ref(0)
+    const newBalance = ref(0)
     const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
     const transactions = ref([])
 
@@ -41,13 +43,18 @@ import { useStore } from 'vuex';
     }, {debounce: 500})
 
     watchDebounced(amount, () => {
-        let totalBill = Number(client.value.account.prev_balance) + Number(client.value.account.current_charges)
-        if(Number(amount.value) > totalBill) {
-            change.value = Number(amount.value) - totalBill
-            form.amount = totalBill
-        } else {
-            console.log(amount.value)
-            form.amount = amount.value
+        if(amount.value) {
+            let totalBill = Number(client.value.account.prev_balance) + Number(client.value.account.current_charges)
+            paidAmount.value = amount.value
+            if(Number(amount.value) > totalBill) {
+                change.value = Number(amount.value) - totalBill
+                form.amount = totalBill
+                newBalance.value = 0
+            } else {
+                console.log(amount.value)
+                form.amount = amount.value
+                newBalance.value = totalBill - Number(amount.value)
+            }
         }
     }, {debounce: 500})
 
@@ -257,11 +264,11 @@ import { useStore } from 'vuex';
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Paid Amount: </p>
-                            <p class="ml-auto">₱ {{Number(amountToPrint).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{Number(paidAmount).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>New Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{((Number(client.account.current_charges)+Number(client.account.prev_balance))-Number(amount)).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{newBalance.toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Change: </p>
