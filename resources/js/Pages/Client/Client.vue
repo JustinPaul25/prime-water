@@ -1,18 +1,18 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import RecieptModal from '@/Modals/RecieptModal.vue';
-    import PrimaryButton from '@/Components/PrimaryButton.vue';
     import InputError from '@/Components/InputError.vue';
-    import InputLabel from '@/Components/InputLabel.vue';
-    import TextInput from '@/Components/TextInput.vue';
-    import Pagination from '@/Components/Pagination.vue'
-    import { Inertia } from '@inertiajs/inertia';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { computed, onMounted, inject, ref} from 'vue'
-    import { useStore } from 'vuex'
-    import { watchDebounced } from '@vueuse/core'
-    import axios from 'axios';
+import InputLabel from '@/Components/InputLabel.vue';
+import Pagination from '@/Components/Pagination.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import RecieptModal from '@/Modals/RecieptModal.vue';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { watchDebounced } from '@vueuse/core';
+import axios from 'axios';
+import { computed, inject, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
 
     defineProps({
         status: String,

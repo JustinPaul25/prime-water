@@ -1,26 +1,85 @@
 <script setup>
-import { ref, inject } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import LayoutFooter from '@/Components/LayoutFooter.vue'
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link, useForm } from '@inertiajs/inertia-vue3';
-import VTailwindModal from '@/Modals/VTailwindModal.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import LayoutFooter from '@/Components/LayoutFooter.vue';
+import NavLink from '@/Components/NavLink.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import TextInput from '@/Components/TextInput.vue';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { watchDebounced } from '@vueuse/core';
+import axios from 'axios';
+import { inject, ref } from 'vue';
 
 const showingNavigationDropdown = ref(false);
 const show = ref(false)
 const showList = ref(false)
+const showSettings = ref(false)
+const fullName = ref(usePage().props.value.auth.user.name)
 const swal = inject('$swal')
 
 const form = useForm({
-    amount: ''
+    amount: '',
+    username: usePage().props.value.auth.user.username,
+    first_name: usePage().props.value.auth.user.first_name,
+    middle_name: usePage().props.value.auth.user.middle_name,
+    last_name: usePage().props.value.auth.user.last_name,
+    contact_no: usePage().props.value.auth.user.contact_no
 });
+
+watchDebounced(
+    () => form.first_name,
+    (first_name) => {
+        form.first_name = capitalizeString(first_name)
+    },
+    {debounce: 300}
+)
+
+watchDebounced(
+    () => form.middle_name,
+    (middle_name) => {
+        form.middle_name = capitalizeString(middle_name)
+    },
+    {debounce: 300}
+)
+
+watchDebounced(
+    () => form.last_name,
+    (last_name) => {
+        form.last_name = capitalizeString(last_name)
+    },
+    {debounce: 300}
+)
+
+watchDebounced(
+        () => form.contact_no,
+        (contact_no) => {
+            form.contact_no = checkContact(contact_no)
+        },
+        {debounce: 300}
+    )
+
+    const checkContact = (text) => {
+        let result = text.replace(/[^a-zA-Z0-9 ]/g, "");
+        result = result.replace(/([a-zA-Z ])/g, "")
+
+        return result;
+    }
+
+    const capitalizeString = (text) => {
+        const words = text.split(" ");
+
+        // return text.toLowerCase();
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
+        }
+
+        return words.join(" ");
+    }
 
 function showPriceModal() {
     form.amount = 0
@@ -29,6 +88,14 @@ function showPriceModal() {
 
 function showPriceListModal() {
     showList.value = true
+}
+
+function showSettingsModal() {
+    showSettings.value = true
+}
+
+function cancelSettings(close) {
+    showSettings.value = false
 }
 
 function cancel(close) {
@@ -54,12 +121,61 @@ function submitSuccess() {
         confirmButtonColor: '#23408E'
     })
 }
+
+const updateUser = () => {
+    axios.post('/update-user', form)
+    .then(response => {
+        fullName.value = response.data
+        cancelSettings()
+        swal.fire({
+            icon: 'success',
+            title: 'Updated Successfully',
+            text: '',
+            confirmButtonColor: '#23408E'
+        })
+    })
+    .catch(response => {
+        console.log(response)
+    })
+}
 </script>
 
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
             <div>
+                <v-tailwind-modal v-model="showSettings" @cancel="cancelSettings()">
+                    <div>
+                        <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">User Settings</h1>
+
+                            <div>
+                                <div class="mt-4">
+                                    <InputLabel for="first_name" value="First Name" />
+                                    <TextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" required autofocus autocomplete="first_name" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <InputLabel for="middle_name" value="Middle Name" />
+                                    <TextInput id="middle_name" type="text" class="mt-1 block w-full" v-model="form.middle_name" autofocus autocomplete="middle_name" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <InputLabel for="last_name" value="Last Name" />
+                                    <TextInput id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required autofocus autocomplete="last_name" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <InputLabel for="contact_no" value="Contact Number" />
+                                    <TextInput maxlength="11" id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-end mt-4">
+                                <button @click="updateUser()" class="inline-flex items-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </v-tailwind-modal>
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
                     <div>
                         <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
@@ -73,7 +189,7 @@ function submitSuccess() {
                         <form @submit.prevent="submit">
                             <div class="mt-4">
                                 <InputLabel for="amount" value="New Price" />
-                                <TextInput id="amount" type="text" class="mt-1 block w-full" v-model="form.amount" required autofocus autocomplete="amount" />
+                                <TextInput id="amount" type="text" class="mt-1 block w-full" v-model="form.amount" placeholder="Input Amount" required autofocus autocomplete="amount" />
                                 <InputError class="mt-2" :message="form.errors.amount" />
                             </div>
                             <div class="flex items-center justify-end mt-4">
@@ -157,7 +273,7 @@ function submitSuccess() {
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.name }}
+                                                {{ fullName }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -172,6 +288,9 @@ function submitSuccess() {
                                         </DropdownLink>
                                         <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                             Price/Cu M
+                                        </button>
+                                        <button v-if="$page.props.auth.admin" @click="showSettingsModal()" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                                            User Settings
                                         </button>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
@@ -219,7 +338,7 @@ function submitSuccess() {
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
                         <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">{{ $page.props.auth.user.name }}</div>
+                            <div class="font-medium text-base text-gray-800">{{ fullName }}</div>
                             <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
                         </div>
 
@@ -229,6 +348,9 @@ function submitSuccess() {
                             </ResponsiveNavLink>
                             <button v-if="$page.props.auth.admin" @click="showPriceModal()" class="w-full block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Price/Cu M
+                            </button>
+                            <button v-if="$page.props.auth.admin" @click="showSettingsModal()" class="w-full block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                                User Settings
                             </button>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full">
                                 Log Out

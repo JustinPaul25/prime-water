@@ -20,6 +20,8 @@ import { useStore } from 'vuex';
     const showReciept = ref(false)
     const sending = ref(false)
     const client = ref(null)
+    const change = ref(0)
+    const amount = ref(0)
     const amountToPrint = ref(0)
     const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
     const transactions = ref([])
@@ -36,6 +38,17 @@ import { useStore } from 'vuex';
 
     watchDebounced(search, () => {
         getClients()
+    }, {debounce: 500})
+
+    watchDebounced(amount, () => {
+        let totalBill = Number(client.value.account.prev_balance) + Number(client.value.account.current_charges)
+        if(Number(amount.value) > totalBill) {
+            change.value = Number(amount.value) - totalBill
+            form.amount = totalBill
+        } else {
+            console.log(amount.value)
+            form.amount = amount.value
+        }
     }, {debounce: 500})
 
     function getClients(page) {
@@ -65,21 +78,22 @@ import { useStore } from 'vuex';
     const submit = () => {
         form.id = client.value.id
         amountToPrint.value = form.amount
-        form.post(route('pay.bill'), {
-            onSuccess: () => {
-                form.reset('id')
-                form.reset('amount')
-                showPayment.value = false
-                showReciept.value = true
-                getClients()
-                swal.fire({
-                    icon: 'success',
-                    title: 'Successfully Paid',
-                    text: `Payment reflected to ${client.value.first_name} ${client.value.last_name}`,
-                    confirmButtonColor: '#23408E'
-                })
-            },
-        });
+
+        axios.post('/pay-bill', form)
+        .then(response => {
+            form.reset('id')
+            form.reset('amount')
+            showPayment.value = false
+            showReciept.value = true
+            amount.value = 0
+            getClients()
+            swal.fire({
+                icon: 'success',
+                title: 'Successfully Paid',
+                text: `Payment reflected to ${client.value.first_name} ${client.value.last_name}`,
+                confirmButtonColor: '#23408E'
+            })
+        })
     };
 
     const sendReminder = (id) => {
@@ -160,29 +174,30 @@ import { useStore } from 'vuex';
                                     <div class="sm:mr-6">
                                         <div class="sm:border-r sm:border-gray-200 sm:pr-6">
                                         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">{{ client.first_name+' '+client.last_name }}</h1>
+                                        <p>Previous Balance: ₱ {{ Number(client.account.prev_balance).toLocaleString() }}</p>
                                         <p>Current Bill: ₱ {{ Number(client.account.current_charges).toLocaleString() }}</p>
                                         <p>Billed At: {{ client.account.current_date_reading }}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <p class="mt-1 text-base text-gray-500">Total Balance:</p>
-                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ Number(client.account.current_charges).toLocaleString() }}</p>
+                                        <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ (Number(client.account.current_charges) + Number(client.account.prev_balance)).toLocaleString() }}</p>
                                     </div>
                                 </main>
-                                <form @submit.prevent="submit">
+                                <div>
                                     <div class="relative rounded-md shadow-sm mt-10">
                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                         <!-- Heroicon name: mini/envelope -->
                                         <p class="text-gray-400">₱</p>
                                         </div>
-                                        <input v-model="form.amount" type="number" name="amount" placeholder="Input Amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <input v-model="amount" type="number" name="amount" placeholder="Input Amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.amount" />
                                     <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
                                         <button @click="cancel()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
-                                        <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Process Payment</button>
+                                        <button @click="submit()" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Process Payment</button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                 </div>
@@ -228,7 +243,7 @@ import { useStore } from 'vuex';
                         </div>
 
                         <div class="flex text-xs mt-4">
-                            <p>Previous Balance - {{getPrevMonth()}} {{getCurrentYear()}}: </p>
+                            <p>Last Month Remaining Balance: </p>
                             <p class="mx-auto">₱ {{Number(client.account.prev_balance).toLocaleString()}}</p>
                         </div>
                         <div class="flex text-xs">
@@ -237,19 +252,19 @@ import { useStore } from 'vuex';
                         </div>
                         <div class="flex text-sm font-bold mt-2">
                             <p>Total Bill: </p>
-                            <p class="ml-auto">₱ {{Number(client.account.current_charges).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{(Number(client.account.current_charges)+Number(client.account.prev_balance)).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Paid Amount: </p>
                             <p class="ml-auto">₱ {{Number(amountToPrint).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
-                            <p>Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{Number(client.account.current_charges - amountToPrint < 0 ? 0 : client.account.current_charges - amountToPrint).toLocaleString()}}.00</p>
+                            <p>New Remaining Balance: </p>
+                            <p class="ml-auto">₱ {{((Number(client.account.current_charges)+Number(client.account.prev_balance))-Number(amount)).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Change: </p>
-                            <p class="ml-auto">₱ {{Number(renderChange(client.account.current_charges - amountToPrint)).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{Number(change).toLocaleString()}}.00</p>
                         </div>
 
                         <div v-if="transactions.length !== 0" class="flex text-xs mt-8">

@@ -91,6 +91,8 @@ Route::get('/notify-all', [SMSController::class, 'notifyAllUser'])->middleware([
 Route::get('/usage', [UsageController::class, 'usage'])->middleware(['auth', 'verified'])->name('usage');
 Route::get('/usage/list', [UsageController::class, 'list'])->middleware(['auth', 'verified'])->name('usage.list');
 
+Route::post('/update-user', [UserController::class, 'update'])->middleware(['auth', 'verified'])->name('update.user');
+
 Route::post('/user-change-password', [ChangePasswordController::class, 'change'])->name('user.change.password');
 
 require __DIR__.'/auth.php';
