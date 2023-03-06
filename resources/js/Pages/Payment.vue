@@ -85,7 +85,7 @@ import { useStore } from 'vuex';
             form.reset('amount')
             showPayment.value = false
             showReciept.value = true
-            amount.value = 0
+            amount.value = ''
             getClients()
             swal.fire({
                 icon: 'success',
