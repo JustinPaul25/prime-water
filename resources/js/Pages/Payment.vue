@@ -54,6 +54,7 @@ import { useStore } from 'vuex';
                 console.log(amount.value)
                 form.amount = amount.value
                 newBalance.value = totalBill - Number(amount.value)
+                change.value = 0
             }
         }
     }, {debounce: 500})
