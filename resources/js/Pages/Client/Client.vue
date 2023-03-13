@@ -204,7 +204,7 @@ import { useStore } from 'vuex';
     }
 
     const submit = (id) => {
-        const fullname = form.middle_name ? form.first_name+' '+form.middle_name+' '.form.last_name : form.first_name
+        const fullname = form.middle_name ? form.first_name+' '+form.middle_name+' '+form.last_name : form.first_name+' '+form.last_name
         form.name = fullname
         if(isEdit.value) {
             form.put(`/client/${form.id}`, {
@@ -290,19 +290,19 @@ import { useStore } from 'vuex';
                             <div class="mt-4">
                                 <InputLabel for="first_name" value="First Name" />
                                 <TextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" required autofocus autocomplete="first_name" />
-                                <InputError class="mt-2" :message="form.errors.first_name" />
+                                <InputError class="mt-2" :message="form.errors.name" />
                             </div>
 
                             <div class="mt-4">
                                 <InputLabel for="middle_name" value="Middle Name" />
                                 <TextInput id="middle_name" type="text" class="mt-1 block w-full" v-model="form.middle_name" autofocus autocomplete="middle_name" />
-                                <InputError class="mt-2" :message="form.errors.middle_name" />
+                                <InputError class="mt-2" :message="form.errors.name" />
                             </div>
 
                             <div class="mt-4">
                                 <InputLabel for="last_name" value="Last Name" />
                                 <TextInput id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required autofocus autocomplete="last_name" />
-                                <InputError class="mt-2" :message="form.errors.last_name" />
+                                <InputError class="mt-2" :message="form.errors.name" />
                             </div>
 
                             <div class="mt-4">

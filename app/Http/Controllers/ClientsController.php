@@ -56,6 +56,7 @@ class ClientsController extends Controller
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'name' => 'required|string|max:255|unique:users',
             'contact_no' => 'required|string|max:255|unique:users',

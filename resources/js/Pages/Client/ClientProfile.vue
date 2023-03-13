@@ -173,7 +173,7 @@ const updateReading = (id) => {
                         </div>
                         <div class="flex text-sm font-bold mt-2">
                             <p>Total Bill: </p>
-                            <p class="ml-auto">₱ {{Number(client.account.current_charges).toLocaleString()}}.00</p>
+                            <p class="ml-auto">₱ {{(Number(client.account.current_charges) + Number(client.account.prev_balance)).toLocaleString()}}.00</p>
                         </div>
 
                         <div v-if="transactions.length" class="flex text-xs mt-8">
@@ -248,7 +248,7 @@ const updateReading = (id) => {
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Total Bill</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ Number(client.account.current_charges + client.account.prev_balance).toLocaleString() }}.00</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ (Number(client.account.current_charges) + Number(client.account.prev_balance)).toLocaleString() }}.00</dd>
                                 </div>
                             </dl>
                         </div>
