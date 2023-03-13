@@ -31,7 +31,7 @@ class ReadingController extends Controller
 
         $new_current = $request->input('reading');
 
-        $reading_diff = $new_current - $account->current_reading;
+        $reading_diff = $new_current - $account->prev_reading;
 
         $payment = $reading_diff * $price->value;
 
