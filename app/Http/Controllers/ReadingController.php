@@ -36,9 +36,9 @@ class ReadingController extends Controller
         $payment = $reading_diff * $price->value;
 
         $account->prev_reading = $account->current_reading;
-        $account->prev_balance = $account->current_charges;
+        $account->prev_balance = $account->prev_balance + $account->current_charges;
         $account->current_reading = $new_current;
-        $account->current_charges = $account->current_charges + $payment;
+        $account->current_charges = $payment;
         $account->update();
 
         $reading = new Reading;
