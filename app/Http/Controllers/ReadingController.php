@@ -54,6 +54,8 @@ class ReadingController extends Controller
 
     public function update(User $user, Request $request)
     {
+        $reading = Reading::where('client_id', $user->id)->latest()->first();
+
         $current_rate = Utility::where('field', 'price')->where('is_active', true)->first();
         $cu_price = $current_rate->value;
 
@@ -67,6 +69,10 @@ class ReadingController extends Controller
         $account->current_reading = $request->reading;
         $account->current_charges = $new_charge;
         $account->save();
+
+        $reading->current_reading = $request->reading;
+        $reading->price = $new_charge;
+        $reading->save();
 
         return $user;
     }
