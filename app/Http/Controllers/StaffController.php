@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminLog;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
@@ -39,10 +40,22 @@ class StaffController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users',
+            'contact_no' => 'required|string|max:255|unique:users',
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'role' => 'required',
         ]);
+
+        if($request->role === 'Admin') {
+            $old_admin = User::role(['Admin'])->first();
+            AdminLog::create([
+                'user_id' => $old_admin->id,
+                'message' => $old_admin->name.' is no longer an admin and his/her account will be deleted.'
+            ]);
+            $old_admin->delete();
+        }
 
         $user = new User;
         $user->name = $request->input('name');
@@ -54,14 +67,22 @@ class StaffController extends Controller
 
         $user->assignRole($request->input('role'));
 
+        AdminLog::create([
+            'user_id' => $user->id,
+            'message' => "New app admin assigned to ".$user->name.".",
+        ]);
+
         return;
     }
 
     public function update(User $user, Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
             'username' => 'required|string|unique:users,username,'.$user->id,
+            'name' => 'required|string|max:255|unique:users,name,'.$user->id,
+            'contact_no' => 'required|string|max:255|unique:users,contact_no,'.$user->id,
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
             'role' => 'required',
         ]);
 

@@ -98,13 +98,19 @@ class ClientSeeder extends Seeder
 
             $newPayment = $payment - 50;
 
-            $current_charges =  $account->current_charges - $newPayment;
-            $prev_balance = $account->current_charges;
+            if($newPayment > $account->prev_balance) {
+                $remainingAmount = $newPayment - $account->prev_balance;
+                $newPrev = 0;
+                $newCur = $account->current_charges - $remainingAmount;
+            } else {
+                $newPrev = $account->prev_balance - $newPayment;
+                $newCur = $account->current_charges;
+            }
 
             $account->update([
                 'last_payment' => $datePaid[$dateInd-1],
-                'current_charges' => $current_charges,
-                'prev_balance' => $prev_balance,
+                'current_charges' => $newCur,
+                'prev_balance' => $newPrev,
                 'created_at' => $datePaid[$dateInd-1],
                 'updated_at' => $datePaid[$dateInd-1],
             ]);

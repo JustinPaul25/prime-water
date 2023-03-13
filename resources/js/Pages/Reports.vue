@@ -1,18 +1,12 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import RecieptModal from '@/Modals/RecieptModal.vue';
-    import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
-    import TextInput from '@/Components/TextInput.vue';
-    import Pagination from '@/Components/Pagination.vue'
-    import { Inertia } from '@inertiajs/inertia';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import ReportsChart from '@/Components/ReportsChart.vue';
-    import { computed, onMounted, inject, ref, watch } from 'vue'
-    import { useStore } from 'vuex'
-    import _ from 'lodash'
+import ReportsChart from '@/Components/ReportsChart.vue';
+import TextInput from '@/Components/TextInput.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import RecieptModal from '@/Modals/RecieptModal.vue';
+import { Head } from '@inertiajs/inertia-vue3';
+import { computed, inject, onMounted, ref, watch } from 'vue';
+import { useStore } from 'vuex';
 
     defineProps({
         income_data: Object,
@@ -161,7 +155,7 @@
         <div class="py-12">
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="flex mb-8">
-                    <div>
+                    <div class="w-3/4">
                         <ReportsChart :datas="income_data"/>
                     </div>
                     <div class="ml-auto">

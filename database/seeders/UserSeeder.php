@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Account;
+use App\Models\AdminLog;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,6 +28,11 @@ class UserSeeder extends Seeder
         $user->save();
 
         $user->assignRole('Admin');
+
+        AdminLog::create([
+            'user_id' => $user->id,
+            'message' => "New app admin assigned to ".$user->name.".",
+        ]);
 
         $user = new User;
         $user->name = 'Meter';

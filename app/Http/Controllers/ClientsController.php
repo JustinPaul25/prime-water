@@ -25,6 +25,12 @@ class ClientsController extends Controller
     {
         $client = User::query();
 
+        if($request->reminder === "true") {
+            $client = $client->whereHas('account', function ($query) {
+                $query->where('last_payment', '<', Carbon::now()->subDays(90));
+            });
+        }
+
         if($request->filled('search')) {
             $search = $request->input('search');
             $client = $client->where(function($q) use ($search){
@@ -51,7 +57,8 @@ class ClientsController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'contact_no' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users',
+            'contact_no' => 'required|string|max:255|unique:users',
             'address' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
         ]);

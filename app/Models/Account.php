@@ -29,7 +29,7 @@ class Account extends Model
 
     public function getDueDateAttribute()
     {
-        $due = Carbon::parse($this->last_payment)->addMonth();
+        $due = Carbon::parse($this->last_payment)->addDays(30);
         return $due->format('M-d-Y');
     }
 

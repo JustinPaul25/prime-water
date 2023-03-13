@@ -38,6 +38,7 @@ const actions = {
             params: payload.params
         })
         .then(response => {
+            console.log(response);
             commit('setClients', response.data)
             commit('setPagination', response.data)
         })

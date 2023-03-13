@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('utilities', function (Blueprint $table) {
-            $table->id();
-            $table->string('field');
-            $table->boolean('is_active');
-            $table->string('value');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('utilities');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -16,6 +16,7 @@ import { useStore } from 'vuex';
     import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 
     const search = ref('')
+    const reminder = ref(false)
     const showPayment = ref(false)
     const showReciept = ref(false)
     const sending = ref(false)
@@ -42,6 +43,10 @@ import { useStore } from 'vuex';
         getClients()
     }, {debounce: 500})
 
+    watchDebounced(reminder, () => {
+        getClients()
+    }, {debounce: 500})
+
     watchDebounced(amount, () => {
         if(amount.value) {
             let totalBill = Number(client.value.account.prev_balance) + Number(client.value.account.current_charges)
@@ -63,7 +68,8 @@ import { useStore } from 'vuex';
         store.dispatch('clients/getClients', {
             params: {
                 page: page,
-                search: search.value
+                search: search.value,
+                reminder: reminder.value
             }
         })
     }
@@ -293,10 +299,14 @@ import { useStore } from 'vuex';
         </div>
         <div class="py-12">
             <div class="px-4 sm:px-6 lg:px-8">
-                <div class="sm:flex sm:items-center mt-4 w-full">
+                <div class="sm:flex sm:items-center justify-center mt-4 w-full">
                     <div class="mr-4">
                         <InputLabel class="font-bold" for="search" value="Search" />
                         <TextInput id="search" type="text" class="mt-1 block w-full" v-model="search"/>
+                    </div>
+                    <div class="mt-auto mb-2 flex items-center">
+                        <input v-model="reminder" type="checkbox" class="appearance-none bg-gray-300 my" />
+                        <p class="ml-2 font-bold text-gray-700">View Only With Reminders</p>
                     </div>
                     <div class="ml-auto">
                         <button :disabled="sending" @click="notifyAll()" class="flex bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">

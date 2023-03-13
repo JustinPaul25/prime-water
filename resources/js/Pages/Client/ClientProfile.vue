@@ -1,20 +1,27 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import RecieptModal from '@/Modals/RecieptModal.vue';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
 import { Head } from '@inertiajs/inertia-vue3';
+import axios from 'axios';
 import moment from 'moment';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 
 const transactions = ref([])
 const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
 const showBill = ref(false)
+let newReadingShow = ref(false)
+let newReading = ref(null)
+const swal = inject('$swal')
 
 const props = defineProps({
     client: Object
 })
 
+const client = ref(props.client);
+
 const getTransaction = () => {
-    axios.get(`/client-transactions/${props.client.id}`)
+    axios.get(`/client-transactions/${client.value.id}`)
     .then(response => {
         transactions.value = response.data
     });
@@ -22,12 +29,20 @@ const getTransaction = () => {
 
 onMounted(() => getTransaction())
 
+const reload = async () => {
+  myData.value = 'new value'
+}
+
 const printBill = () => {
     showBill.value = true
 }
 
 function cancel(close) {
     showBill.value = false
+}
+
+function cancelNewReading(close) {
+    newReadingShow.value = false
 }
 
 const getMonth = () => {
@@ -51,6 +66,37 @@ const sendSms = (id) => {
         console.log('sms sent')
     })
 }
+
+const checkInput = () => {
+    if(newReading.value > client.value.account.prev_reading) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const updateReading = (id) => {
+    if(checkInput()) {
+        axios.put(`/update-reading/${id}`, {reading: newReading.value})
+        .then(response => {
+            client.value = response.data
+            newReading.value = null
+            cancelNewReading()
+            swal.fire({
+                icon: 'success',
+                title: 'Current Reading Successfully Changed!',
+                confirmButtonColor: '#23408E'
+            })
+        })
+    } else {
+        swal.fire({
+            icon: 'error',
+            title: 'Update Failes',
+            text: 'Current reading must be greater than previous',
+            confirmButtonColor: '#23408E'
+        })
+    }
+}
 </script>
 
 <template>
@@ -58,6 +104,25 @@ const sendSms = (id) => {
 
     <AuthenticatedLayout>
         <div class="py-12">
+            <v-tailwind-modal v-model="newReadingShow" @cancel="cancelNewReading()">
+                <template v-slot:title>Input New Reading</template>
+                <p class="mt-2">
+                    The current reading is {{ client.account.current_reading }}
+                </p>
+                <div>
+                    <div class="relative rounded-md shadow-sm mt-10">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <!-- Heroicon name: mini/envelope -->
+                        <p class="text-gray-400">₱</p>
+                        </div>
+                        <input v-model="newReading" type="number" name="amount" placeholder="Input New Reading" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+                        <button @click="cancelNewReading()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
+                        <button @click="updateReading(client.id)" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Current Reading</button>
+                    </div>
+                </div>
+            </v-tailwind-modal>
             <reciept-modal v-model="showBill" @cancel="cancel()">
                 <section class="bg-white" id="printReciept">
                     <div class="max-w-5xl mx-auto bg-white">
@@ -128,9 +193,9 @@ const sendSms = (id) => {
             <div class="mx-auto max-w-3xl px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
                 <div class="flex items-center space-x-5">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">{{ props.client.first_name }} {{ props.client.last_name }}</h1>
-                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ props.client.address }}</span></p>
-                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ props.client.contact_no }}</span></p>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ client.first_name }} {{ client.last_name }}</h1>
+                        <p class="text-sm font-medium text-gray-500">Address: <span class="text-gray-900">{{ client.address }}</span></p>
+                        <p class="text-sm font-medium text-gray-500">Contact No.: <span class="text-gray-900">{{ client.contact_no }}</span></p>
                     </div>
                 </div>
                 <div class="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
@@ -150,38 +215,46 @@ const sendSms = (id) => {
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">
                                         Previous Reading<br>
-                                        <span v-if="props.client.account.prev_date_reading">Date Metered: {{ props.client.account.prev_date_reading }}</span>
+                                        <span v-if="client.account.prev_date_reading">Date Metered: {{ client.account.prev_date_reading }}</span>
                                     </dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">
                                         Current Reading<br>
-                                        <span v-if="props.client.account.current_date_reading">Date Metered: {{ props.client.account.current_date_reading }}</span>
+                                        <span v-if="client.account.current_date_reading">Date Metered: {{ client.account.current_date_reading }}</span>
                                     </dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.current_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 text-right">
+                                        {{ client.account.current_reading }}<br>
+                                        <p @click="newReadingShow = true" class="text-primary-blue font-bold cursor-pointer hover:opacity-75">Change Reading</p>
+                                    </dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Consumed Cu. M</dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ props.client.account.current_reading - props.client.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.current_reading - client.account.prev_reading }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
                                     <dt class="text-gray-500">Previous Balance</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold">₱ {{ Number(props.client.account.prev_balance).toLocaleString() }}.00</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold">₱ {{ Number(client.account.prev_balance).toLocaleString() }}.00</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">
-                                    <dt class="text-gray-500">Remaining Balance</dt>
-                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ Number(props.client.account.current_charges).toLocaleString() }}.00</dd>
+                                    <dt class="text-gray-500">Current Bill</dt>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ Number(client.account.current_charges).toLocaleString() }}.00</dd>
+                                </div>
+
+                                <div class="flex justify-between py-3 text-sm font-medium">
+                                    <dt class="text-gray-500">Total Bill</dt>
+                                    <dd class="whitespace-nowrap text-gray-900 font-bold text-xl">₱ {{ Number(client.account.current_charges + client.account.prev_balance).toLocaleString() }}.00</dd>
                                 </div>
                             </dl>
                         </div>
 
                         <div class="justify-stretch mt-6 flex flex-col">
-                            <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{$props.client.account.due_date}}</button>
+                            <button disabled type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Due Date: {{client.account.due_date}}</button>
                             <button @click="printBill()" type="button" class="hover:opacity-75 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-2">Print Bill</button>
                         </div>
                     </div>

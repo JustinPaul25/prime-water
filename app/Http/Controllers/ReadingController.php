@@ -27,7 +27,7 @@ class ReadingController extends Controller
 
         $account = $client->account;
 
-        $price = Utility::find(1);
+        $price = Utility::where('field', 'price')->where('is_active', true)->first();
 
         $new_current = $request->input('reading');
 
@@ -50,5 +50,24 @@ class ReadingController extends Controller
         $reading->save();
 
         return;
+    }
+
+    public function update(User $user, Request $request)
+    {
+        $current_rate = Utility::where('field', 'price')->where('is_active', true)->first();
+        $cu_price = $current_rate->value;
+
+        $account = $request->user->account;
+        $prev = $account->prev_reading;
+        $cur = $account->current_reading;
+        $old_consumed = $cur - $prev;
+        $old_charge = $old_consumed * $cu_price;
+        $new_charge = $request->reading * $cu_price;
+
+        $account->current_reading = $request->reading;
+        $account->current_charges = $new_charge;
+        $account->save();
+
+        return $user;
     }
 }

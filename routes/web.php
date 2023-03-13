@@ -15,6 +15,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ReadingController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UtilityController;
+use App\Http\Controllers\AdminLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\ChangePasswordController;
@@ -69,6 +70,7 @@ Route::get('/switch-status/{user}', [ClientsController::class, 'switchStatus'])-
 
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');
+Route::put('/update-reading/{user}', [ReadingController::class, 'update'])->middleware(['auth', 'verified']);
 
 //utilities
 Route::put('/utilities-price/{utility}', [UtilityController::class, 'priceUpdate'])->middleware(['auth', 'verified'])->name('price.update');
@@ -94,5 +96,7 @@ Route::get('/usage/list', [UsageController::class, 'list'])->middleware(['auth',
 Route::post('/update-user', [UserController::class, 'update'])->middleware(['auth', 'verified'])->name('update.user');
 
 Route::post('/user-change-password', [ChangePasswordController::class, 'change'])->name('user.change.password');
+
+Route::get('/admin-logs', [AdminLogController::class, 'list']);
 
 require __DIR__.'/auth.php';

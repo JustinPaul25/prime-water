@@ -1,17 +1,17 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import VTailwindModal from '@/Modals/VTailwindModal.vue';
-    import PrimaryButton from '@/Components/PrimaryButton.vue';
     import InputError from '@/Components/InputError.vue';
-    import InputLabel from '@/Components/InputLabel.vue';
-    import TextInput from '@/Components/TextInput.vue';
-    import Pagination from '@/Components/Pagination.vue'
-    import { Inertia } from '@inertiajs/inertia';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { computed, onMounted, inject, ref, watch } from 'vue'
-    import { useStore } from 'vuex'
-    import _ from 'lodash'
-    import { watchDebounced } from '@vueuse/core'
+import InputLabel from '@/Components/InputLabel.vue';
+import Pagination from '@/Components/Pagination.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { watchDebounced } from '@vueuse/core';
+import axios from 'axios';
+import { computed, inject, onMounted, ref, watch } from 'vue';
+import { useStore } from 'vuex';
 
     defineProps({
         status: String,
@@ -23,9 +23,23 @@
     const pagination = computed(() => store.state.staffs.pagination)
 
     let show = ref(false)
+    let showLogs = ref(false)
     let isEdit = ref(false)
+    let adminLogs = ref([])
     const role = ref('')
     const search = ref('')
+
+    const form = useForm({
+        id: '',
+        name: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        username: '',
+        contact_no: '',
+        address: '',
+        role: ''
+    });
 
     watch(role, async (newRole, oldRole) => {
         getStaffs()
@@ -35,24 +49,78 @@
         getStaffs()
     }, {debounce: 500})
 
-    const form = useForm({
-        id: '',
-        name: '',
-        username: '',
-        role: ''
-    });
+    watchDebounced(
+        () => form.first_name,
+        (first_name) => {
+            form.first_name = capitalizeString(first_name)
+            form.name = form.first_name+' '+form.middle_name+' '+form.last_name
+        },
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.middle_name,
+        (middle_name) => {
+            form.middle_name = capitalizeString(middle_name)
+            form.name = form.first_name+' '+form.middle_name+' '+form.last_name
+        },
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.last_name,
+        (last_name) => {
+            form.last_name = capitalizeString(last_name)
+            form.name = form.first_name+' '+form.middle_name+' '+form.last_name
+        },
+        {debounce: 300}
+    )
+
+    watchDebounced(
+        () => form.contact_no,
+        (contact_no) => {
+            form.contact_no = checkContact(contact_no)
+        },
+        {debounce: 300}
+    )
+
+    const checkContact = (text) => {
+        let result = text.replace(/[^a-zA-Z0-9 ]/g, "");
+        result = result.replace(/([a-zA-Z ])/g, "")
+
+        return result;
+    }
+
+    const capitalizeString = (text) => {
+        const words = text.split(" ");
+
+        // return text.toLowerCase();
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
+        }
+
+        return words.join(" ");
+    }
 
     function showModal(type, staff) {
         if(type == 'create') {
             isEdit.value = false
             form.id = ''
-            form.name = ''
+            form.first_name = ''
+            form.middle_name = ''
+            form.last_name = ''
+            form.contact_no = ''
+            form.address = ''
             form.username = ''
             form.role = ''
         } else {
             isEdit.value = true
             form.id = staff.id
-            form.name = staff.name
+            form.first_name = staff.first_name
+            form.middle_name = staff.middle_name
+            form.last_name = staff.last_name
+            form.contact_no = staff.contact_no
+            form.address = staff.address
             form.username = staff.username
             form.role = staff.role.replace(/^./, staff.role[0].toUpperCase())
         }
@@ -62,6 +130,10 @@
 
     function cancel(close) {
         show.value = false
+    }
+
+    function cancelLogs(close) {
+        showLogs.value = false
     }
 
     function submitSuccess() {
@@ -125,7 +197,17 @@
         }
     };
 
-    onMounted(() => store.dispatch('staffs/getStaffs'))
+    const getAdminLogs = () => {
+        axios.get('/admin-logs')
+        .then(response => {
+            adminLogs.value = response.data
+        })
+    }
+
+    onMounted(() => {
+        store.dispatch('staffs/getStaffs')
+        getAdminLogs();
+    })
 </script>
 
 <template>
@@ -141,13 +223,37 @@
 
         <div class="py-12">
             <div>
+                <v-tailwind-modal v-model="showLogs" @cancel="cancelLogs()">
+                    <template v-slot:title>Admin History</template>
+                    <div class="pt-2">
+                        <div v-for="logs in adminLogs" class="p-2">
+                            <p>{{ logs.message }}</p>
+                            <p class="text-gray-400">Date Time: {{ logs.created_at }}</p>
+                        </div>
+                    </div>
+                </v-tailwind-modal>
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
                     <template v-slot:title>{{isEdit ? 'Update User' : 'Create User'}}</template>
                     <div>
                         <form @submit.prevent="submit">
-                            <div>
-                                <InputLabel for="name" value="Name" />
-                                <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
+                            <div class="mt-4">
+                                <InputLabel for="first_name" value="First Name" />
+                                <TextInput id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" required autofocus autocomplete="first_name" />
+                                <InputError class="mt-2" :message="form.errors.first_name" />
+                                <InputError class="mt-2" :message="form.errors.name" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="middle_name" value="Middle Name" />
+                                <TextInput id="middle_name" type="text" class="mt-1 block w-full" v-model="form.middle_name" autofocus autocomplete="middle_name" />
+                                <InputError class="mt-2" :message="form.errors.middle_name" />
+                                <InputError class="mt-2" :message="form.errors.name" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="last_name" value="Last Name" />
+                                <TextInput id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" required autofocus autocomplete="last_name" />
+                                <InputError class="mt-2" :message="form.errors.last_name" />
                                 <InputError class="mt-2" :message="form.errors.name" />
                             </div>
 
@@ -155,6 +261,24 @@
                                 <InputLabel for="username" value="Username" />
                                 <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required autocomplete="username" />
                                 <InputError class="mt-2" :message="form.errors.email" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="contact_no" value="Contact Number" />
+                                <TextInput maxlength="11" id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
+                                <InputError class="mt-2" :message="form.errors.contact_no" />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="address" value="Complete Address" />
+                                <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                    <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
+                                    <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
+                                </select>
+                                <InputError class="mt-2" :message="form.errors.address" />
                             </div>
 
                             <div class="mt-4">
@@ -191,7 +315,10 @@
                         </select>
                         <InputError class="mt-2" :message="form.errors.role" />
                     </div>
-                    <div class="ml-auto">
+                    <div class="ml-auto flex items-end">
+                        <p @click="showLogs = true" class="cursor-pointer font-bold mr-5 text-lg text-primary-blue hover:opacity-75">
+                            Admin History
+                        </p>
                         <button  @click="showModal('create', null)" type="button" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Create User</button>
                     </div>
                 </div>

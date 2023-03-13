@@ -30,6 +30,7 @@ import { useStore } from 'vuex';
     const search = ref('')
     const status = ref('')
     const purok = ref('')
+    const reminder = ref(false)
     const qrUrl = ref('http://prime-water.test/dashboard')
     const clientsQr = ref([])
 
@@ -41,7 +42,8 @@ import { useStore } from 'vuex';
         username: '',
         contact_no: '',
         address: '',
-        status: ''
+        status: '',
+        name: ''
     });
 
     watchDebounced(search, () => {
@@ -202,6 +204,8 @@ import { useStore } from 'vuex';
     }
 
     const submit = (id) => {
+        const fullname = form.middle_name ? form.first_name+' '+form.middle_name+' '.form.last_name : form.first_name
+        form.name = fullname
         if(isEdit.value) {
             form.put(`/client/${form.id}`, {
                 onSuccess: () => submitSuccess()

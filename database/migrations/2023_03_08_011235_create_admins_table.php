@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('utilities', function (Blueprint $table) {
+        Schema::create('admin_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('field');
-            $table->boolean('is_active');
-            $table->string('value');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('message')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('utilities');
+        Schema::dropIfExists('admins');
     }
 };
