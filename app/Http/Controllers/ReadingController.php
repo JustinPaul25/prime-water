@@ -62,9 +62,8 @@ class ReadingController extends Controller
         $account = $request->user->account;
         $prev = $account->prev_reading;
         $cur = $account->current_reading;
-        $old_consumed = $cur - $prev;
-        $old_charge = $old_consumed * $cu_price;
-        $new_charge = $request->reading * $cu_price;
+        $new_reading = $request->reading - $account->prev_reading;
+        $new_charge = $new_reading * $cu_price;
 
         $account->current_reading = $request->reading;
         $account->current_charges = $new_charge;
