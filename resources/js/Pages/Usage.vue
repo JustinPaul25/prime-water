@@ -37,7 +37,7 @@ import { useStore } from 'vuex';
 
     const consumed = computed(() => {
         return transactions.value.reduce((accumulator, object) => {
-            return accumulator + (object.client.account.current_reading - object.client.account.prev_reading);
+            return accumulator + (object.client_data.account.current_reading - object.client_data.account.prev_reading);
         }, 0);
     })
 
@@ -130,8 +130,8 @@ import { useStore } from 'vuex';
                                 <tbody>
                                     <tr v-for="transaction in transactions">
                                         <td>{{ transaction.id }}</td>
-                                        <td class="text-center">{{ transaction.client?.name }}</td>
-                                        <td class="text-center">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
+                                        <td class="text-center">{{ transaction.client_data?.name }}</td>
+                                        <td class="text-center">{{ transaction.client_data.account.current_reading - transaction.client_data.account.prev_reading }}</td>
                                         <td class="text-center">{{ transaction.cum_price}} /Cu M</td>
                                         <td class="text-center">{{ transaction.date_metered }}</td>
                                     </tr>
@@ -204,9 +204,9 @@ import { useStore } from 'vuex';
                             <tr v-for="transaction in transactions">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ transaction.id }}</td>
                                 <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                                    <a :href="route('client.profile', transaction.client.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ transaction.client.first_name+' '+transaction.client.last_name }}</a>
+                                    <a :href="route('client.profile', transaction.client_data.id)" class="font-bold text-primary-blue hover:opacity-70 cursor-pointer">{{ transaction.client_data.first_name+' '+transaction.client_data.last_name }}</a>
                                 </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client.account.current_reading - transaction.client.account.prev_reading }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.client_data.account.current_reading - transaction.client_data.account.prev_reading }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize font-bold">₱{{ transaction.cum_price }}<span class="text-xs font-thin">/CuM</span></td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ transaction.date_metered }}</td>
                             </tr>

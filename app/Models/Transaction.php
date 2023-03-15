@@ -20,9 +20,13 @@ class Transaction extends Model
 
     public function getClientAttribute()
     {
-        $client = User::find($this->client_id);
+        $user = User::find($this->client_id);
 
-        return $client;
+        if(!$user) {
+            $user =  User::onlyTrashed()->find($this->client_id);
+        }
+
+        return $user;
     }
 
     public function getFormatCreatedAtAttribute()

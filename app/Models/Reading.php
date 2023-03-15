@@ -23,12 +23,24 @@ class Reading extends Model
 
     protected $appends = [
         'date_metered',
+        'client_data',
     ];
 
     public function getDateMeteredAttribute()
     {
         $due = Carbon::parse($this->created_at);
         return $due->format('M-d-Y');
+    }
+
+    public function getClientDataAttribute()
+    {
+        $user = User::find($this->client_id);
+
+        if(!$user) {
+            $user =  User::onlyTrashed()->find($this->client_id);
+        }
+
+        return $user;
     }
 
     public function client()
