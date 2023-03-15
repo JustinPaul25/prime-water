@@ -47,7 +47,7 @@ class ClientsController extends Controller
             $client = $client->where('address', $request->input('purok'));
         }
 
-        $client = $client->role(['Client'])->paginate(10);
+        $client = $client->withTrashed()->role(['Client'])->paginate(10);
 
         return $client;
     }
@@ -151,19 +151,30 @@ class ClientsController extends Controller
         return $user;
     }
 
-    public function profile(User $user)
+    public function profile($id)
     {
+        $user = User::find($id);
+
+        if(!$user) {
+            $user =  User::onlyTrashed()->find($id);
+        }
+
         return Inertia::render('Client/ClientProfile', [
             'client' => $user,
             'account' => $user->account,
         ]);
     }
 
-    public function switchStatus(User $user)
+    public function switchStatus($id)
     {
-        $user->update([
-            'status' => !$user->status,
-        ]);
+        $user = User::find($id);;
+
+        if($user) {
+            $user->delete();
+        } else {
+            $user =  User::onlyTrashed()->find($id);
+            $user->restore();
+        }
 
         return $user->status;
     }

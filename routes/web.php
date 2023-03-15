@@ -66,7 +66,7 @@ Route::get('/client-list', [ClientsController::class, 'list'])->middleware(['aut
 Route::get('/client-data/{user}', [ClientsController::class, 'data'])->middleware(['auth', 'verified'])->name('client.data');
 Route::get('/client/{user}/profile', [ClientsController::class, 'profile'])->middleware(['auth', 'verified'])->name('client.profile');
 Route::get('/all-clients', [ClientsController::class, 'all'])->middleware(['auth', 'verified'])->name('all-clients');
-Route::get('/switch-status/{user}', [ClientsController::class, 'switchStatus'])->middleware(['auth', 'verified'])->name('switch.status');
+Route::get('/switch-status/{id}', [ClientsController::class, 'switchStatus'])->middleware(['auth', 'verified'])->name('switch.status');
 
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');

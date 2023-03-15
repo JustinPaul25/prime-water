@@ -407,7 +407,7 @@ import { useStore } from 'vuex';
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <button @click="statusSwitch(client.id)" :class=" client.status === 1 ? 'text-red-600': 'text-green-600'" class="hover:opacity-75 mr-4">{{client.status === 1 ? 'Switch to Inactive' : 'Switch to Active'}}</button>
+                                    <button @click="statusSwitch(client.id)" :class=" client.deleted_at ? 'text-green-600' : 'text-red-600'" class="hover:opacity-75 mr-4">{{client.deleted_at ? 'Switch to Active' : 'Switch to Inactive'}}</button>
                                     <a @click="showModal('update', client)" href="#" class="text-primary-blue hover:opacity-75">Edit</a>
                                 </td>
                             </tr>
