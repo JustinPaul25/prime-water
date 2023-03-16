@@ -15,6 +15,7 @@ class UsageController extends Controller
             DB::raw('extract(year from created_at) as year'),
             DB::raw('extract(month from created_at) as month'),
             DB::raw('sum(current_reading) as readings'),
+            DB::raw('sum(prev_reading) as prev_readings'),
         )
             ->where(DB::raw('date(created_at)'), '>=', "2010-01-01")
             ->groupBy('year')

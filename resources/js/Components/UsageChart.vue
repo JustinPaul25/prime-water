@@ -13,7 +13,7 @@
                 this.datas.forEach(element => {
                     const toPush = {
                         x: element.month,
-                        y: element.readings
+                        y: Number(element.readings) - Number(element.prev_readings)
                     }
                     dataArr.push(toPush)
                 });
@@ -23,7 +23,7 @@
             renderData() {
                 var datas = []
                 this.datas.forEach(read => {
-                    datas.push(read.readings)
+                    datas.push(Number(read.readings) - Number(read.prev_readings))
                 })
 
                 console.log(datas);
