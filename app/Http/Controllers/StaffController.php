@@ -40,12 +40,12 @@ class StaffController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:users',
+            'name' => 'required|string|max:255|check_name_staff',
             'contact_no' => 'required|string|max:255|unique:users',
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'role' => 'required',
+        ], [
+            'name.check_name_staff' => 'The name has already been taken.',
         ]);
 
         if($request->role === 'Admin') {
@@ -59,7 +59,12 @@ class StaffController extends Controller
 
         $user = new User;
         $user->name = $request->input('name');
+        $user->first_name = $request->input('first_name');
+        $user->middle_name = $request->input('middle_name');
+        $user->last_name = $request->input('last_name');
         $user->username = $request->input('username');
+        $user->contact_no = $request->input('contact_no');
+        $user->address = $request->input('address');
         $user->status = true;
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
@@ -79,16 +84,22 @@ class StaffController extends Controller
     {
         $request->validate([
             'username' => 'required|string|unique:users,username,'.$user->id,
-            'name' => 'required|string|max:255|unique:users,name,'.$user->id,
+            'name' => 'required|string|max:255|check_name_staff:'.$user->id,
             'contact_no' => 'required|string|max:255|unique:users,contact_no,'.$user->id,
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
             'role' => 'required',
+        ], [
+            'name.check_name_staff' => 'The name has already been taken.',
         ]);
 
         $user->update([
             'name' => $request->input('name'),
+            'contact_no' => $request->input('contact_no'),
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
             'username' => $request->input('username'),
+            'address' => $request->input('address'),
+
         ]);
 
         $user->removeRole('Cashier');

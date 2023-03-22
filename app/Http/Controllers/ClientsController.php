@@ -55,13 +55,12 @@ class ClientsController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255|unique:users',
+            'name' => 'required|string|max:255|check_name_client',
             'contact_no' => 'required|string|max:255|unique:users',
             'address' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
+        ], [
+            'name.check_name_client' => 'The name has already been taken.',
         ]);
 
         $name = $request->input('first_name');
@@ -109,12 +108,13 @@ class ClientsController extends Controller
     public function update(User $user, Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|check_name_client:'.$user->id,
             'contact_no' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'username' => 'required|string|unique:users,username,'.$user->id,
             'status' => 'required',
+        ], [
+            'name.check_name_client' => 'The name has already been taken.',
         ]);
 
         $name = $request->input('first_name');

@@ -1,0 +1,24 @@
+[
+    {
+        "username": "arambalawbs",
+        "password": "arambalaalita",
+        "first_name": "Alita",
+        "middle_name": "",
+        "last_name": "Arambala",
+        "status": true,
+        "name": "Alita Arambala",
+        "previous_reading": "140",
+        "current_reading": "143"
+    },
+    {
+        "username": "agonwbs",
+        "password": "edwinagon",
+        "first_name": "Edwin",
+        "middle_name": "",
+        "last_name": "Agon",
+        "status": true,
+        "name": "Edwin Agon",
+        "previous_reading": "7",
+        "current_reading": "8"
+    }
+]

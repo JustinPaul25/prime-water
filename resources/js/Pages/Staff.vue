@@ -103,6 +103,7 @@ import { useStore } from 'vuex';
     }
 
     function showModal(type, staff) {
+        console.log(staff);
         if(type == 'create') {
             isEdit.value = false
             form.id = ''
@@ -117,7 +118,7 @@ import { useStore } from 'vuex';
             isEdit.value = true
             form.id = staff.id
             form.first_name = staff.first_name
-            form.middle_name = staff.middle_name
+            form.middle_name = staff.middle_name ? staff.middle_name : '',
             form.last_name = staff.last_name
             form.contact_no = staff.contact_no
             form.address = staff.address
@@ -186,6 +187,8 @@ import { useStore } from 'vuex';
     }
 
     const submit = (id) => {
+        const fullname = form.middle_name ? form.first_name+' '+form.middle_name+' '+form.last_name : form.first_name+' '+form.last_name
+        form.name = fullname
         if(isEdit.value) {
             form.put(`/staff/${form.id}`, {
                 onSuccess: () => submitSuccess()

@@ -33,25 +33,5 @@ class UserSeeder extends Seeder
             'user_id' => $user->id,
             'message' => "New app admin assigned to ".$user->name.".",
         ]);
-
-        $user = new User;
-        $user->name = 'Meter';
-        $user->username = 'meterman';
-        $user->password = Hash::make('123123');
-        $user->status = true;
-        $user->email_verified_at = Carbon::now();
-        $user->save();
-
-        $user->assignRole('Meterman');
-
-        $user = new User;
-        $user->name = 'Cashier';
-        $user->username = 'cashier';
-        $user->password = Hash::make('123123');
-        $user->status = true;
-        $user->email_verified_at = Carbon::now();
-        $user->save();
-
-        $user->assignRole('Cashier');
     }
 }

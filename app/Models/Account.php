@@ -29,8 +29,13 @@ class Account extends Model
 
     public function getDueDateAttribute()
     {
-        $due = Carbon::parse($this->last_payment)->addDays(30);
-        return $due->format('M-d-Y');
+        $last_reading = Reading::where('client_id', $this->client_id)->latest()->first();
+        if($last_reading) {
+            $due = Carbon::parse($last_reading->created_at)->addDays(30);
+            return $due->format('M-d-Y');
+        } else {
+            return null;
+        }
     }
 
     public function getIsMeteredAttribute() {
