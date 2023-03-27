@@ -21,6 +21,7 @@ import { useStore } from 'vuex';
     let isEdit = ref(false)
     const role = ref('')
     const searchYear = ref('')
+    const searchMonth = ref('')
     const searchDate = ref('')
     const searchFrom = ref('')
     const searchTo = ref('')
@@ -61,6 +62,10 @@ import { useStore } from 'vuex';
         }
     })
 
+    watch(searchMonth, (newValue, oldValue) => {
+        getTransactions()
+    })
+
 
     async function getTransactions() {
         await axios.get('/transactions', {
@@ -68,7 +73,8 @@ import { useStore } from 'vuex';
                     searchYear: searchYear.value,
                     searchDate: searchDate.value,
                     searchFrom: searchFrom.value,
-                    searchTo: searchTo.value
+                    searchTo: searchTo.value,
+                    searchMonth: searchMonth.value
                 }
         })
         .then(response => {
@@ -170,6 +176,7 @@ import { useStore } from 'vuex';
                             <option value="">None</option>
                             <option value="date">Date</option>
                             <option value="between">Date Between</option>
+                            <option value="month">Month</option>
                             <option value="year">Year</option>
                         </select>
                     </div>
@@ -185,9 +192,26 @@ import { useStore } from 'vuex';
                         <InputLabel class="font-bold" for="date" value="Date To" />
                         <TextInput id="search" type="date" class="mt-1 block w-full" v-model="searchTo"/>
                     </div>
-                    <div v-if="searchBy === 'year'" class="mr-4">
+                    <div v-if="searchBy === 'year' || searchBy === 'month'" class="mr-4">
                         <InputLabel class="font-bold" for="date" value="Year" />
                         <TextInput id="search" type="number" min="1980" max="2030" class="mt-1 block w-full" v-model="searchYear"/>
+                    </div>
+                    <div v-if="searchBy === 'month'" class="mr-4">
+                        <InputLabel class="font-bold" value="Month" />
+                        <select class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="searchMonth">
+                            <option value="1">Jan</option>
+                            <option value="2">Feb</option>
+                            <option value="3">Mar</option>
+                            <option value="4">Apr</option>
+                            <option value="5">May</option>
+                            <option value="6">Jun</option>
+                            <option value="7">Jul</option>
+                            <option value="8">Aug</option>
+                            <option value="9">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>
                     </div>
                     <div class="ml-auto">
                         <button @click="showPrint = true" class="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:opacity-75 focus:outline-none focus:ring-2 focus:opacity-75 focus:ring-offset-2 sm:w-auto">Print Report</button>

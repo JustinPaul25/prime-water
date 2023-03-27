@@ -51,6 +51,10 @@ class UsageController extends Controller
             $transactions = $transactions->whereYear('created_at', '=', $request->input('searchYear'));
         }
 
+        if($request->filled('searchMonth')) {
+            $transactions = $transactions->whereMonth('created_at', '=', $request->input('searchMonth'));
+        }
+
         return $transactions->orderBy('created_at')->get();
     }
 }
