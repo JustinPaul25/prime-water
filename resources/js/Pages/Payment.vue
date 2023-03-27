@@ -28,6 +28,7 @@ import { useStore } from 'vuex';
     const newBalance = ref(0)
     const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
     const transactions = ref([])
+    const money = ref(null)
 
     const store = useStore()
     const swal = inject('$swal')
@@ -50,17 +51,19 @@ import { useStore } from 'vuex';
     watchDebounced(amount, () => {
         if(amount.value) {
             let totalBill = Number(client.value.account.prev_balance) + Number(client.value.account.current_charges)
-            paidAmount.value = amount.value
-            if(Number(amount.value) > totalBill) {
-                change.value = Number(amount.value) - totalBill
-                form.amount = totalBill
+            if(amount.value > totalBill) {
+                amount.value = totalBill
                 newBalance.value = 0
-            } else {
-                console.log(amount.value)
-                form.amount = amount.value
-                newBalance.value = totalBill - Number(amount.value)
-                change.value = 0
             }
+            newBalance.value = totalBill - Number(amount.value)
+            form.amount = amount.value
+            paidAmount.value = amount.value
+        }
+    }, {debounce: 500})
+
+    watchDebounced(money, () => {
+        if(money.value) {
+            change.value = Number(money.value) - Number(amount.value)
         }
     }, {debounce: 500})
 
@@ -94,21 +97,30 @@ import { useStore } from 'vuex';
         form.id = client.value.id
         amountToPrint.value = form.amount
 
-        axios.post('/pay-bill', form)
-        .then(response => {
-            form.reset('id')
-            form.reset('amount')
-            showPayment.value = false
-            showReciept.value = true
-            amount.value = ''
-            getClients()
+        if(Number(money.value) < Number(amount.value) || money.value === null) {
             swal.fire({
-                icon: 'success',
-                title: 'Successfully Paid',
-                text: `Payment reflected to ${client.value.first_name} ${client.value.last_name}`,
+                icon: 'error',
+                title: 'Payment Failed! ',
+                text: `Please enter right amount of money.`,
                 confirmButtonColor: '#23408E'
             })
-        })
+        } else {
+            axios.post('/pay-bill', form)
+            .then(response => {
+                form.reset('id')
+                form.reset('amount')
+                showPayment.value = false
+                showReciept.value = true
+                amount.value = ''
+                getClients()
+                swal.fire({
+                    icon: 'success',
+                    title: 'Successfully Paid',
+                    text: `Payment reflected to ${client.value.first_name} ${client.value.last_name}`,
+                    confirmButtonColor: '#23408E'
+                })
+            })
+        }
     };
 
     const sendReminder = (id) => {
@@ -199,13 +211,22 @@ import { useStore } from 'vuex';
                                         <p class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl">₱ {{ (Number(client.account.current_charges) + Number(client.account.prev_balance)).toLocaleString() }}</p>
                                     </div>
                                 </main>
-                                <div>
-                                    <div class="relative rounded-md shadow-sm mt-10">
+                                <div class="mt-10">
+                                    <label class="font-bold">Amount to Pay</label>
+                                    <div class="relative rounded-md shadow-sm mb-2">
                                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                         <!-- Heroicon name: mini/envelope -->
                                         <p class="text-gray-400">₱</p>
                                         </div>
                                         <input v-model="amount" type="number" name="amount" placeholder="Input Amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    </div>
+                                    <label class="font-bold">Money</label>
+                                    <div class="relative rounded-md shadow-sm">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <!-- Heroicon name: mini/envelope -->
+                                        <p class="text-gray-400">₱</p>
+                                        </div>
+                                        <input v-model="money" type="number" name="amount" placeholder="Input Amount" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     </div>
                                     <InputError class="mt-2" :message="form.errors.amount" />
                                     <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
@@ -274,12 +295,16 @@ import { useStore } from 'vuex';
                             <p class="ml-auto">₱ {{Number(paidAmount).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
-                            <p>New Remaining Balance: </p>
-                            <p class="ml-auto">₱ {{newBalance.toLocaleString()}}.00</p>
+                            <p>Money: </p>
+                            <p class="ml-auto">₱ {{Number(money).toLocaleString()}}.00</p>
                         </div>
                         <div class="flex text-sm font-bold">
                             <p>Change: </p>
                             <p class="ml-auto">₱ {{Number(change).toLocaleString()}}.00</p>
+                        </div>
+                        <div class="flex text-sm font-bold">
+                            <p>New Remaining Balance: </p>
+                            <p class="ml-auto">₱ {{newBalance.toLocaleString()}}.00</p>
                         </div>
 
                         <div v-if="transactions.length !== 0" class="flex text-xs mt-8">

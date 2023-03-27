@@ -48,15 +48,6 @@ class StaffController extends Controller
             'name.check_name_staff' => 'The name has already been taken.',
         ]);
 
-        if($request->role === 'Admin') {
-            $old_admin = User::role(['Admin'])->first();
-            AdminLog::create([
-                'user_id' => $old_admin->id,
-                'message' => $old_admin->name.' is no longer an admin and his/her account will be deleted.'
-            ]);
-            $old_admin->delete();
-        }
-
         $user = new User;
         $user->name = $request->input('name');
         $user->first_name = $request->input('first_name');
@@ -74,7 +65,7 @@ class StaffController extends Controller
 
         AdminLog::create([
             'user_id' => $user->id,
-            'message' => "New app admin assigned to ".$user->name.".",
+            'message' => "New app admin ".$user->name.".",
         ]);
 
         return;

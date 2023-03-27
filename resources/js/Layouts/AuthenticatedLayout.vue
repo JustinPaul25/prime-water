@@ -28,7 +28,9 @@ const form = useForm({
     first_name: usePage().props.value.auth.user.first_name,
     middle_name: usePage().props.value.auth.user.middle_name,
     last_name: usePage().props.value.auth.user.last_name,
-    contact_no: usePage().props.value.auth.user.contact_no
+    contact_no: usePage().props.value.auth.user.contact_no,
+    username: usePage().props.value.auth.user.username,
+    name: usePage().props.value.auth.user.name
 });
 
 watchDebounced(
@@ -123,6 +125,8 @@ function submitSuccess() {
 }
 
 const updateUser = () => {
+    const fullname = form.middle_name ? form.first_name+' '+form.middle_name+' '+form.last_name : form.first_name+' '+form.last_name
+    form.name = fullname
     axios.post('/update-user', form)
     .then(response => {
         fullName.value = response.data
@@ -169,6 +173,11 @@ const updateUser = () => {
                                     <InputLabel for="contact_no" value="Contact Number" />
                                     <TextInput maxlength="11" id="contact_no" type="text" class="mt-1 block w-full" v-model="form.contact_no" required autofocus autocomplete="contact_no" />
                                 </div>
+
+                                <div class="mt-4">
+                                    <InputLabel for="username" value="Username" />
+                                    <TextInput id="username" type="text" class="mt-1 block w-full" v-model="form.username" required autofocus autocomplete="username" />
+                                </div>
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <button @click="updateUser()" class="inline-flex items-center rounded-md border border-transparent bg-primary-blue px-4 py-2 text-sm font-medium text-white hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update</button>
@@ -179,7 +188,7 @@ const updateUser = () => {
                 <v-tailwind-modal v-model="show" @cancel="cancel()">
                     <div>
                         <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Current sdPrice/Cu m</h1>
+                            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Current Price/Cu m</h1>
 
                             <div class="mt-3">
                                 <h2 class="sr-only">Product information</h2>
@@ -210,14 +219,16 @@ const updateUser = () => {
                                 <table class="table-auto w-full">
                                     <thead>
                                         <tr>
-                                        <th>Price</th>
-                                        <th>Date Changes</th>
+                                            <th>Price</th>
+                                            <th>Date Changes</th>
+                                            <th>Change By:</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="price in $page.props.auth.price_list">
-                                            <td>₱ {{ price.value }}/CuM</td>
+                                            <td class="text-center">₱ {{ price.value }}/CuM</td>
                                             <td class="text-center">{{ price.date_created }}</td>
+                                            <td class="text-center">{{ price.user.name }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

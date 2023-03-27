@@ -13,6 +13,11 @@ class Utility extends Model
     protected $fillable = [
         'field',
         'value',
+        'user_id',
+    ];
+
+    protected $with = [
+        'user',
     ];
 
     protected $appends = [
@@ -22,5 +27,10 @@ class Utility extends Model
     public function getDateCreatedAttribute()
     {
         return date("d-M-Y", strtotime($this->created_at));
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

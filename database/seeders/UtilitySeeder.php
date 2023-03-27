@@ -19,6 +19,7 @@ class UtilitySeeder extends Seeder
         $utility->field = 'price';
         $utility->value = '500';
         $utility->is_active = true;
+        $utility->user_id = 1;
         $utility->save();
     }
 }

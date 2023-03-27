@@ -33,22 +33,26 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'contact_no' => 'required|string|max:255',
-            'username' => 'required|string|unique:users,username,'.$user->id,
-        ]);
-
-        $name = $request->input('first_name');
-        if($request->filled('middle_name')) {
-            $name = $name.' '.$request->input('middle_name').' '.$request->input('last_name');
+        if($user->isClient()) {
+            $request->validate([
+                'name' => 'required|string|max:255|check_name_client:'.$user->id,
+                'contact_no' => 'required|string|max:255',
+                'username' => 'required|string|unique:users,username,'.$user->id,
+            ], [
+                'name.check_name_client' => 'The name has already been taken.',
+            ]);
         } else {
-            $name = $name.' '.$request->input('last_name');
+            $request->validate([
+                'username' => 'required|string|unique:users,username,'.$user->id,
+                'name' => 'required|string|max:255|check_name_staff:'.$user->id,
+                'contact_no' => 'required|string|max:255|unique:users,contact_no,'.$user->id,
+            ], [
+                'name.check_name_staff' => 'The name has already been taken.',
+            ]);
         }
 
         $user->update([
-            'name' => $name,
+            'name' => $request->input('name'),
             'first_name' => $request->input('first_name'),
             'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),

@@ -11,11 +11,14 @@ class UtilityController extends Controller
     {
         Utility::where('field', 'price')->update(['is_active' => false]);
 
+        $user = auth()->user();
+
         $utility = new Utility();
 
         $utility->field = 'price';
         $utility->value = $request->input('amount');
         $utility->is_active = true;
+        $utility->user_id = $user->id;
         $utility->save();
 
         return;
