@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Account;
 use App\Models\AdminLog;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;

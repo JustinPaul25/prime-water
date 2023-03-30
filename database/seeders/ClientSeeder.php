@@ -11,7 +11,6 @@ use App\Models\Utility;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ClientSeeder extends Seeder
 {
@@ -23,14 +22,6 @@ class ClientSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-
-        $address = [
-            'Prk - 1 Consolacion Panabo City Davao Del Norte',
-            'Prk - 1A Consolacion Panabo City Davao Del Norte',
-            'Prk - 2 Consolacion Panabo City Davao Del Norte',
-            'Prk - 3 Consolacion Panabo City Davao Del Norte',
-            'Prk - 4 Consolacion Panabo City Davao Del Norte',
-        ];
 
         $date = [
             '2022-11-01 10:00:00',
@@ -49,7 +40,7 @@ class ClientSeeder extends Seeder
         foreach( range(1, 20) as $index ){
             $dateInd = rand(1,4);
 
-            $addIndex = rand(0, 4);
+            $addIndex = rand(1, 5);
 
             $user = new User;
             $user->username = $faker->name();
@@ -57,7 +48,7 @@ class ClientSeeder extends Seeder
             $user->last_name = $faker->lastName();
             $user->name = $user->first_name . ' ' . $user->last_name;
             $user->password = Hash::make('123123');
-            $user->address = $address[$addIndex];
+            $user->address_id = $addIndex;
             $user->status = true;
             $user->email_verified_at = Carbon::now();
             $user->save();
@@ -126,7 +117,7 @@ class ClientSeeder extends Seeder
 
         $dateInd = rand(1,4);
 
-        $addIndex = rand(0, 4);
+        $addIndex = rand(1, 5);
 
         $user = new User;
         $user->username = $faker->name();
@@ -134,7 +125,7 @@ class ClientSeeder extends Seeder
         $user->last_name = $faker->lastName();
         $user->name = $user->first_name . ' ' . $user->last_name;
         $user->password = Hash::make('123123');
-        $user->address = $address[$addIndex];
+        $user->address_id = $addIndex;
         $user->status = true;
         $user->email_verified_at = Carbon::now();
         $user->save();

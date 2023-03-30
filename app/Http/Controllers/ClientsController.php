@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Account;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +19,10 @@ class ClientsController extends Controller
 
     public function index()
     {
-        return Inertia::render('Client/Client');
+        $address = Address::get();
+        return Inertia::render('Client/Client', [
+            'addresses' => $address
+        ]);
     }
 
     public function list(Request $request)
@@ -44,7 +48,7 @@ class ClientsController extends Controller
         }
 
         if ($request->filled('purok')) {
-            $client = $client->where('address', $request->input('purok'));
+            $client = $client->where('address_id', $request->input('purok'));
         }
 
         $client = $client->withTrashed()->role(['Client'])->paginate(10);

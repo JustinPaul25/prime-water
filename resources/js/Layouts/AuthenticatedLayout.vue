@@ -274,6 +274,9 @@ const updateUser = () => {
                                 <NavLink v-if="$page.props.auth.admin" :href="route('usage')" :active="route().current('usage')">
                                     Usage Report
                                 </NavLink>
+                                <NavLink v-if="$page.props.auth.admin" :href="route('addresses')" :active="route().current('addresses')">
+                                    Addresses
+                                </NavLink>
                             </div>
                         </div>
 
@@ -343,6 +346,9 @@ const updateUser = () => {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('usage')" :active="route().current('usage')">
                             Usage Report
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.admin" :href="route('addresses')" :active="route().current('addresses')">
+                            Addresses
                         </ResponsiveNavLink>
                     </div>
 

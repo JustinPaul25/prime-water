@@ -1,15 +1,14 @@
 <?php
 
-use Inertia\Inertia;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\SMSController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsageController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ReadingController;
@@ -98,5 +97,10 @@ Route::post('/update-user', [UserController::class, 'update'])->middleware(['aut
 Route::post('/user-change-password', [ChangePasswordController::class, 'change'])->name('user.change.password');
 
 Route::get('/admin-logs', [AdminLogController::class, 'list']);
+
+Route::get('/addresses', [AddressController::class, 'index'])->middleware(['auth', 'verified'])->name('addresses');
+Route::get('/address-list', [AddressController::class, 'list'])->middleware(['auth', 'verified'])->name('address.list');
+Route::post('/address', [AddressController::class, 'create'])->middleware(['auth', 'verified'])->name('address.create');
+Route::put('/address/{address}', [AddressController::class, 'update'])->middleware(['auth', 'verified'])->name('address.update');
 
 require __DIR__.'/auth.php';

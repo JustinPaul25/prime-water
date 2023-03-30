@@ -15,7 +15,7 @@ import { computed, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
     defineProps({
-        status: String,
+        status: String
     });
 
     const store = useStore()
@@ -41,7 +41,7 @@ import { useStore } from 'vuex';
         last_name: '',
         username: '',
         contact_no: '',
-        address: '',
+        address_id: '',
         status: '',
         name: ''
     });
@@ -117,7 +117,7 @@ import { useStore } from 'vuex';
             form.last_name = ''
             form.username = ''
             form.contact_no = ''
-            form.address = ''
+            form.address_id = ''
             form.status = ''
         } else {
             isEdit.value = true
@@ -127,7 +127,7 @@ import { useStore } from 'vuex';
             form.last_name = client.last_name
             form.username = client.username
             form.contact_no = client.contact_no
-            form.address = client.address
+            form.address = client.address_id
             form.status = client.status
         }
 
@@ -314,11 +314,7 @@ import { useStore } from 'vuex';
                             <div class="mt-4">
                                 <InputLabel for="address" value="Complete Address" />
                                 <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                                    <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
+                                <option v-for="add in $page.props.addresses" :value="add.id">{{ add.address }}</option>
                                 </select>
                                 <InputError class="mt-2" :message="form.errors.address" />
                             </div>
@@ -362,11 +358,7 @@ import { useStore } from 'vuex';
                         <InputLabel class="font-bold" for="search" value="Status" />
                         <select v-model="purok" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                             <option value="">All</option>
-                            <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
-                            <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
-                            <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
-                            <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
-                            <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
+                            <option v-for="add in $page.props.addresses" :value="add.id">{{ add.address }}</option>
                         </select>
                     </div>
                     <div class="ml-auto flex">
@@ -413,7 +405,6 @@ import { useStore } from 'vuex';
                             </tr>
                         </tbody>
                     </table>
-
 
                     <pagination class="mt-6"
                             :pagination="pagination"

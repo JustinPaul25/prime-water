@@ -3,8 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Spatie\Sluggable\SlugOptions;
-use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'middle_name',
         'last_name',
         'contact_no',
-        'address',
+        'address_id',
         'status',
         'username',
         'password',
@@ -53,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['role', 'account'];
+    protected $appends = ['role', 'account', 'address'];
 
     public function getRoleAttribute()
     {
@@ -65,6 +63,12 @@ class User extends Authenticatable implements JWTSubject
     public function getAccountAttribute()
     {
         return Account::where('client_id', $this->id)->first();
+    }
+
+    public function getAddressAttribute()
+    {
+        $address = Address::where('id', $this->address_id)->first();
+        return $address ? 'Prk - '.$address->prk.', Consolacion, Panabo City, Davao Del Norte' : null;
     }
 
     public function isAdmin(): bool
