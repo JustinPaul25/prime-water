@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('contact_no')->nullable();
-            $table->unsignedBigInteger('address_id');
+            $table->unsignedBigInteger('address_id')->nullable();
             $table->boolean('status')->dafault(true);
             $table->string('email')->unique()->nullable();
             $table->string('username')->unique();
