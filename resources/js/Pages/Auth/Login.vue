@@ -13,6 +13,7 @@ defineProps({
 })
 
 const swal = inject('$swal')
+const showPass = ref(false)
 
 const showResetPassword = ref(false)
 
@@ -99,7 +100,11 @@ function cancel(close) {
 
                         <div class="space-y-1 mt-2">
                             <InputLabel for="password" value="Password" />
-                            <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
+                            <div class="flex items-center">
+                                <TextInput id="password" :type="showPass ? 'text' : 'password'" class="mt-1 block w-full mr-2" v-model="form.password" required autocomplete="current-password" />
+                                <svg v-if="!showPass" @click="showPass = true" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 cursor-pointer hover:text-blue-900"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                <svg v-else @click="showPass = false" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 cursor-pointer hover:text-blue-900"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </div>
                             <InputError class="mt-2" :message="form.errors.password" />
                         </div>
 
