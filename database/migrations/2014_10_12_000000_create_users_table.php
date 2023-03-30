@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('contact_no')->nullable();
-            $table->string('address')->nullable();
+            $table->unsignedBigInteger('address_id');
             $table->boolean('status')->dafault(true);
             $table->string('email')->unique()->nullable();
             $table->string('username')->unique();
@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('address_id')->references('id')->on('addresses');
         });
     }
 
