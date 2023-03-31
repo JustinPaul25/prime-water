@@ -128,17 +128,13 @@ const updateReading = (id) => {
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead>
                             <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Meterman/Editor</th>
-                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Previous Reading</th>
-                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Current Reading</th>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Created/Updated By</th>
                                 <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="log in logs">
-                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.creator_editor.name }}</td>
-                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.prev_reading }}</td>
-                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.current_reading }}</td>
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.changer.name }}</td>
                                 <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.message }}</td>
                             </tr>
                         </tbody>

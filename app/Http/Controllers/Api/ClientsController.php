@@ -75,6 +75,12 @@ class ClientsController extends Controller
         $reading->price = $payment;
         $reading->save();
 
+        $log = new ReadingLog();
+        $log->changer_id = 2;
+        $log->client_id = $client->id;
+        $log->message = "Meterman Reading -> Previous Reading ".$reading->prev_reading." Current Reading ".$reading->current_reading;
+        $log->save();
+
         return;
     }
 }

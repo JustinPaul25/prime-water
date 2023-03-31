@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Reading;
 use App\Models\Utility;
+use App\Models\ReadingLog;
 use Illuminate\Http\Request;
 
 class ReadingController extends Controller
@@ -71,6 +72,12 @@ class ReadingController extends Controller
         $account->current_charges = $new_charge;
         $account->save();
 
+        $log = new ReadingLog();
+        $log->changer_id = $auth->id;
+        $log->client_id = $user->id;
+        $log->message = "Current reading change by ".$auth->name." From: ".$reading->current_reading." To: ".$request->reading;
+        $log->save();
+
         $reading->message = "Current reading change by ".$auth->name." From: ".$reading->current_reading." To: ".$request->reading;
         $reading->current_reading = $request->reading;
         $reading->price = $new_charge;
@@ -82,6 +89,6 @@ class ReadingController extends Controller
 
     public function clientLogs(User $user)
     {
-        return Reading::where('client_id', $user->id)->get();
+        return ReadingLog::where('client_id', $user->id)->get();
     }
 }
