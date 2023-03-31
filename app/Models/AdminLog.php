@@ -12,6 +12,6 @@ class AdminLog extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'created_at' => 'date:Y-m-d H:i:s',
+        'created_at' => 'date:M-d-Y H:i:s',
     ];
 }

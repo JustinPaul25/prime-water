@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -31,12 +30,12 @@ class Transaction extends Model
 
     public function getFormatCreatedAtAttribute()
     {
-        return $this->created_at;
+        return $this->created_at->format('M-d-Y');
     }
 
     public function getDatePaidAttribute()
     {
-        return date("d-M-Y", strtotime($this->created_at));
+        return date("M-d-Y", strtotime($this->created_at));
     }
 
     public function client()
