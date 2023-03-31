@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import VTailwindModal from '@/Modals/VTailwindModal.vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import { watchDebounced } from '@vueuse/core';
 import { computed, inject, onMounted, ref } from 'vue';
@@ -78,6 +79,34 @@ import { useStore } from 'vuex';
         })
     }
 
+    const deleteAddress = (address) => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#23408E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.delete(route("address.delete", address.id), {
+                    onSuccess: () => deleteSuccess()
+                })
+            }
+        })
+    }
+
+    function deleteSuccess() {
+        store.dispatch('addresses/getAddresses')
+        swal.fire({
+            title: 'Deleted!',
+            text: 'Address has been deleted.',
+            icon: 'success',
+            confirmButtonColor: '#23408E'
+        })
+    }
+
     onMounted(() => store.dispatch('addresses/getAddresses'))
 </script>
 
@@ -138,6 +167,7 @@ import { useStore } from 'vuex';
                                 </td>
                                 <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                     <a @click="showModal('update', address)" href="#" class="text-primary-blue hover:opacity-75">Edit</a>
+                                    <a @click="deleteAddress(address)" href="#" class="text-red-500 hover:opacity-75 ml-2">Delete</a>
                                 </td>
                             </tr>
                         </tbody>

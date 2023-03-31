@@ -59,6 +59,7 @@ class AddressController extends Controller
     {
         User::where('address_id', $address->id)->update(['address_id' => null]);
 
-        return $address->delete();
+        $address->delete();
+        return;
     }
 }
