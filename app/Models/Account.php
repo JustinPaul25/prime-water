@@ -62,10 +62,10 @@ class Account extends Model
             $date1 = explode (" ", $this->last_payment);
             $date1 = $date1[0];
         } else {
-            $date1 = $this->created_at->format('Y-m-d');
+            $date1 = $this->created_at->format('M-d-Y');
         }
 
-        $date2 = date('Y-m-d');;
+        $date2 = date('M-d-Y');;
 
         $ts1 = strtotime($date1);
         $ts2 = strtotime($date2);
