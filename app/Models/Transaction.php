@@ -30,7 +30,7 @@ class Transaction extends Model
 
     public function getFormatCreatedAtAttribute()
     {
-        return $this->created_at->format('M-d-Y');
+        return $this->created_at;
     }
 
     public function getDatePaidAttribute()
