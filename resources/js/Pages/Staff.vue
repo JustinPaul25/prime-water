@@ -37,7 +37,7 @@ import { useStore } from 'vuex';
         last_name: '',
         username: '',
         contact_no: '',
-        address: '',
+        address_id: '',
         role: ''
     });
 
@@ -111,7 +111,7 @@ import { useStore } from 'vuex';
             form.middle_name = ''
             form.last_name = ''
             form.contact_no = ''
-            form.address = ''
+            form.address_id = ''
             form.username = ''
             form.role = ''
         } else {
@@ -121,7 +121,7 @@ import { useStore } from 'vuex';
             form.middle_name = staff.middle_name ? staff.middle_name : '',
             form.last_name = staff.last_name
             form.contact_no = staff.contact_no
-            form.address = staff.address
+            form.address_id = staff.address_id
             form.username = staff.username
             form.role = staff.role.replace(/^./, staff.role[0].toUpperCase())
         }
@@ -274,14 +274,10 @@ import { useStore } from 'vuex';
 
                             <div class="mt-4">
                                 <InputLabel for="address" value="Complete Address" />
-                                <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                                    <option value="Prk - 1 Consolacion Panabo City Davao Del Norte">Prk - 1 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 1A Consolacion Panabo City Davao Del Norte">Prk - 1A Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 2 Consolacion Panabo City Davao Del Norte">Prk - 2 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 3 Consolacion Panabo City Davao Del Norte">Prk - 3 Consolacion Panabo City Davao Del Norte</option>
-                                    <option value="Prk - 4 Consolacion Panabo City Davao Del Norte">Prk - 4 Consolacion Panabo City Davao Del Norte</option>
+                                <select v-model="form.address_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                    <option v-for="add in $page.props.addresses" :value="add.id">{{ add.address }}</option>
                                 </select>
-                                <InputError class="mt-2" :message="form.errors.address" />
+                                <InputError class="mt-2" :message="form.errors.address_id" />
                             </div>
 
                             <div class="mt-4">

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminLog;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Address;
+use App\Models\AdminLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +14,10 @@ class StaffController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Staff');
+        $address = Address::get();
+        return Inertia::render('Staff', [
+            'addresses' => $address
+        ]);
     }
 
     public function list(Request $request)
@@ -44,6 +48,7 @@ class StaffController extends Controller
             'contact_no' => 'required|string|max:255|unique:users',
             'username' => 'required|string|max:255|unique:users',
             'role' => 'required',
+            'address_id' => 'required',
         ], [
             'name.check_name_staff' => 'The name has already been taken.',
         ]);
@@ -55,7 +60,7 @@ class StaffController extends Controller
         $user->last_name = $request->input('last_name');
         $user->username = $request->input('username');
         $user->contact_no = $request->input('contact_no');
-        $user->address = $request->input('address');
+        $user->address_id = $request->input('address_id');
         $user->status = true;
         $user->password = Hash::make('PW-Staff');
         $user->email_verified_at = Carbon::now();
@@ -78,6 +83,7 @@ class StaffController extends Controller
             'name' => 'required|string|max:255|check_name_staff:'.$user->id,
             'contact_no' => 'required|string|max:255|unique:users,contact_no,'.$user->id,
             'role' => 'required',
+            'address_id' => 'required',
         ], [
             'name.check_name_staff' => 'The name has already been taken.',
         ]);
@@ -89,8 +95,7 @@ class StaffController extends Controller
             'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
             'username' => $request->input('username'),
-            'address' => $request->input('address'),
-
+            'address_id' => $request->input('address_id'),
         ]);
 
         $user->removeRole('Cashier');

@@ -103,5 +103,6 @@ Route::get('/addresses', [AddressController::class, 'index'])->middleware(['auth
 Route::get('/address-list', [AddressController::class, 'list'])->middleware(['auth', 'verified'])->name('address.list');
 Route::post('/address', [AddressController::class, 'create'])->middleware(['auth', 'verified'])->name('address.create');
 Route::put('/address/{address}', [AddressController::class, 'update'])->middleware(['auth', 'verified'])->name('address.update');
+Route::delete('/address/{address}', [AddressController::class, 'destroy'])->middleware(['auth', 'verified'])->name('address.delete');
 
 require __DIR__.'/auth.php';

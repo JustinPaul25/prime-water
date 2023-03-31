@@ -91,21 +91,29 @@ import { useStore } from 'vuex';
     )
 
     const checkContact = (text) => {
-        let result = text.replace(/[^a-zA-Z0-9 ]/g, "");
-        result = result.replace(/([a-zA-Z ])/g, "")
+        if(text === null) {
+            return ''
+        } else {
+            let result = text.replace(/[^a-zA-Z0-9 ]/g, "");
+            result = result.replace(/([a-zA-Z ])/g, "")
 
-        return result;
+            return result;
+        }
     }
 
     const capitalizeString = (text) => {
-        const words = text.split(" ");
+        if(text === null) {
+            return ''
+        } else {
+            const words = text.split(" ");
 
-        // return text.toLowerCase();
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
+            // return text.toLowerCase();
+            for (let i = 0; i < words.length; i++) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
+            }
+
+            return words.join(" ");
         }
-
-        return words.join(" ");
     }
 
     function showModal(type, client) {
@@ -127,7 +135,7 @@ import { useStore } from 'vuex';
             form.last_name = client.last_name
             form.username = client.username
             form.contact_no = client.contact_no
-            form.address = client.address_id
+            form.address_id = client.address_id
             form.status = client.status
         }
 
@@ -313,10 +321,10 @@ import { useStore } from 'vuex';
 
                             <div class="mt-4">
                                 <InputLabel for="address" value="Complete Address" />
-                                <select v-model="form.address" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                                <select v-model="form.address_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                                 <option v-for="add in $page.props.addresses" :value="add.id">{{ add.address }}</option>
                                 </select>
-                                <InputError class="mt-2" :message="form.errors.address" />
+                                <InputError class="mt-2" :message="form.errors.address_id" />
                             </div>
 
                             <div class="mt-4">

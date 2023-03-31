@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Address;
 use App\Rules\CiUnique;
@@ -52,5 +53,12 @@ class AddressController extends Controller
         ]);
 
         return;
+    }
+
+    public function destroy(Address $address)
+    {
+        User::where('address_id', $address->id)->update(['address_id' => null]);
+
+        return $address->delete();
     }
 }

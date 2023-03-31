@@ -61,7 +61,7 @@ class ClientsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|check_name_client',
             'contact_no' => 'required|string|max:255|unique:users',
-            'address' => 'required|string|max:255',
+            'address_id' => 'required',
             'username' => 'required|string|max:255|unique:users',
         ], [
             'name.check_name_client' => 'The name has already been taken.',
@@ -80,7 +80,7 @@ class ClientsController extends Controller
         $user->last_name = $request->input('last_name');
         $user->name = $name;
         $user->contact_no = $request->input('contact_no');
-        $user->address = $request->input('address');
+        $user->address_id = $request->input('address_id');
         $user->username = $request->input('username');
         $user->status = 1;
         $user->password = Hash::make('pwclient');
@@ -114,7 +114,7 @@ class ClientsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|check_name_client:'.$user->id,
             'contact_no' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'address_id' => 'required',
             'username' => 'required|string|unique:users,username,'.$user->id,
             'status' => 'required',
         ], [
@@ -134,7 +134,7 @@ class ClientsController extends Controller
             'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
             'contact_no' => $request->input('contact_no'),
-            'address' => $request->input('address'),
+            'address_id' => $request->input('address_id'),
             'username' => $request->input('username'),
             'status' => $request->input('status'),
         ]);
