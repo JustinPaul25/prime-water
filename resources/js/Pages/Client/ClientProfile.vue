@@ -11,6 +11,8 @@ const transactions = ref([])
 const month = ref(["January","February","March","April","May","June","July","August","September","October","November","December"])
 const showBill = ref(false)
 let newReadingShow = ref(false)
+let readingLogShow = ref(false)
+let logs = ref([])
 let newReading = ref(null)
 const swal = inject('$swal')
 
@@ -45,6 +47,10 @@ function cancelNewReading(close) {
     newReadingShow.value = false
 }
 
+function cancelReadingLog(close) {
+    readingLogShow.value = false
+}
+
 const getMonth = () => {
     const d = new Date();
     return month.value[d.getMonth()];
@@ -73,6 +79,18 @@ const checkInput = () => {
     } else {
         return false
     }
+}
+
+const showLog = () => {
+    readingLogShow.value = true
+    getLogs(client.value.id)
+}
+
+const getLogs = (id) => {
+    axios.get(`/reading-log/${id}`)
+    .then(response => {
+        logs.value = response.data
+    })
 }
 
 const updateReading = (id) => {
@@ -104,6 +122,29 @@ const updateReading = (id) => {
 
     <AuthenticatedLayout>
         <div class="py-12">
+            <v-tailwind-modal v-model="readingLogShow" @cancel="cancelReadingLog()">
+                <template v-slot:title>Reading Logs</template>
+                <div class="-mx-4 mt-10 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Meterman/Editor</th>
+                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Previous Reading</th>
+                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Current Reading</th>
+                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="log in logs">
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.creator_editor.name }}</td>
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.prev_reading }}</td>
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.current_reading }}</td>
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.message }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </v-tailwind-modal>
             <v-tailwind-modal v-model="newReadingShow" @cancel="cancelNewReading()">
                 <template v-slot:title>Input New Reading</template>
                 <p class="mt-2">
@@ -111,15 +152,11 @@ const updateReading = (id) => {
                 </p>
                 <div>
                     <div class="relative rounded-md shadow-sm mt-10">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <!-- Heroicon name: mini/envelope -->
-                        <p class="text-gray-400">₱</p>
-                        </div>
                         <input v-model="newReading" type="number" name="amount" placeholder="Input New Reading" class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                     <div class="flex mt-2 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
                         <button @click="cancelNewReading()" href="#" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ml-auto">Close</button>
-                        <button @click="updateReading(client.id)" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Current Reading</button>
+                        <button @click="updateReading(client.id)" class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Change Current Reading</button>
                     </div>
                 </div>
             </v-tailwind-modal>
@@ -217,7 +254,10 @@ const updateReading = (id) => {
                                         Previous Reading<br>
                                         <span v-if="client.account.prev_date_reading">Date Metered: {{ client.account.prev_date_reading }}</span>
                                     </dt>
-                                    <dd class="whitespace-nowrap text-gray-900">{{ client.account.prev_reading }}</dd>
+                                    <dd class="whitespace-nowrap text-gray-900 text-right">
+                                        {{ client.account.prev_reading }}
+                                        <p @click="showLog()" class="text-primary-blue font-bold cursor-pointer hover:opacity-75">Reading Logs</p>
+                                    </dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-sm font-medium">

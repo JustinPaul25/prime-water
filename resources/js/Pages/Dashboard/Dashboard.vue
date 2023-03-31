@@ -1,10 +1,9 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import IncomeChart from '@/Components/IncomeChart.vue';
-import UsageChart from '@/Components/UsageChart.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
-import regression from 'regression'
-import { ref, onMounted } from 'vue'
+import regression from 'regression';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps({
     income: Object,
@@ -12,6 +11,7 @@ const props = defineProps({
 });
 
 const datas = ref([])
+const showModal = ref(false)
 
 function getResult() {
     console.log(regression.linear(datas.value).points);
@@ -77,14 +77,16 @@ onMounted(() => populateData())
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight">
-                Dashboard
-            </h2>
-        </template>
-
         <div class="py-12">
-            <div class="mt-10 bg-white pb-12 sm:pb-16">
+            <div>
+                <div class="grid overflow-hidden w-full px-10 lg:px-60">
+                    <div class="box row-span-2 p-5">
+                        <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">Forecast Chart</p>
+                        <income-chart class="h-60" v-if="datas.length > 1" :raw-data="datas" :result="getResult()" :label="renderLabel()"></income-chart>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 bg-primary-blue pb-12 sm:pb-16">
                 <div class="relative">
                     <div class="absolute inset-0 h-1/2 bg-gray-100"></div>
                     <div class="relative mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
@@ -112,14 +114,6 @@ onMounted(() => populateData())
                                 </div>
                             </dl>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white">
-                <div class="grid overflow-hidden w-full px-8 lg:px-40">
-                    <div class="box row-span-2 p-5">
-                        <p class="order-1 text-4xl font-bold tracking-tight text-primary-blue">Forecast Chart</p>
-                        <income-chart class="h-60" v-if="datas.length > 1" :raw-data="datas" :result="getResult()" :label="renderLabel()"></income-chart>
                     </div>
                 </div>
             </div>

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('prev_reading', 10, 2);
             $table->float('current_reading', 10, 2);
             $table->float('price', 10, 2);
+            $table->string('message')->default('Meterman Reading');
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('users');

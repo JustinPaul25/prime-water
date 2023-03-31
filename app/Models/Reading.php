@@ -24,6 +24,7 @@ class Reading extends Model
     protected $appends = [
         'date_metered',
         'client_data',
+        'creator_editor',
     ];
 
     public function getDateMeteredAttribute()
@@ -43,13 +44,13 @@ class Reading extends Model
         return $user;
     }
 
+    public function getCreatorEditorAttribute()
+    {
+        return User::find($this->meterman_id);
+    }
+
     public function client()
     {
         return $this->belongsTo(User::class, 'client_id');
-    }
-
-    public function meterman()
-    {
-        return $this->belongsTo(User::class, 'meterman_id');
     }
 }

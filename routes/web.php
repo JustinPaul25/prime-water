@@ -70,6 +70,7 @@ Route::get('/switch-status/{id}', [ClientsController::class, 'switchStatus'])->m
 //reading
 Route::post('/reading', [ReadingController::class, 'store'])->middleware(['auth', 'verified'])->name('reading.create');
 Route::put('/update-reading/{user}', [ReadingController::class, 'update'])->middleware(['auth', 'verified']);
+Route::get('/reading-log/{user}', [ReadingController::class, 'clientLogs'])->middleware(['auth', 'verified']);
 
 //utilities
 Route::put('/utilities-price/{utility}', [UtilityController::class, 'priceUpdate'])->middleware(['auth', 'verified'])->name('price.update');

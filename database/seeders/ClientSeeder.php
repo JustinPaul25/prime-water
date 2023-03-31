@@ -21,6 +21,56 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
+        // $clientsJson = File::get("database/datas/initial.json");
+        // $clients = json_decode($clientsJson);
+
+        // foreach($clients as $client) {
+        //     $user = new User;
+        //     $user->username = $client->username;
+        //     $user->first_name = $client->first_name;
+        //     $user->middle_name = $client->middle_name;
+        //     $user->last_name = $client->last_name;
+        //     $user->name = $client->name;
+        //     $user->password = Hash::make($client->password);
+        //     $user->deleted_at = $client->status ? null : Carbon::now();
+        //     $user->status = $client->status;
+        //     $user->email_verified_at = Carbon::now();
+        //     $user->save();
+
+        //     $user->assignRole('Client');
+
+        //     $account = new Account;
+        //     $account->client_id = $user->id;
+        //     $account->prev_reading = 0;
+        //     $account->current_reading = 0;
+        //     $account->prev_balance = 0;
+        //     $account->current_charges = $client->previous_reading;
+        //     $account->last_payment = null;
+        //     $account->save();
+
+        //     $price = Utility::find(1);
+
+        //     $reading_diff = (int)$client->current_reading - $account->current_reading;
+
+        //     $payment = $reading_diff * $price->value;
+
+        //     $account->prev_reading = $account->current_reading;
+        //     $account->current_reading = $client->current_reading;
+        //     $account->current_charges = $payment;
+        //     $account->update();
+
+        //     $reading = new Reading;
+        //     $reading->client_id = $user->id;
+        //     $reading->meterman_id = 2;
+        //     $reading->prev_reading = $client->previous_reading;
+        //     $reading->current_reading = $client->current_reading;
+        //     $reading->cum_price = $price->value;
+        //     $reading->price = $payment;
+        //     $reading->updated_at = '2023-02-01 10:00:00';
+        //     $reading->created_at = '2023-02-01 10:00:00';
+        //     $reading->save(['timestamps' => false]);
+        // }
+
         $faker = Factory::create();
 
         $date = [
