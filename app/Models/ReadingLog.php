@@ -16,6 +16,15 @@ class ReadingLog extends Model
         'client',
     ];
 
+    protected $appends = [
+        'date_created',
+    ];
+
+    public function getDateCreatedAttribute()
+    {
+        return $this->created_at->format('M-d-Y');
+    }
+
     public function changer()
     {
         return $this->belongsTo(User::class, 'changer_id');

@@ -130,12 +130,14 @@ const updateReading = (id) => {
                             <tr>
                                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Created/Updated By</th>
                                 <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"></th>
+                                <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="log in logs">
                                 <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.changer.name }}</td>
                                 <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.message }}</td>
+                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ log.date_created }}</td>
                             </tr>
                         </tbody>
                     </table>

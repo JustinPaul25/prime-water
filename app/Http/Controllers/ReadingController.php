@@ -89,6 +89,6 @@ class ReadingController extends Controller
 
     public function clientLogs(User $user)
     {
-        return ReadingLog::where('client_id', $user->id)->get();
+        return ReadingLog::where('client_id', $user->id)->orderBy('created_at','DESC')->get()->take(10);
     }
 }
