@@ -200,10 +200,10 @@ import { onMounted, ref } from 'vue';
                                                 <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
                                                     <div class="font-medium text-gray-900">{{ transaction.id }}</div>
                                                     <div class="mt-1 flex flex-col text-gray-500 sm:block lg:hidden">
-                                                    <span>₱ {{ transaction.amount }} / {{ transaction.date_paid }}</span>
+                                                    <span>₱ {{ transaction.amount }}.00 / {{ transaction.date_paid }}</span>
                                                     </div>
                                                 </td>
-                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ Number(transaction.amount).toLocaleString() }}</td>
+                                                <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">₱ {{ Number(transaction.amount).toLocaleString() }}.00</td>
                                                 <td class="hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell">{{ transaction.date_paid }}</td>
                                             </tr>
                                         </tbody>

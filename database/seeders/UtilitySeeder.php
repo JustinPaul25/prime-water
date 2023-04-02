@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Utility;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UtilitySeeder extends Seeder
@@ -17,7 +16,7 @@ class UtilitySeeder extends Seeder
     {
         $utility = new Utility;
         $utility->field = 'price';
-        $utility->value = '500';
+        $utility->value = '26';
         $utility->is_active = true;
         $utility->user_id = 1;
         $utility->save();

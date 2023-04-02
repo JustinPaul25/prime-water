@@ -118,10 +118,10 @@
         "status": true,
         "name": "nestor gulada",
         "previous_reading": "1951",
-        "current_reading": ""
+        "current_reading": "1951"
     },
     {
-        "username": "agonwbs",
+        "username": "agonwbs2",
         "password": "edwinagon",
         "first_name": "patricia",
         "middle_name": "",
@@ -520,22 +520,22 @@
     {
         "username": "parandas123",
         "password": "parandas123",
-        "first_name": "parandas2",
+        "first_name": "parandas",
         "middle_name": "",
-        "last_name": "parandas3",
+        "last_name": "parandas",
         "status": true,
-        "name": "parandas2 parandas3",
+        "name": "parandas parandas",
         "previous_reading": "3",
         "current_reading": "4"
     },
     {
         "username": "cherwin1234",
         "password": "cherwin1234",
-        "first_name": "cherwin#2",
+        "first_name": "cherwin",
         "middle_name": "",
         "last_name": "serondo",
         "status": true,
-        "name": "cherwin#2 serondo",
+        "name": "cherwin serondo",
         "previous_reading": "1",
         "current_reading": "2"
     },
@@ -546,8 +546,8 @@
         "middle_name": "",
         "last_name": "cagay",
         "status": true,
-        "name": "alexi#2 cagay",
-        "previous_reading": "",
+        "name": "alexi cagay",
+        "previous_reading": "0",
         "current_reading": "48"
     },
 {
