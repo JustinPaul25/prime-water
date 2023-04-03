@@ -24,6 +24,12 @@ class ClientSeeder extends Seeder
         $clients = json_decode($clientsJson);
 
         foreach($clients as $client) {
+            $user = User::where('username', $client->username)->first();
+
+            if($user) {
+                continue;
+            }
+
             $user = new User;
             $user->username = $client->username;
             $user->first_name = $client->first_name;
