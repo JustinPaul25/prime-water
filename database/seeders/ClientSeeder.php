@@ -44,25 +44,21 @@ class ClientSeeder extends Seeder
 
             $user->assignRole('Client');
 
-            $account = new Account;
-            $account->client_id = $user->id;
-            $account->prev_reading = 0;
-            $account->current_reading = 0;
-            $account->prev_balance = 0;
-            $account->current_charges = $client->previous_reading;
-            $account->last_payment = null;
-            $account->save();
-
             $price = Utility::find(1);
 
-            $reading_diff = (int)$client->current_reading - $account->current_reading;
+            $reading_diff = (int)$client->current_reading - (int)$client->previous_reading;
 
             $payment = $reading_diff * $price->value;
 
-            $account->prev_reading = $account->current_reading;
+            $account = new Account;
+            $account->client_id = $user->id;
+            $account->prev_reading = $client->previous_reading;
             $account->current_reading = $client->current_reading;
+            $account->prev_balance = 0;
+            $account->current_charges = $client->previous_reading;
+            $account->last_payment = null;
             $account->current_charges = $payment;
-            $account->update();
+            $account->save();
 
             $reading = new Reading;
             $reading->client_id = $user->id;
