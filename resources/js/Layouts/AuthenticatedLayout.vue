@@ -245,7 +245,7 @@ const updateUser = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <div class="flex items-end">
+                                    <div class="flex items-center">
                                         <ApplicationLogo class="block h-9 w-auto" />
                                         <div>
                                             <span class="text-secondary-blue font-bold text-xl">WBS</span>

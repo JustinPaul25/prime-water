@@ -57,6 +57,7 @@ class HandleInertiaRequests extends Middleware
                 'price_list' => Utility::orderBy('created_at', 'desc')->get(),
             ],
             'cover_url' => url('/img/coverimg.jpg'),
+            'logo' => url('/images/logo/logo.png'),
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),

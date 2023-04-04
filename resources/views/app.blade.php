@@ -9,7 +9,7 @@
         <!-- Add to homescreen for Chrome on Android -->
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="application-name" content="PWA">
-        <link rel="icon" sizes="512x512" href="/images/icons/favicon-16x16.png">
+        <link rel="icon" sizes="512x512" href="/images/icons/favicon.ico">
 
         <!-- Add to homescreen for Safari on iOS -->
         <meta name="apple-mobile-web-app-capable" content="yes">
