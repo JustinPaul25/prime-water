@@ -268,7 +268,6 @@ import { useStore } from 'vuex';
         <div class="py-12">
             <div>
                 <RecieptModal v-model="showQrAll" @cancel="cancelShowAll()">
-                    <section class="bg-white" id="printQr">
                         <div class="max-w-5xl mx-auto bg-white">
                             <article class="overflow-hidden">
                                 <div class="bg-[white] rounded-b-md">
@@ -276,17 +275,17 @@ import { useStore } from 'vuex';
                                         <p class="font-bold text-lg">WBS Client Qr's</p>
                                         <p>Barangay Consolacion, Panabo City, Davao del Norte</p>
                                     </div>
-
-                                    <div class="grid grid-cols-4 gap-4">
-                                        <div class="text-center" v-for="client in clientsQr">
-                                            <vue-qrcode :value="`${client.id}`" :options="{ width: 200 }"></vue-qrcode>
-                                            <p class="text-center my-auto">{{ client.first_name }} {{ client.last_name }}</p>
+                                    <section class="bg-white" id="printQr">
+                                        <div class="grid grid-cols-4 gap-4">
+                                            <div class="text-center" v-for="(client, index) in clientsQr">
+                                                <vue-qrcode :value="`${client.id}`" :options="{ width: 200 }"></vue-qrcode>
+                                                <p class="text-center my-auto">{{ client.first_name }} {{ client.last_name }}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </section>
                                 </div>
                             </article>
                         </div>
-                    </section>
                     <div class="flex">
                         <button v-print="'#printQr'" class="ml-auto bg-blue-800 px-4 py-2 rounded-md text-white font-bold hover:opacity-75">Print</button>
                     </div>
