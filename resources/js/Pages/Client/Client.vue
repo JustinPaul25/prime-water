@@ -245,7 +245,7 @@ import { useStore } from 'vuex';
             if (result.isConfirmed) {
                 axios.get(`/switch-status/${id}`)
                 .then(response => {
-                    store.dispatch('clients/getClients')
+                    getClients()
                 })
             }
         })
@@ -362,7 +362,7 @@ import { useStore } from 'vuex';
                         </select>
                     </div>
                     <div class="mr-4">
-                        <InputLabel class="font-bold" for="search" value="Status" />
+                        <InputLabel class="font-bold" for="search" value="Address" />
                         <select v-model="purok" class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                             <option value="">All</option>
                             <option v-for="add in $page.props.addresses" :value="add.id">{{ add.address }}</option>

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\User;
-use Inertia\Inertia;
 use App\Models\Account;
 use App\Models\Address;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class ClientsController extends Controller
 {
@@ -43,15 +43,19 @@ class ClientsController extends Controller
             });
         }
 
-        if($request->filled('status')) {
-            $client = $client->where('status', $request->input('status'));
-        }
-
         if ($request->filled('purok')) {
             $client = $client->where('address_id', $request->input('purok'));
         }
 
-        $client = $client->withTrashed()->role(['Client'])->paginate(10);
+        if($request->filled('status')) {
+            if($request->input('status') == 1) {
+                $client = $client->role(['Client'])->paginate(10);
+            } else {
+                $client = $client->onlyTrashed()->role(['Client'])->paginate(10);
+            }
+        } else {
+            $client = $client->withTrashed()->role(['Client'])->paginate(10);
+        }
 
         return $client;
     }
