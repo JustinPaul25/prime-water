@@ -76,7 +76,7 @@ class ClientsController extends Controller
         $reading->save();
 
         $log = new ReadingLog();
-        $log->changer_id = 2;
+        $log->changer_id = $request->input('meterman_id');
         $log->client_id = $client->id;
         $log->message = "Meterman Reading -> Previous Reading ".$reading->prev_reading." Current Reading ".$reading->current_reading;
         $log->save();
