@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Account;
-use Twilio\Rest\Client;
-use ClickSend\Api\SMSApi;
 use ClickSend\Configuration;
-use Illuminate\Http\Request;
-use ClickSend\Api\AccountApi;
 use ClickSend\Model\SmsMessage;
-use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Client as GuzzleClient;
 use ClickSend\Model\SmsMessageCollection;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client;
 
 class SMSController extends Controller
 {
@@ -71,7 +67,7 @@ class SMSController extends Controller
 
     public function bill(User $user)
     {
-        $date = Carbon::now()->addDays(12)->format('M-d-Y');
+        $date = $user->account->due_date;
         $balance = $user->account->prev_balance + $user->account->current_charges;
         $balance = number_format($balance, 2);
         $string = $user->contact_no;
